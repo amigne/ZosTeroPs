@@ -1,0 +1,109 @@
+html {
+    background-color: #eee;
+    font-family: arial, sans-serif;
+}
+body {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 0 15px;
+    margin: 15px;
+}
+
+/* Menu */
+.menu {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #eee;
+}
+.menu a {
+    background-color: inherit;
+    color: #000;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 5px 15px;
+    transition: 0.3s;
+    font-size: medium;
+    text-decoration: none;
+}
+.menu a:hover {
+    background-color: #ddd;
+}
+.menu a.active {
+    background-color: skyblue;
+}
+
+/* Content */
+.content {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+
+/* Table list */
+table.table_list {
+    border-collapse: collapse;
+    width: 100%;
+}
+table.table_list th, table.table_list td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+table.table_list th {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: left;
+    background-color: #af4c50;
+    color: #fff;
+}
+table.table_list tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+table.table_list tr:hover {
+    background-color: #ddd;
+}
+
+/* Table vendor */
+.vendor_id { width: 40px!important; }
+th.vendor_id { text-align: center; }
+td.vendor_id { text-align: right; }
+.vendor_name { width: 40%; }
+.vendor_description { }
+.vendor_action { width: 50px!important; }
+td.vendor_action { text-align: right; }
+.vendor_action a {
+    color: #000;
+    text-decoration: none;
+}
+
+
+
+
+
+
+
+.tabmain {
+    max-height: calc(100vh - 265px);
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+
+
+
+
+
+.box {
+    background-color: #eee;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+table, input[type=text], input[type=file], textarea {
+    width: 100%;
+}
+textarea {
+    white-space: nowrap;
+    resize: vertical;
+}
