@@ -41,10 +41,53 @@ body {
     border-top: none;
 }
 
+/* Forms */
+input[type=text], input[type=file], textarea {
+    width: 100%;
+}
+textarea {
+    white-space: nowrap;
+    resize: vertical;
+}
+form .field-error {
+    color: #ff0000;
+    font-size: smaller;
+    margin-block: 0;
+}
+form .error {
+    color: #ff0000;
+    font-size: smaller;
+    margin-block: 0;
+    text-align: center;
+}
+form .has-error {
+    color: #ff0000;
+}
+form .delete_confirm {
+    color: #ff0000;
+    text-align: center;
+    font-size: large;
+}
+form .delete_button {
+    text-align: center;
+}
+
+/* Form vendor */
+.vendor_description textarea {
+    height: 100px;
+}
+
+
 /* Table list */
 table.table_list {
     border-collapse: collapse;
     width: 100%;
+}
+table.table_list tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+table.table_list tr:hover {
+    background-color: #ddd;
 }
 table.table_list th, table.table_list td {
     border: 1px solid #ddd;
@@ -57,26 +100,43 @@ table.table_list th {
     background-color: #af4c50;
     color: #fff;
 }
-table.table_list tr:nth-child(even) {
-    background-color: #f2f2f2;
+
+/* Table update */
+table.table_update {
+    border-collapse: collapse;
+    width: 100%;
 }
-table.table_list tr:hover {
-    background-color: #ddd;
+table.table_update th, table.table_update td {
+    border: 0;
+    padding: 8px;
+}
+table.table_update th {
+    vertical-align: top;
+    text-align: right;
 }
 
-/* Table vendor */
-.vendor_id { width: 40px!important; }
-th.vendor_id { text-align: center; }
-td.vendor_id { text-align: right; }
-.vendor_name { width: 40%; }
-.vendor_description { }
-.vendor_action { width: 50px!important; }
-td.vendor_action { text-align: right; }
-.vendor_action a {
+/* Table vendor list */
+table.table_list .vendor_id { width: 40px!important; }
+table.table_list th.vendor_id { text-align: center; }
+table.table_list td.vendor_id { text-align: right; }
+table.table_list .vendor_name { width: 40%; }
+table.table_list .vendor_description { }
+table.table_list .vendor_action { width: 50px!important; }
+table.table_list th.vendor_action { text-align: center; }
+table.table_list th.vendor_action a {
+    color: #fff;
+    text-decoration: none;
+}
+table.table_list td.vendor_action { text-align: right; }
+table.table_list td.vendor_action a {
     color: #000;
     text-decoration: none;
 }
 
+/* Table vendor update */
+table.table_update .vendor_name { }
+table.table_update .vendor_description { }
+table.table_update .vendor_action { text-align: center; }
 
 
 
@@ -100,10 +160,3 @@ td.vendor_action { text-align: right; }
     padding: 5px;
 }
 
-table, input[type=text], input[type=file], textarea {
-    width: 100%;
-}
-textarea {
-    white-space: nowrap;
-    resize: vertical;
-}

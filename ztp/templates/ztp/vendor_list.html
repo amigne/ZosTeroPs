@@ -9,7 +9,7 @@
                 <th class="vendor_id">ID</th>
                 <th class="vendor_name">Name</th>
                 <th class="vendor_description">Description</th>
-                <th class="vendor_action"></th>
+                <th class="vendor_action"><a href="{% url 'vendorCreate' %}"><i class="far fa-plus-square"></i></a></th>
             </tr>
         </thead>
         <tbody>
@@ -19,7 +19,7 @@
                     <td class="vendor_name">{{ vendor.name }}</td>
                     <td class="vendor_description">{{ vendor.description }}</td>
                     <td class="vendor_action">
-                        {% if vendor.platforms.count == 0 %}<a href="#"><i class="fas fa-trash"></i></a>&nbsp;&nbsp;{% endif %}
+                        {% if vendor.platforms.count == 0 %}<a href="{% url 'vendorDelete' vendor.id %}"><i class="fas fa-trash"></i></a>&nbsp;&nbsp;{% endif %}
                         <a href="{% url 'vendorUpdate' vendor.id %}"><i class="fas fa-edit"></i></a>
                     </td>
                 </tr>

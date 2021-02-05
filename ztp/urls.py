@@ -4,9 +4,10 @@ from . import views
 
 
 urlpatterns = [
+    # Vendors
     path('vendor/', views.VendorListView.as_view(), name='vendorList'),
-#    path('vendor/new', views.vendors_new, name='vendors_new'),
-#    path('vendor/<int:pk>', views.vendors_view, name='vendors_view'),
-    path('vendor/<int:pk>/edit', views.VendorUpdateView.as_view(), name='vendorUpdate'),
-#    path('vendor/<int:pk>/delete', views.vendors_delete, name='vendors_delete'),
+    path('vendor/new/', views.VendorCreateView.as_view(), name='vendorCreate'),
+#   path('vendor/<pk>/', views.VendorDetailView.as_view(), name='vendorDetail'),
+    path('vendor/<pk>/edit/', views.VendorUpdateView.as_view(), name='vendorUpdate'),
+    path('vendor/<pk>/delete/', views.VendorDeleteView.as_view(), name='vendorDelete'),
 ]
