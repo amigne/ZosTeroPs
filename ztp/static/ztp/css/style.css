@@ -42,7 +42,7 @@ body {
 }
 
 /* Forms */
-input[type=text], input[type=file], textarea {
+input[type=text], input[type=file], select, option, textarea {
     width: 100%;
 }
 textarea {
@@ -70,6 +70,11 @@ form .delete_confirm {
 }
 form .delete_button {
     text-align: center;
+}
+
+/* Form platform */
+.platform_description textarea {
+    height: 100px;
 }
 
 /* Form vendor */
@@ -115,6 +120,26 @@ table.table_update th {
     text-align: right;
 }
 
+/* Table platform list */
+table.table_list .platform_id { width: 40px!important; }
+table.table_list th.platform_id { text-align: center; }
+table.table_list td.platform_id { text-align: right; }
+table.table_list .platform_vendor { }
+table.table_list .platform_name { width: 30%; }
+table.table_list .platform_description { }
+table.table_list .platform_action { width: 50px!important; }
+table.table_list th.platform_action { text-align: center; }
+table.table_list th.platform_action a {
+    color: #fff;
+    text-decoration: none;
+}
+table.table_list td.platform_action { text-align: right; }
+table.table_list td.platform_action a {
+    color: #000;
+    text-decoration: none;
+}
+
+
 /* Table vendor list */
 table.table_list .vendor_id { width: 40px!important; }
 table.table_list th.vendor_id { text-align: center; }
@@ -132,6 +157,12 @@ table.table_list td.vendor_action a {
     color: #000;
     text-decoration: none;
 }
+
+/* Table platform update */
+table.table_update .platform_vendor { }
+table.table_update .platform_name { }
+table.table_update .platform_description { }
+table.table_update .platform_action { text-align: center; }
 
 /* Table vendor update */
 table.table_update .vendor_name { }

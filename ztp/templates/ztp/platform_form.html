@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content_title %}Platform {% if platform.id %}#{{ platform.id }} - Edit{% else %}- New{% endif %}{% endblock content_title %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% for error in form.non_field_errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        <table class="table_update">
+            <tbody>
+                <tr>
+                    {% with field=form.vendor %}
+                        <th class="platform_{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                        <td class="platform_{{ field.name }}">
+                            <select name="{{ field.name }}"
+                                    id="{{ field.id_for_label }}"
+                                   {% if field.errors %}class="has-error"{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                                {% for value, display in form.fields.vendor.choices %}
+                                    <option value="{{ value }}"{% if value|stringformat:'s' == field.value|stringformat:'s' %} selected{% endif %}>{{ display }}</option>
+                                {% endfor %}
+                            </select>
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}
+                        </td>
+                    {% endwith %}
+                </tr>
+
+                <tr>
+                    {% with field=form.name %}
+                        <th class="platform_{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                        <td class="platform_{{ field.name }}">
+                            <input type="text" name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.errors %}class="has-error"{% endif %}
+                                   placeholder="{{ field.label|lower }}"
+                                   {% if field.field.required %}required{% endif %}
+                                   {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                   {% if field.value %}value="{{ field.value }}"{% endif %}>
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}
+                        </td>
+                    {% endwith %}
+                </tr>
+                <tr>
+                    {% with field=form.description %}
+                        <th class="platform_{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                        <td class="platform_{{ field.name }}">
+                            <textarea name="{{ field.name }}"
+                                      id="{{ field.id_for_label }}"
+                                      {% if field.errors %}class="has-error"{% endif %}
+                                      placeholder="{{ field.label|lower }}"
+                                      {% if field.field.required %}required{% endif %}
+                                      {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                            >{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                        {% for error in field.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                        </td>
+                    {% endwith %}
+                </tr>
+                <tr>
+                    <td class="platform_action" colspan="2"><button type="submit">Update</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+{% endblock content %}

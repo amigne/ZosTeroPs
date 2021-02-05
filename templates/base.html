@@ -15,7 +15,7 @@
         <a href="#"{% if menuitem == 'ztpScript' %} class="active"{% endif %}>ZTP Scripts</a>
         <a href="#"{% if menuitem == 'configuration' %} class="active"{% endif %}>Configurations</a>
         <a href="#"{% if menuitem == 'firmware' %} class="active"{% endif %}>Firmwares</a>
-        <a href="#"{% if menuitem == 'platform' %} class="active"{% endif %}>Platforms</a>
+        <a href="{% url 'platformList' %}"{% if menuitem == 'platform' %} class="active"{% endif %}>Platforms</a>
         <a href="{% url 'vendorList' %}"{% if menuitem == 'vendor' %} class="active"{% endif %}>Vendors</a>
         <a href="#"{% if menuitem == 'log' %} class="active"{% endif %}>Logs</a>
     </nav>

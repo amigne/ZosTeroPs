@@ -14,8 +14,7 @@ class Platform(models.Model):
     vendor = models.ForeignKey(Vendor,
                                related_name='platforms',
                                on_delete=models.PROTECT)
-    name = models.CharField(max_length=50,
-                            unique=True)
+    name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
 
     def __str__(self):
