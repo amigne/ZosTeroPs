@@ -13,6 +13,75 @@ def home(request):
     return SimpleTemplateResponse('ztp/home.html',  {'menuitem': 'home'})
 
 
+def ztp_download(request, name):
+    try:
+        ztpScript = models.ZtpScript.objects.get(name=name)
+    except models.ZtpScript.DoesNotExist:
+        raise Http404('ZTP Script does not exist!')
+    return HttpResponse(ztpScript.template, content_type='text/plain')
+
+
+class ZtpCreateView(SuccessMessageMixin, CreateView):
+    model = models.ZtpScript
+    fields = [ 'name', 'accept_query_string', 'description', 'template' ]
+    context_object_name = 'ztpscript'
+    success_url = reverse_lazy('ztpList')
+
+    def get_context_data(self, **kwargs):
+        context = super(ZtpCreateView, self).get_context_data(**kwargs)
+        context['menuitem'] = 'ztpScript'
+        return context
+
+    def get_success_message(self, cleaned_data):
+        return f"ZTP script {cleaned_data['name']} successfully created!"
+
+
+class ZtpDeleteView(DeleteView):
+    model = models.ZtpScript
+    context_object_name = 'ztpscript'
+    success_url = reverse_lazy('ztpList')
+
+    def get_context_data(self, **kwargs):
+        context = super(ZtpDeleteView, self).get_context_data(**kwargs)
+        context['menuitem'] = 'ztpScript'
+        return context
+
+
+class ZtpDetailView(DetailView):
+    model = models.ZtpScript
+    context_object_name = 'ztpscript'
+
+    def get_context_data(self, **kwargs):
+        context = super(ZtpDetailView, self).get_context_data(**kwargs)
+        context['menuitem'] = 'ztpScript'
+        return context
+
+
+class ZtpListView(ListView):
+    model = models.ZtpScript
+    context_object_name = 'ztpscripts'
+
+    def get_context_data(self, **kwargs):
+        context = super(ZtpListView, self).get_context_data(**kwargs)
+        context['menuitem'] = 'ztpScript'
+        return context
+
+
+class ZtpUpdateView(SuccessMessageMixin, UpdateView):
+    model = models.ZtpScript
+    fields = [ 'name', 'accept_query_string', 'description', 'template' ]
+    context_object_name = 'ztpscript'
+    success_url = reverse_lazy('ztpList')
+
+    def get_context_data(self, **kwargs):
+        context = super(ZtpUpdateView, self).get_context_data(**kwargs)
+        context['menuitem'] = 'ztpScript'
+        return context
+
+    def get_success_message(self, cleaned_data):
+        return f"ZTP script {cleaned_data['name']} successfully updated!"
+
+
 def firmware_download(request, filename):
     try:
         p = models.Firmware.objects.get(file=filename)

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content_title %}ZTP Script #{{ ztpscript.id }} - Details{% endblock content_title %}
+
+{% block content %}
+    <table class="detail ztpscript">
+        <tbody>
+            <tr>
+                <th class="name">Name</th>
+                <td class="name">{{ ztpscript.name }}</td>
+            </tr>
+            <tr>
+                <th class="options">Options</th>
+                <td class="options">
+                    <input type="checkbox" id="id_accept_query_string"
+                           {% if ztpscript.accept_query_string %}checked{% endif %}
+                           disabled>
+                    <label for="id_accept_query_string">Accept query string</label>
+                </td>
+            </tr>
+            <tr>
+                <th class="description">Description</th>
+                <td class="description">{{ ztpscript.description }}</td>
+            </tr>
+            <tr>
+                <th class="template">Template</th>
+                <td class="template"><pre>{{ ztpscript.template }}</pre></td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock content %}

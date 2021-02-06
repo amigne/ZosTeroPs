@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block content_title %}ZTP scripts{% endblock content_title %}
+
+{% block content %}
+    <table class="table_list">
+        <thead>
+            <tr>
+                <th class="id">ID</th>
+                <th class="name">Name</th>
+                <th class="description">Description</th>
+                <th class="action"><a href="{% url 'ztpCreate' %}"><i class="far fa-plus-square"></i></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ztpscript in ztpscripts %}
+                <tr>
+                    <td class="id">{{ ztpscript.id }}</td>
+                    <td class="name"><a href="{% url 'ztpDetail' ztpscript.id %}">{{ ztpscript.name }}</a></td>
+                    <td class="description">{{ ztpscript.description }}</td>
+                    <td class="action">
+                        <a href="{% url 'ztpDelete' ztpscript.id %}"><i class="fas fa-trash"></i></a>&nbsp;&nbsp;
+                        <a href="{% url 'ztpUpdate' ztpscript.id %}"><i class="fas fa-edit"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

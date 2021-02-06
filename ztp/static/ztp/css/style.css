@@ -97,6 +97,18 @@ form .delete_button {
     text-align: center;
 }
 
+/* Form ZTP Scripts */
+.description textarea {
+    height: 100px;
+}
+.template textarea {
+    height: 550px;
+    background-color: black;
+    color: white;
+    font: 'Courier New', monospace;
+}
+
+
 /* Form firmware */
 .firmware_description textarea {
     height: 100px;
@@ -136,6 +148,43 @@ table.table_list th {
     color: #fff;
 }
 
+/* Table list items */
+table.table_list .id { width: 40px!important; }
+table.table_list th.id { text-align: center; }
+table.table_list td.id { text-align: right; }
+table.table_list .name { width: 30%; }
+table.table_list .name a {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+table.table_list .description { }
+table.table_list .action { width: 50px!important; }
+table.table_list th.action { text-align: center; }
+table.table_list th.action a {
+    color: #fff;
+    text-decoration: none;
+}
+table.table_list td.action { text-align: right; }
+table.table_list td.action a {
+    color: #000;
+    text-decoration: none;
+}
+
+/* Table detail */
+table.detail {
+    border-collapse: collapse;
+    width: 100%
+}
+table.detail th, table.detail td {
+    border: 0;
+    padding: 8px;
+}
+table.detail th {
+    vertical-align: top;
+    text-align: right;
+}
+
 /* Table update */
 table.table_update {
     border-collapse: collapse;
@@ -149,6 +198,17 @@ table.table_update th {
     vertical-align: top;
     text-align: right;
 }
+
+/* Table detail: ZTP Scripts */
+table.detail td.template pre {
+    background-color: black;
+    color: white;
+    width: 100%;
+    padding: 5px;
+    line-height: 1.2;
+    font-size: medium;
+}
+
 
 /* Table firmware list */
 table.table_list .firmware_id { width: 40px!important; }
@@ -210,6 +270,12 @@ table.table_list td.vendor_action a {
     color: #000;
     text-decoration: none;
 }
+
+/* Table update */
+table.table_update .firmware_vendor { }
+table.table_update .firmware_name { }
+table.table_update .firmware_description { }
+table.table_update .action { text-align: center; }
 
 /* Table firmware update */
 table.table_update .firmware_vendor { }

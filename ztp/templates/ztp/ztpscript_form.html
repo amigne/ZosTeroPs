@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content_title %}ZTP Script {% if ztpscript.id %}#{{ ztpscript.id }} - Edit{% else %}- New{% endif %}{% endblock content_title %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% for error in form.non_field_errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        <table class="table_update ztpscript">
+            <tbody>
+                <tr>
+                    {% with field=form.name %}
+                        <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                        <td class="{{ field.name }}">
+                            <input type="text" name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.errors %}class="has-error"{% endif %}
+                                   placeholder="{{ field.label|lower }}"
+                                   {% if field.field.required %}required{% endif %}
+                                   {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                   {% if field.value %}value="{{ field.value }}"{% endif %}>
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}
+                        </td>
+                    {% endwith %}
+                </tr>
+                <tr>
+                    <th class="options">Options</th>
+                    <td class="options">
+                        {% with field=form.accept_query_string %}
+                            <input type="checkbox" name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.errors %}class="has-error"{% endif %}
+                                   {% if field.value %}checked{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}
+                        {% endwith %}
+                    </td>
+                </tr>
+                <tr>
+                    {% with field=form.description %}
+                        <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                        <td class="{{ field.name }}">
+                            <textarea name="{{ field.name }}"
+                                      id="{{ field.id_for_label }}"
+                                      {% if field.errors %}class="has-error"{% endif %}
+                                      placeholder="{{ field.label|lower }}"
+                                      {% if field.field.required %}required{% endif %}
+                                      {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                            >{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                        {% for error in field.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                        </td>
+                    {% endwith %}
+                </tr>
+                <tr>
+                    {% with field=form.template %}
+                        <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                        <td class="{{ field.name }}">
+                            <textarea name="{{ field.name }}"
+                                      id="{{ field.id_for_label }}"
+                                      {% if field.errors %}class="has-error"{% endif %}
+                                      placeholder="{{ field.label|lower }}"
+                                      {% if field.field.required %}required{% endif %}
+                                      {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                            >{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                        {% for error in field.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                        </td>
+                    {% endwith %}
+                </tr>
+                <tr>
+                    <td class="action" colspan="2"><button type="submit">Update</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+{% endblock content %}

@@ -1,4 +1,5 @@
 from django.core.files.storage import FileSystemStorage
+from django.core.validators import RegexValidator
 from django.conf import settings
 from django.db import models
 from django.dispatch import receiver
@@ -87,3 +88,18 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
     if not old_file == new_file:
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)
+
+
+class ZtpScript(models.Model):
+    ztpNameValidator = RegexValidator(r'^[0-9a-zA-Z._-]+$', 'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
+
+    name = models.CharField(max_length=50,
+                            validators=[ztpNameValidator],
+                            unique=True)
+    accept_query_string = models.BooleanField(blank=False,
+                                              default=False)
+    template = models.TextField()
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
