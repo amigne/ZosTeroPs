@@ -5,6 +5,9 @@ from . import views
 
 
 urlpatterns = [
+    # Home
+    path('', views.home, name='home'),
+
     # Firmwares
     path('firmware/', views.FirmwareListView.as_view(), name='firmwareList'),
     path('firmware/new/', views.FirmwareCreateView.as_view(), name='firmwareCreate'),

@@ -1,11 +1,16 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import Http404, HttpResponse
+from django.template.response import SimpleTemplateResponse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from . import models
 
 import locale
+
+
+def home(request):
+    return SimpleTemplateResponse('ztp/home.html',  {'menuitem': 'home'})
 
 
 def firmware_download(request, filename):

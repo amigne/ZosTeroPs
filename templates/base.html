@@ -11,7 +11,7 @@
     {% block body_title %}<h3>ZosTeroPs</h3>{% endblock body_title %}
 
     <nav class="menu">
-        <a href="#"{% if menuitem == 'home' %} class="active"{% endif %}>Home</a>
+        <a href="{% url 'home' %}"{% if menuitem == 'home' %} class="active"{% endif %}>Home</a>
         <a href="#"{% if menuitem == 'ztpScript' %} class="active"{% endif %}>ZTP Scripts</a>
         <a href="#"{% if menuitem == 'configuration' %} class="active"{% endif %}>Configurations</a>
         <a href="{% url 'firmwareList' %}"{% if menuitem == 'firmware' %} class="active"{% endif %}>Firmwares</a>

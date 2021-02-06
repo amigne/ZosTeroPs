@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block content_title %}Home{% endblock content_title %}
+
+{% block content %}
+    <div class="home">
+        <p>ZosTeroPs manages the ZTP (Zero Touch Provisioning) of your network devices.</p>
+        <p>The system contains different parts that permit to customize the process depending
+            on the vendor and the platform of your network devices.</p>
+        <ul>
+            <li>
+                <a href="#">ZTP Scripts</a> (not implemented) collects your ZTP bootstrap scripts that are
+                first downloaded by the network devices. Multiple scripts can be defined
+                to support multiple platforms with different bootstrap conditions. All
+                scripts are text-based (not binary) that can define variable substitution.
+            </li>
+            <li>
+                <a href="#">Configurations</a> (not implemented) defines your configuration templates that
+                can be copied by the ZTP script to your device, if it supports this
+                possibility. Splitting the bootstrap and the configuration permits to have
+                a more generic bootstrap script and custom configurations for specific
+                platforms or for specific devices.
+            </li>
+            <li>
+                <a href="{% url 'firmwareList' %}">Firmwares</a> collects all the firmwares (softwares) that can
+                be downloaded by the managed devices.
+            </li>
+            <li>
+                <a href="{% url 'platformList' %}">Platforms</a> manages the categories of
+                the network devices of a given vendor.
+            </li>
+            <li>
+                <a href="{% url 'vendorList' %}">Vendors</a> manages the vendors of the
+                network devices.
+            </li>
+            <li>
+                <a href="#">Log</a> (not implemented) displays the logs of ZosTeroPs.
+            </li>
+        </ul>
+    </div>
+{% endblock content %}

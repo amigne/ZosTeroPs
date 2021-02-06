@@ -55,6 +55,17 @@ ul.messages li.success { color: forestgreen; }
     border-top: none;
 }
 
+/* Home */
+.home ul li {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+.home a {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
 /* Forms */
 input[type=text], input[type=file], select, option, textarea {
     width: 100%;
