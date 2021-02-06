@@ -1,5 +1,6 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import Http404, HttpResponse
+from django.template import Context, Template
 from django.template.response import SimpleTemplateResponse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
@@ -18,7 +19,18 @@ def ztp_download(request, name):
         ztpScript = models.ZtpScript.objects.get(name=name)
     except models.ZtpScript.DoesNotExist:
         raise Http404('ZTP Script does not exist!')
-    return HttpResponse(ztpScript.template, content_type='text/plain')
+
+    argument_context_dict = {}
+    if ztpScript.accept_query_string:
+        arguments = request.GET.dict()
+        for key in arguments.keys():
+            argument_context_dict[key] = arguments[key]
+
+    context_dict = {}
+    context_dict |= argument_context_dict
+
+    template = Template(ztpScript.template)
+    return HttpResponse(template.render(Context(context_dict)), content_type='text/plain')
 
 
 class ZtpCreateView(SuccessMessageMixin, CreateView):
