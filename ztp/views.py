@@ -1,8 +1,87 @@
+from django.contrib.messages.views import SuccessMessageMixin
+from django.http import Http404, HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import ListView
+from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-
 from . import models
+
+import locale
+
+
+def firmware_download(request, filename):
+    try:
+        p = models.Firmware.objects.get(file=filename)
+    except models.Firmware.DoesNotExist:
+        raise Http404('Firmware does not exist!')
+    return HttpResponse(p.file.open('rb'), content_type='application/octet-stream')
+
+
+class FirmwareCreateView(SuccessMessageMixin, CreateView):
+    model = models.Firmware
+    fields = [ 'platform', 'file', 'description' ]
+    context_object_name = 'firmware'
+    success_url = reverse_lazy('firmwareList')
+
+    def get_context_data(self, **kwargs):
+        context = super(FirmwareCreateView, self).get_context_data(**kwargs)
+        context['menuitem'] = 'firmware'
+        return context
+
+    def get_success_message(self, cleaned_data):
+        form = self.get_form()
+        instance = form.instance
+        locale.setlocale(locale.LC_ALL, '')
+        return f"Firmware {instance.file.name} successfully created! File size is {instance.filesize:n} bytes. MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
+
+
+class FirmwareDeleteView(DeleteView):
+    model = models.Firmware
+    context_object_name = 'firmware'
+    success_url = reverse_lazy('firmwareList')
+
+    def get_context_data(self, **kwargs):
+        context = super(FirmwareDeleteView, self).get_context_data(**kwargs)
+        context['menuitem'] = 'firmware'
+        return context
+
+
+class FirmwareDetailView(DetailView):
+    model = models.Firmware
+    context_object_name = 'firmware'
+
+    def get_context_data(self, **kwargs):
+        context = super(FirmwareDetailView, self).get_context_data(**kwargs)
+        context['menuitem'] = 'firmware'
+        return context
+
+
+class FirmwareListView(ListView):
+    model = models.Firmware
+    context_object_name = 'firmwares'
+
+    def get_context_data(self, **kwargs):
+        context = super(FirmwareListView, self).get_context_data(**kwargs)
+        context['menuitem'] = 'firmware'
+        return context
+
+
+class FirmwareUpdateView(SuccessMessageMixin, UpdateView):
+    model = models.Firmware
+    fields = [ 'platform', 'file', 'description' ]
+    context_object_name = 'firmware'
+    success_url = reverse_lazy('firmwareList')
+
+    def get_context_data(self, **kwargs):
+        context = super(FirmwareUpdateView, self).get_context_data(**kwargs)
+        context['menuitem'] = 'firmware'
+        return context
+
+    def get_success_message(self, cleaned_data):
+        form = self.get_form()
+        instance = form.instance
+        locale.setlocale(locale.LC_ALL, '')
+        return f"Firmware {instance.file.name} successfully modified! File size is {instance.filesize:n} bytes. MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
+
 
 
 class PlatformCreateView(CreateView):

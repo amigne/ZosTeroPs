@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block content_title %}Firmwares{% endblock content_title %}
+
+{% block content %}
+    <table class="table_list">
+        <thead>
+            <tr>
+                <th class="firmware_id">ID</th>
+                <th class="firmware_platform">Platform</th>
+                <th class="firmware_file">File</th>
+                <th class="firmware_description">Description</th>
+                <th class="firmware_action"><a href="{% url 'firmwareCreate' %}"><i class="far fa-plus-square"></i></a></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for firmware in firmwares %}
+                <tr>
+                    <td class="firmware_id">{{ firmware.id }}</td>
+                    <td class="firmware_platform">{{ firmware.platform.name }} ({{ firmware.platform.vendor.name }})</td>
+                    <td class="firmware_filename"><a href="{% url 'firmwareDetail' firmware.id %}">{{ firmware.file.name }}</a> <small>({{ firmware.file.size|intcomma }} bytes)</small></td>
+                    <td class="firmware_description">{{ firmware.description }}</td>
+                    <td class="firmware_action">
+                        <a href="{% url 'firmwareDelete' firmware.id %}"><i class="fas fa-trash"></i></a>&nbsp;&nbsp;
+                        <a href="{% url 'firmwareUpdate' firmware.id %}"><i class="fas fa-edit"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

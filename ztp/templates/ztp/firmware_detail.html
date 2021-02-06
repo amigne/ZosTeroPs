@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content_title %}Firmware #{{ firmware.id }} - Details{% endblock content_title %}
+
+{% block content %}
+    <table class="table_update">
+        <tbody>
+            <tr>
+                <th class="firmware_platform">Platform</th>
+                <td class="firmware_platform">{{ firmware.platform.name }} - {{ firmware.platform.vendor.name }}</td>
+            </tr>
+            <tr>
+                <th class="firmware_filename">Filename</th>
+                <td class="firmware_filename">{{ firmware.file.name }}</td>
+            </tr>
+            <tr>
+                <th class="firmware_filename">File size</th>
+                <td class="firmware_filename">{{ firmware.filesize }}</td>
+            </tr>
+            <tr>
+                <th class="firmware_filename">MD5 hash</th>
+                <td class="firmware_filename">{{ firmware.md5_hash }}</td>
+            </tr>
+            <tr>
+                <th class="firmware_filename">SHA512 hash</th>
+                <td class="firmware_filename">{{ firmware.sha512_hash }}</td>
+            </tr>
+            <tr>
+                <th class="firmware_url">Download URL</th>
+                <td class="firmware_url"><a href="{{ firmware.file.url }}">{{ firmware.file.url }}</a></td>
+            </tr>
+            <tr>
+                <th class="firmware_filename">Description</th>
+                <td class="firmware_filename">{{ firmware.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock content %}

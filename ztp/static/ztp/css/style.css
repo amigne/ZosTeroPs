@@ -34,6 +34,20 @@ body {
     background-color: skyblue;
 }
 
+/* Messages */
+ul.messages {
+    margin: 5px;
+    border: 1px solid #000;
+    list-style-type: none;
+    padding: 3px;
+}
+ul.messages li {
+    text-align: center;
+    margin: 0;
+    padding: 2px;
+}
+ul.messages li.success { color: forestgreen; }
+
 /* Content */
 .content {
     padding: 15px;
@@ -70,6 +84,11 @@ form .delete_confirm {
 }
 form .delete_button {
     text-align: center;
+}
+
+/* Form firmware */
+.firmware_description textarea {
+    height: 100px;
 }
 
 /* Form platform */
@@ -120,6 +139,30 @@ table.table_update th {
     text-align: right;
 }
 
+/* Table firmware list */
+table.table_list .firmware_id { width: 40px!important; }
+table.table_list th.firmware_id { text-align: center; }
+table.table_list td.firmware_id { text-align: right; }
+table.table_list .firmware_vendor { }
+table.table_list .firmware_filename { width: 30%; }
+table.table_list .firmware_filename a {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+table.table_list .firmware_description { }
+table.table_list .firmware_action { width: 50px!important; }
+table.table_list th.firmware_action { text-align: center; }
+table.table_list th.firmware_action a {
+    color: #fff;
+    text-decoration: none;
+}
+table.table_list td.firmware_action { text-align: right; }
+table.table_list td.firmware_action a {
+    color: #000;
+    text-decoration: none;
+}
+
 /* Table platform list */
 table.table_list .platform_id { width: 40px!important; }
 table.table_list th.platform_id { text-align: center; }
@@ -139,7 +182,6 @@ table.table_list td.platform_action a {
     text-decoration: none;
 }
 
-
 /* Table vendor list */
 table.table_list .vendor_id { width: 40px!important; }
 table.table_list th.vendor_id { text-align: center; }
@@ -157,6 +199,13 @@ table.table_list td.vendor_action a {
     color: #000;
     text-decoration: none;
 }
+
+/* Table firmware update */
+table.table_update .firmware_vendor { }
+table.table_update .firmware_name { }
+table.table_update .firmware_description { }
+table.table_update .firmware_action { text-align: center; }
+
 
 /* Table platform update */
 table.table_update .platform_vendor { }
