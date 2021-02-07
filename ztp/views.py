@@ -1,55 +1,93 @@
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db import transaction
 from django.http import Http404, HttpResponse
 from django.template import Context, Template
 from django.template.response import SimpleTemplateResponse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from . import models
+
+from .forms import ZtpScriptForm
+from .formset import ZtpParameterFormSet
+from .models import Firmware, Platform, Vendor, ZtpScript
 
 import locale
 
 
 def home(request):
-    return SimpleTemplateResponse('ztp/home.html',  {'menuitem': 'home'})
+    return SimpleTemplateResponse('ztp/home.html', {'menuitem': 'home'})
 
 
 def ztp_download(request, name):
     try:
-        ztpScript = models.ZtpScript.objects.get(name=name)
-    except models.ZtpScript.DoesNotExist:
+        ztp_script = ZtpScript.objects.get(name=name)
+    except ZtpScript.DoesNotExist:
         raise Http404('ZTP Script does not exist!')
 
-    argument_context_dict = {}
-    if ztpScript.accept_query_string:
+    if not ztp_script.render_template:
+        return HttpResponse(ztp_script.template, content_type='text/plain')
+
+    query_string_context_dict = {}
+    if ztp_script.accept_query_string:
         arguments = request.GET.dict()
         for key in arguments.keys():
-            argument_context_dict[key] = arguments[key]
+            query_string_context_dict[key] = arguments[key]
 
-    context_dict = {}
-    context_dict |= argument_context_dict
+    parameters_context_dict = {}
+    if ztp_script.use_parameters:
+        for param in ztp_script.parameters.values():
+            parameters_context_dict[param['key']] = param['value']
 
-    template = Template(ztpScript.template)
+    if ztp_script.priority_query_string_over_arguments:
+        context_dict = parameters_context_dict | query_string_context_dict
+    else:
+        context_dict = query_string_context_dict | parameters_context_dict
+
+    template = Template(ztp_script.template)
     return HttpResponse(template.render(Context(context_dict)), content_type='text/plain')
 
 
-class ZtpCreateView(SuccessMessageMixin, CreateView):
-    model = models.ZtpScript
-    fields = [ 'name', 'accept_query_string', 'description', 'template' ]
-    context_object_name = 'ztpscript'
-    success_url = reverse_lazy('ztpList')
+class ZtpCreateView(CreateView):
+    model = ZtpScript
+    template_name = 'ztp/ztpscript_form.html'
+    form_class = ZtpScriptForm
+    success_url = None
 
     def get_context_data(self, **kwargs):
-        context = super(ZtpCreateView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'ztpScript'
-        return context
+        data = super(ZtpCreateView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data['formset'] = ZtpParameterFormSet(self.request.POST)
+        else:
+            data['formset'] = ZtpParameterFormSet()
+        return data
 
-    def get_success_message(self, cleaned_data):
-        return f"ZTP script {cleaned_data['name']} successfully created!"
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        context = self.get_context_data()
+
+        form = self.get_form()
+        formset = context['formset']
+        if form.is_valid() and formset.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            with transaction.atomic():
+                self.object = form.save()
+                formset.instance = self.object
+                formset.save()
+        return super(ZtpCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
 
 
 class ZtpDeleteView(DeleteView):
-    model = models.ZtpScript
+    model = ZtpScript
     context_object_name = 'ztpscript'
     success_url = reverse_lazy('ztpList')
 
@@ -60,7 +98,7 @@ class ZtpDeleteView(DeleteView):
 
 
 class ZtpDetailView(DetailView):
-    model = models.ZtpScript
+    model = ZtpScript
     context_object_name = 'ztpscript'
 
     def get_context_data(self, **kwargs):
@@ -70,7 +108,7 @@ class ZtpDetailView(DetailView):
 
 
 class ZtpListView(ListView):
-    model = models.ZtpScript
+    model = ZtpScript
     context_object_name = 'ztpscripts'
 
     def get_context_data(self, **kwargs):
@@ -79,32 +117,56 @@ class ZtpListView(ListView):
         return context
 
 
-class ZtpUpdateView(SuccessMessageMixin, UpdateView):
-    model = models.ZtpScript
-    fields = [ 'name', 'accept_query_string', 'description', 'template' ]
-    context_object_name = 'ztpscript'
-    success_url = reverse_lazy('ztpList')
+class ZtpUpdateView(UpdateView):
+    model = ZtpScript
+    template_name = 'ztp/ztpscript_form.html'
+    form_class = ZtpScriptForm
+    success_url = None
 
     def get_context_data(self, **kwargs):
-        context = super(ZtpUpdateView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'ztpScript'
-        return context
+        data = super(ZtpUpdateView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data['formset'] = ZtpParameterFormSet(self.request.POST, instance=self.object)
+        else:
+            data['formset'] = ZtpParameterFormSet(instance=self.object)
+        return data
 
-    def get_success_message(self, cleaned_data):
-        return f"ZTP script {cleaned_data['name']} successfully updated!"
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data()
+
+        form = self.get_form()
+        formset = context['formset']
+        if form.is_valid() and formset.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            with transaction.atomic():
+                self.object = form.save()
+                formset.instance = self.object
+                formset.save()
+        return super(ZtpUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
 
 
 def firmware_download(request, filename):
     try:
-        p = models.Firmware.objects.get(file=filename)
-    except models.Firmware.DoesNotExist:
+        p = Firmware.objects.get(file=filename)
+    except Firmware.DoesNotExist:
         raise Http404('Firmware does not exist!')
     return HttpResponse(p.file.open('rb'), content_type='application/octet-stream')
 
 
 class FirmwareCreateView(SuccessMessageMixin, CreateView):
-    model = models.Firmware
-    fields = [ 'platform', 'file', 'description' ]
+    model = Firmware
+    fields = ['platform', 'file', 'description']
     context_object_name = 'firmware'
     success_url = reverse_lazy('firmwareList')
 
@@ -117,11 +179,12 @@ class FirmwareCreateView(SuccessMessageMixin, CreateView):
         form = self.get_form()
         instance = form.instance
         locale.setlocale(locale.LC_ALL, '')
-        return f"Firmware {instance.file.name} successfully created! File size is {instance.filesize:n} bytes. MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
+        return f"Firmware {instance.file.name} successfully created! File size is {instance.filesize:n} bytes." \
+               f" MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
 
 
 class FirmwareDeleteView(DeleteView):
-    model = models.Firmware
+    model = Firmware
     context_object_name = 'firmware'
     success_url = reverse_lazy('firmwareList')
 
@@ -132,7 +195,7 @@ class FirmwareDeleteView(DeleteView):
 
 
 class FirmwareDetailView(DetailView):
-    model = models.Firmware
+    model = Firmware
     context_object_name = 'firmware'
 
     def get_context_data(self, **kwargs):
@@ -142,7 +205,7 @@ class FirmwareDetailView(DetailView):
 
 
 class FirmwareListView(ListView):
-    model = models.Firmware
+    model = Firmware
     context_object_name = 'firmwares'
 
     def get_context_data(self, **kwargs):
@@ -152,8 +215,8 @@ class FirmwareListView(ListView):
 
 
 class FirmwareUpdateView(SuccessMessageMixin, UpdateView):
-    model = models.Firmware
-    fields = [ 'platform', 'file', 'description' ]
+    model = Firmware
+    fields = ['platform', 'file', 'description']
     context_object_name = 'firmware'
     success_url = reverse_lazy('firmwareList')
 
@@ -166,13 +229,13 @@ class FirmwareUpdateView(SuccessMessageMixin, UpdateView):
         form = self.get_form()
         instance = form.instance
         locale.setlocale(locale.LC_ALL, '')
-        return f"Firmware {instance.file.name} successfully modified! File size is {instance.filesize:n} bytes. MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
-
+        return f"Firmware {instance.file.name} successfully modified! File size is {instance.filesize:n} bytes. " \
+               f"MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
 
 
 class PlatformCreateView(CreateView):
-    model = models.Platform
-    fields = [ 'vendor', 'name', 'description' ]
+    model = Platform
+    fields = ['vendor', 'name', 'description']
     context_object_name = 'platform'
     success_url = reverse_lazy('platformList')
 
@@ -183,7 +246,7 @@ class PlatformCreateView(CreateView):
 
 
 class PlatformDeleteView(DeleteView):
-    model = models.Platform
+    model = Platform
     context_object_name = 'platform'
     success_url = reverse_lazy('platformList')
 
@@ -194,7 +257,7 @@ class PlatformDeleteView(DeleteView):
 
 
 class PlatformListView(ListView):
-    model = models.Platform
+    model = Platform
     context_object_name = 'platforms'
 
     def get_context_data(self, **kwargs):
@@ -204,8 +267,8 @@ class PlatformListView(ListView):
 
 
 class PlatformUpdateView(UpdateView):
-    model = models.Platform
-    fields = [ 'vendor', 'name', 'description' ]
+    model = Platform
+    fields = ['vendor', 'name', 'description']
     context_object_name = 'platform'
     success_url = reverse_lazy('platformList')
 
@@ -216,8 +279,8 @@ class PlatformUpdateView(UpdateView):
 
 
 class VendorCreateView(CreateView):
-    model = models.Vendor
-    fields = [ 'name', 'description' ]
+    model = Vendor
+    fields = ['name', 'description']
     context_object_name = 'vendor'
     success_url = reverse_lazy('vendorList')
 
@@ -228,7 +291,7 @@ class VendorCreateView(CreateView):
 
 
 class VendorDeleteView(DeleteView):
-    model = models.Vendor
+    model = Vendor
     context_object_name = 'vendor'
     success_url = reverse_lazy('vendorList')
 
@@ -239,7 +302,7 @@ class VendorDeleteView(DeleteView):
 
 
 class VendorListView(ListView):
-    model = models.Vendor
+    model = Vendor
     context_object_name = 'vendors'
 
     def get_context_data(self, **kwargs):
@@ -249,8 +312,8 @@ class VendorListView(ListView):
 
 
 class VendorUpdateView(UpdateView):
-    model = models.Vendor
-    fields = [ 'name', 'description' ]
+    model = Vendor
+    fields = ['name', 'description']
     context_object_name = 'vendor'
     success_url = reverse_lazy('vendorList')
 

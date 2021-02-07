@@ -1,14 +1,19 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content_title %}ZTP Script {% if ztpscript.id %}#{{ ztpscript.id }} - Edit{% else %}- New{% endif %}{% endblock content_title %}
 
 {% block content %}
     <form method="post">
         {% csrf_token %}
+        {{ formset.management_form }}
         {% for error in form.non_field_errors %}
             <p class="error">{{ error }}</p>
         {% endfor %}
-        <table class="table_update ztpscript">
+        {% for error in formset.non_form_errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        <table class="update ztpscript">
             <tbody>
                 <tr>
                     {% with field=form.name %}
@@ -30,7 +35,43 @@
                 <tr>
                     <th class="options">Options</th>
                     <td class="options">
+                        {% with field=form.render_template %}
+                            <input type="checkbox" name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.errors %}class="has-error"{% endif %}
+                                   {% if field.value %}checked{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}
+                        {% endwith %}
+                        <br />
+                        {% with field=form.use_parameters %}
+                            <input type="checkbox" name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.errors %}class="has-error"{% endif %}
+                                   {% if field.value %}checked{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}
+                        {% endwith %}
+                        <br />
                         {% with field=form.accept_query_string %}
+                            <input type="checkbox" name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.errors %}class="has-error"{% endif %}
+                                   {% if field.value %}checked{% endif %}
+                                   {% if field.field.required %}required{% endif %}>
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}
+                        {% endwith %}
+                        <br />
+                        {% with field=form.priority_query_string_over_arguments %}
                             <input type="checkbox" name="{{ field.name }}"
                                    id="{{ field.id_for_label }}"
                                    {% if field.errors %}class="has-error"{% endif %}
@@ -61,6 +102,67 @@
                     {% endwith %}
                 </tr>
                 <tr>
+                    <th class="parameters">Parameters</th>
+                    <td class="parameters">
+                        <fieldset>
+                            <table class="parameters">
+                                <thead>
+                                    <tr>
+                                        <th>Key</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for parameter in formset %}
+                                        <tr class="link-formset">
+                                            <th>
+                                                {% with field=parameter.id %}
+                                                    <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                           id="{{ field.id_for_label }}">
+                                                        {% for error in field.errors %}
+                                                            <p class="field-error">{{ error }}</p>
+                                                        {% endfor %}
+                                                {% endwith %}
+                                                {% with field=parameter.key %}
+                                                    <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                    <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                           {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                                           id="{{ field.id_for_label }}">
+                                                        {% for error in field.errors %}
+                                                            <p class="field-error">{{ error }}</p>
+                                                        {% endfor %}
+                                                {% endwith %}
+                                            </th>
+                                            <td>
+                                                {% with field=parameter.value %}
+                                                    <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                    <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                           {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                                           id="{{ field.id_for_label }}">
+                                                        {% for error in field.errors %}
+                                                            <p class="field-error">{{ error }}</p>
+                                                        {% endfor %}
+                                                {% endwith %}
+                                                {% with field=parameter.DELETE %}
+                                                    <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                    <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                           id="{{ field.id_for_label }}">
+                                                {% endwith %}
+
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </td>
+                </tr>
+                <tr>
                     {% with field=form.template %}
                         <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
                         <td class="{{ field.name }}">
@@ -77,10 +179,40 @@
                         </td>
                     {% endwith %}
                 </tr>
-                <tr>
-                    <td class="action" colspan="2"><button type="submit">Update</button></td>
-                </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td class="action" colspan="2"><button type="submit">{% if ztpscript.id %}Update{% else %}Create{% endif %}</button></td>
+                </tr>
+            </tfoot>
         </table>
     </form>
 {% endblock content %}
+
+{% block js_xtra %}
+    <script src="{% static "ztp/js/jquery.formset.js" %}"></script>
+    <script>
+        $.fn.formset.defaults = {
+            prefix: 'parameters',            // The form prefix for your django formset
+            formTemplate: null,              // The jQuery selection cloned to generate new form instances
+            addText: 'add another',          // Text for the add link
+            deleteText: 'remove',            // Text for the delete link
+            addContainerClass: null,         // Container CSS class for the add link
+            deleteContainerClass: null,      // Container CSS class for the delete link
+            addCssClass: 'add-row',          // CSS class applied to the add link
+            deleteCssClass: 'delete-row',    // CSS class applied to the delete link
+            formCssClass: 'dynamic-form',    // CSS class applied to each form in a formset
+            extraClasses: [],                // Additional CSS classes, which will be applied to each form in turn
+            keepFieldValues: '',             // jQuery selector for fields whose values should be kept when the form is cloned
+            added: null,                     // Function called each time a new form is added
+            removed: null,                   // Function called each time a form is deleted
+            hideLastAddForm: false           // When set to true, hide last empty add form (becomes visible when clicking on add button)
+        };
+        $(function() {
+            $('.link-formset').formset({
+                addText: 'Add Parameter',
+                deleteText: 'Remove Parameter'
+            });
+        });
+    </script>
+{% endblock js_xtra %}

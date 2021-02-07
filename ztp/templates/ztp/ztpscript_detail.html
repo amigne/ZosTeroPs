@@ -12,12 +12,48 @@
             <tr>
                 <th class="options">Options</th>
                 <td class="options">
+                    <input type="checkbox" id="id_render_template"
+                           {% if ztpscript.render_template %}checked{% endif %}
+                           disabled>
+                    <label for="id_render_template">Render template</label><br/>
+                    <input type="checkbox" id="id_use_parameters"
+                           {% if ztpscript.use_parameters %}checked{% endif %}
+                           disabled>
+                    <label for="id_use_parameters">Use parameters</label><br/>
                     <input type="checkbox" id="id_accept_query_string"
                            {% if ztpscript.accept_query_string %}checked{% endif %}
                            disabled>
-                    <label for="id_accept_query_string">Accept query string</label>
+                    <label for="id_accept_query_string">Accept query string</label><br/>
+                    <input type="checkbox" id="id_priority_query_string_over_arguments"
+                           {% if ztpscript.priority_query_string_over_arguments %}checked{% endif %}
+                           disabled>
+                    <label for="id_priority_query_string_over_arguments">Priority query string over arguments</label>
                 </td>
             </tr>
+            <tr>
+                <th class="parameters">Parameters</th>
+                <td class="parameters">
+                    {% if ztpscript.parameters %}
+                        <table class="parameters">
+                            <thead>
+                                <tr>
+                                    <th class="key">Key</th>
+                                    <th class="value">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for param in ztpscript.parameters.all %}
+                                    <tr>
+                                        <th class="key"> &#x7b;&#x7b; {{ param.key }} &#x7d;&#x7d;</th>
+                                        <td class="value">{{ param.value }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </td>
+            </tr>
+
             <tr>
                 <th class="description">Description</th>
                 <td class="description">{{ ztpscript.description }}</td>

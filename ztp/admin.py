@@ -1,5 +1,16 @@
 from django.contrib import admin
-from .models import Firmware, Platform, Vendor
+from .models import Firmware, Platform, Vendor, ZtpParameter, ZtpScript
+
+
+@admin.register(ZtpScript)
+class ZtpScriptAdmin(admin.ModelAdmin):
+    list_display = ['name', 'render_template', 'use_parameters',
+                    'accept_query_string', 'priority_query_string_over_arguments']
+
+
+@admin.register(ZtpParameter)
+class ZtpParameterAdmin(admin.ModelAdmin):
+    list_display = ['ztpScript', 'key', 'value']
 
 
 @admin.register(Vendor)

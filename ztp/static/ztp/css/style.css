@@ -105,7 +105,7 @@ form .delete_button {
     height: 550px;
     background-color: black;
     color: white;
-    font: 'Courier New', monospace;
+    font-family: 'Courier New', monospace;
 }
 
 
@@ -185,7 +185,7 @@ table.detail th {
     text-align: right;
 }
 
-/* Table update */
+/* Table update (legacy) */
 table.table_update {
     border-collapse: collapse;
     width: 100%;
@@ -199,7 +199,35 @@ table.table_update th {
     text-align: right;
 }
 
+/* Table update (new) */
+table.update {
+    border-collapse: collapse;
+    width: 100%;
+}
+table.update th, table.update td {
+    border: 0;
+    padding: 8px;
+}
+table.update th {
+    vertical-align: top;
+    text-align: right;
+}
+
+table.update tfoot td {
+    text-align: center;
+}
+
+
 /* Table detail: ZTP Scripts */
+table.detail table.parameters th.key {
+    text-align: right;
+}
+table.detail table.parameters tbody th,
+table.detail table.parameters tbody td {
+    font-weight: normal;
+    font-family: 'Courier New', monospace;
+}
+
 table.detail td.template pre {
     background-color: black;
     color: white;
@@ -207,6 +235,22 @@ table.detail td.template pre {
     padding: 5px;
     line-height: 1.2;
     font-size: medium;
+}
+
+/* Table parameters */
+table.parameters {
+    width: 100%;
+}
+
+table.parameters th {
+    width: 50%;
+    text-align: left;
+}
+
+table.parameters td a {
+    text-decoration: none;
+    font-size: small;
+    color: navy;
 }
 
 

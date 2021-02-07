@@ -2,6 +2,8 @@ from django.core.files.storage import FileSystemStorage
 from django.core.validators import RegexValidator
 from django.conf import settings
 from django.db import models
+from django.db.models.fields import (AutoFieldMixin, AutoFieldMeta,
+                       IntegerField)
 from django.dispatch import receiver
 
 import hashlib
@@ -96,10 +98,35 @@ class ZtpScript(models.Model):
     name = models.CharField(max_length=50,
                             validators=[ztpNameValidator],
                             unique=True)
+    render_template = models.BooleanField(blank=False,
+                                          default=True)
+    use_parameters = models.BooleanField(blank=False,
+                                         default=True)
     accept_query_string = models.BooleanField(blank=False,
                                               default=False)
+    priority_query_string_over_arguments = models.BooleanField(blank=False,
+                                                               default=False)
     template = models.TextField()
     description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
+
+
+class ZtpParameter(models.Model):
+    ztpParameterNameValidator = RegexValidator(r'^[a-zA-Z_][0-9a-zA-Z._-]*$', 'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
+
+    ztpScript = models.ForeignKey(ZtpScript,
+                                  related_name='parameters',
+                                  on_delete=models.CASCADE)
+    key = models.CharField(max_length=50,
+                           blank=False,
+                           validators=[ztpParameterNameValidator])
+    value = models.CharField(max_length=200,
+                             blank=True)
+
+    def __str__(self):
+        return self.value
+
+    class Meta:
+        unique_together = ('ztpScript', 'key',)
