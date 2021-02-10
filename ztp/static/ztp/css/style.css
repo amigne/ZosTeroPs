@@ -247,13 +247,6 @@ table.parameters th {
     text-align: left;
 }
 
-table.parameters td a {
-    text-decoration: none;
-    font-size: small;
-    color: navy;
-}
-
-
 /* Table firmware list */
 table.table_list .firmware_id { width: 40px!important; }
 table.table_list th.firmware_id { text-align: center; }
@@ -339,25 +332,27 @@ table.table_update .vendor_name { }
 table.table_update .vendor_description { }
 table.table_update .vendor_action { text-align: center; }
 
-
-
-
-
-
-.tabmain {
-    max-height: calc(100vh - 265px);
-    overflow-y: auto;
-    margin-bottom: 15px;
+fieldset {
+    border: none;
+}
+fieldset a {
+    text-decoration: none;
+    font-size: small;
+    color: navy;
 }
 
-
-
-
-
-
-.box {
-    background-color: #eee;
-    border: 1px solid #ddd;
+.link-formset {
+    margin: 5px;
+    border: 2px solid #999999;
     padding: 5px;
+}
+
+.config_parameter_label {
+    display: block;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size: small;
+    font-weight: bold;
+    color: #999999;
 }
 

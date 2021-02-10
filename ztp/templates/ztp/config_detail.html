@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content_title %}Configuration #{{ config.id }} - Details{% endblock content_title %}
+
+{% block content %}
+    <table class="detail config">
+        <tbody>
+            <tr>
+                <th class="name">Name</th>
+                <td class="name">{{ config.name }}</td>
+            </tr>
+            <tr>
+                <th class="description">Description</th>
+                <td class="description">{{ config.description }}</td>
+            </tr>
+            <tr>
+                <th class="parameters">Parameters</th>
+                <td class="parameters">
+                    <fieldset>
+                        {% for param in config.parameters.all %}
+                            <div class="link-formset">
+                                <div class="name">{{ param.name }}</div>
+                                <div class="data">
+                                    <input type="hidden" id="data-{{ param.name }}" value="{{ param.data }}" />
+                                    <div id="data-{{ param.name }}-jexcel" class="jexcel_instance"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </fieldset>
+                </td>
+            </tr>
+            <tr>
+                <th class="template">Template</th>
+                <td class="template"><pre>{{ config.template }}</pre></td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock content %}
+
+
+{% block css_xtra %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jexcel/4.5.2/jexcel.min.css" integrity="sha512-WB/kEaOfg0GNR4kgcutxGokTJwOHScl+1IWlUwobvYi8USQ2ML9mn3794NPSpInbVc6ISnUM6kXZq7hg6Vk1vg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static "ztp/css/jsuites.css" %}" type="text/css" />
+{% endblock css_xtra %}
+
+{% block js_xtra %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jexcel/4.5.2/jexcel.min.js" integrity="sha512-wMMvCzGFoMkqblq/fcXTGli56kJQGAXsP6c2oriVYpzjXC/g6JRlvJe7zVoQZsOadgxECkr5tf4DIaJjofYGlA==" crossorigin="anonymous"></script>
+    <script src="{% static "ztp/js/jsuites.js" %}"></script>
+    <script>
+        function update_jexcel_first_column_header(jexcel_obj, title) {
+            if (title !== '') {
+                jexcel_obj.setHeader(0, title);
+            }
+        }
+
+        function load_jexcel_data(stylesheet_id) {
+            let data = $('#' + stylesheet_id.replace(/-jexcel$/, ''));
+
+            let data_value = data.val();
+            if (data_value === '') {
+                data_value = '{"columns":[{"width":150},{"width":150}],"data":[["",""],["",""]]}';
+            }
+
+            options = JSON.parse(data_value);
+            options['updateTable'] = function(el, cell, x, y, source, value, id) {
+                cell.classList.add('readonly');
+            };
+
+            return jexcel_obj = jexcel(document.getElementById(stylesheet_id), options);
+        }
+    </script>
+    <script>
+        $(function () {
+            $('.jexcel_instance').each(function(index, el) {
+                jexcel_obj = load_jexcel_data(el.id);
+            });
+        })
+    </script>
+{% endblock js_xtra %}

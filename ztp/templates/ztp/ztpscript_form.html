@@ -124,7 +124,7 @@
                                                             <p class="field-error">{{ error }}</p>
                                                         {% endfor %}
                                                 {% endwith %}
-                                                {% with field=parameter.key %}
+                                                {% with field=parameter.name %}
                                                     <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
                                                     <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
                                                            {% if field.value %}value="{{ field.value }}"{% endif %}
@@ -190,24 +190,9 @@
 {% endblock content %}
 
 {% block js_xtra %}
-    <script src="{% static "ztp/js/jquery.formset.js" %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.min.js" integrity="sha512-ltwjKsDTo3hW/wV66ZaEkf2wOAFxmg7rWM76J8kOcYKLSKy44WBYO/BFaNNH3NGDS8BSz3meB9wtSnm41oL+pA==" crossorigin="anonymous"></script>
     <script>
-        $.fn.formset.defaults = {
-            prefix: 'parameters',            // The form prefix for your django formset
-            formTemplate: null,              // The jQuery selection cloned to generate new form instances
-            addText: 'add another',          // Text for the add link
-            deleteText: 'remove',            // Text for the delete link
-            addContainerClass: null,         // Container CSS class for the add link
-            deleteContainerClass: null,      // Container CSS class for the delete link
-            addCssClass: 'add-row',          // CSS class applied to the add link
-            deleteCssClass: 'delete-row',    // CSS class applied to the delete link
-            formCssClass: 'dynamic-form',    // CSS class applied to each form in a formset
-            extraClasses: [],                // Additional CSS classes, which will be applied to each form in turn
-            keepFieldValues: '',             // jQuery selector for fields whose values should be kept when the form is cloned
-            added: null,                     // Function called each time a new form is added
-            removed: null,                   // Function called each time a form is deleted
-            hideLastAddForm: false           // When set to true, hide last empty add form (becomes visible when clicking on add button)
-        };
+        $.fn.formset.defaults['prefix'] = 'parameters';
         $(function() {
             $('.link-formset').formset({
                 addText: 'Add Parameter',

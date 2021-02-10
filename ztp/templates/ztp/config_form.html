@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content_title %}Configuration {% if config.id %}#{{ config.id }} - Edit{% else %}- New{% endif %}{% endblock content_title %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% for error in form.non_field_errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        {% for error in formset.non_form_errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        <table class="update config">
+            <tbody>
+                <tr>
+                    {% with field=form.name %}
+                        <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                        <td class="{{ field.name }}">
+                            <input type="text" name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.errors %}class="has-error"{% endif %}
+                                   placeholder="{{ field.label|lower }}"
+                                   {% if field.field.required %}required{% endif %}
+                                   {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                   {% if field.value %}value="{{ field.value }}"{% endif %}>
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}
+                        </td>
+                    {% endwith %}
+                </tr>
+                <tr>
+                    {% with field=form.description %}
+                        <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                        <td class="{{ field.name }}">
+                            <textarea name="{{ field.name }}"
+                                      id="{{ field.id_for_label }}"
+                                      {% if field.errors %}class="has-error"{% endif %}
+                                      placeholder="{{ field.label|lower }}"
+                                      {% if field.field.required %}required{% endif %}
+                                      {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                            >{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                        {% for error in field.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                        </td>
+                    {% endwith %}
+                </tr>
+                <tr>
+                    <th class="parameters">Parameters</th>
+                    <td class="parameters">
+                        <fieldset>
+                            {% for parameter in formset %}
+                                <div class="link-formset">
+                                    {% with field=parameter.id %}
+                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                               {% if field.value %}value="{{ field.value }}"{% endif %}
+                                               id="{{ field.id_for_label }}">
+                                    {% endwith %}
+
+                                    {% with field=parameter.name %}
+                                        <label for="{{ field.id_for_label }}" class="config_parameter_label">{{ field.label }}</label>
+                                        <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
+                                               {% if field.value %}value="{{ field.value }}"{% endif %}
+                                               {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                               id="{{ field.id_for_label }}">
+                                        {% for error in field.errors %}
+                                            <p class="field-error">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endwith %}
+
+                                    {% with field=parameter.data %}
+                                        <label for="{{ field.id_for_label }}" class="config_parameter_label">{{ field.label }}</label>
+                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                               {% if field.value %}value="{{ field.value }}"{% endif %}
+                                               id="{{ field.id_for_label }}">
+                                        <div id="{{ field.id_for_label }}-jexcel" class="jexcel_instance"></div>
+                                        {% for error in field.errors %}
+                                            <p class="field-error">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endwith %}
+
+                                    {% with field=parameter.DELETE %}
+                                        <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                               {% if field.value %}value="{{ field.value }}"{% endif %}
+                                               id="{{ field.id_for_label }}">
+                                    {% endwith %}
+                                </div>
+                            {% endfor %}
+                        </fieldset>
+                    </td>
+                </tr>
+
+                <tr>
+                    {% with field=form.template %}
+                        <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                        <td class="{{ field.name }}">
+                            <textarea name="{{ field.name }}"
+                                      id="{{ field.id_for_label }}"
+                                      {% if field.errors %}class="has-error"{% endif %}
+                                      placeholder="{{ field.label|lower }}"
+                                      {% if field.field.required %}required{% endif %}
+                                      {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                            >{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                        {% for error in field.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+                        </td>
+                    {% endwith %}
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="action" colspan="2"><button type="submit">{% if config.id %}Update{% else %}Create{% endif %}</button></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+{% endblock content %}
+
+{% block css_xtra %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jexcel/4.5.2/jexcel.min.css" integrity="sha512-WB/kEaOfg0GNR4kgcutxGokTJwOHScl+1IWlUwobvYi8USQ2ML9mn3794NPSpInbVc6ISnUM6kXZq7hg6Vk1vg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static "ztp/css/jsuites.css" %}" type="text/css" />
+{% endblock css_xtra %}
+
+{% block js_xtra %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jexcel/4.5.2/jexcel.min.js" integrity="sha512-wMMvCzGFoMkqblq/fcXTGli56kJQGAXsP6c2oriVYpzjXC/g6JRlvJe7zVoQZsOadgxECkr5tf4DIaJjofYGlA==" crossorigin="anonymous"></script>
+    <script src="{% static "ztp/js/jsuites.js" %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.min.js" integrity="sha512-ltwjKsDTo3hW/wV66ZaEkf2wOAFxmg7rWM76J8kOcYKLSKy44WBYO/BFaNNH3NGDS8BSz3meB9wtSnm41oL+pA==" crossorigin="anonymous"></script>
+    <script>
+        function onElementInserted(containerSelector, elementSelector, callback) {
+            let onMutationsObserved = function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        let elements = $(mutation.addedNodes).find(elementSelector);
+                        for (let i = 0, len = elements.length; i < len; ++i) {
+                            callback(elements[i]);
+                        }
+                    }
+                });
+            };
+
+            let target = $(containerSelector)[0];
+            let config = { childList: true, subtree: true };
+            let MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+            let observer = new MutationObserver(onMutationsObserved);
+            observer.observe(target, config);
+        }
+    </script>
+    <script>
+        function update_jexcel_first_column_header(jexcel_obj, title) {
+            if (title !== '') {
+                jexcel_obj.setHeader(0, title);
+            }
+        }
+
+        function load_jexcel_data(stylesheet_id) {
+            let data_id = stylesheet_id.replace(/-jexcel$/, '');
+            let name_id = data_id.replace(/-[^-]*$/, '') + '-name';
+
+            let data = $('#' + data_id);
+            let name = $('#' + name_id);
+
+            let data_value = data.val();
+            if (data_value === '') {
+                data_value = '{"columns":[{"width":150},{"width":150}],"data":[["",""],["",""]]}';
+            }
+
+            let jexcel_obj = jexcel(document.getElementById(stylesheet_id), JSON.parse(data_value));
+            let name_value = name.val();
+            update_jexcel_first_column_header(jexcel_obj, name_value);
+
+            name.keyup(function(){
+                let name_value = name.val();
+                if (name_value === '') {
+                    name.val(jexcel_obj.getHeader(0).substring(0,1));
+                }
+                update_jexcel_first_column_header(jexcel_obj, name_value);
+            });
+
+            return jexcel_obj;
+        }
+        function save_jexcel_data(jexcel_objs) {
+            for (let stylesheet_id in jexcel_objs) {
+                let jexcel_obj = jexcel_objs[stylesheet_id];
+
+                let data_id = stylesheet_id.replace(/-jexcel$/, '');
+                let name_id = data_id.replace(/-[^-]*$/, '') + '-name';
+
+                let data = $('#' + data_id);
+                let name = $('#' + name_id);
+
+                update_jexcel_first_column_header(jexcel_obj, name.val());
+                let config = jexcel_obj.getConfig();
+
+                data.val(JSON.stringify(config));
+            }
+        }
+    </script>
+    <script>
+        let jexcel_objs = {};
+        $.fn.formset.defaults['prefix'] = 'parameters';
+        $(function () {
+            $('.link-formset').formset({
+                addText: 'Add Parameter',
+                deleteText: 'Remove Parameter'
+            });
+
+            let stylesheet_id;
+            {% for parameter in formset %}
+                stylesheet_id = '{{ parameter.data.id_for_label }}-jexcel';
+                jexcel_objs[stylesheet_id] = load_jexcel_data(stylesheet_id);
+            {% endfor %}
+
+            onElementInserted('body', '.jexcel_instance', function (element) {
+                stylesheet_id = element.id;
+                jexcel_objs[stylesheet_id] = load_jexcel_data(stylesheet_id);
+            });
+
+            $("form").submit(function () {
+                save_jexcel_data(jexcel_objs);
+            });
+        })
+    </script>
+{% endblock js_xtra %}

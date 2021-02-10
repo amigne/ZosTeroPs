@@ -4,7 +4,6 @@ from django.urls import path
 
 from . import views
 
-
 urlpatterns = [
     # Home
     path('', views.home, name='home'),
@@ -16,6 +15,14 @@ urlpatterns = [
     path('ztpscript/<pk>/', views.ZtpDetailView.as_view(), name='ztpDetail'),
     path('ztpscript/<pk>/edit/', views.ZtpUpdateView.as_view(), name='ztpUpdate'),
     path('ztpscript/<pk>/delete/', views.ZtpDeleteView.as_view(), name='ztpDelete'),
+
+    # Configurations
+    url('^' + settings.ZTP_CONFIG_URL + '(?P<name>[A-Za-z0-9_.-]+)$', views.config_download, name='configDownload'),
+    path('configuration/', views.ConfigListView.as_view(), name='configList'),
+    path('configuration/new/', views.ConfigCreateView.as_view(), name='configCreate'),
+    path('configuration/<pk>/', views.ConfigDetailView.as_view(), name='configDetail'),
+    path('configuration/<pk>/edit/', views.ConfigUpdateView.as_view(), name='configUpdate'),
+    path('configuration/<pk>/delete/', views.ConfigDeleteView.as_view(), name='configDelete'),
 
     # Firmwares
     url('^' + settings.ZTP_FIRMWARES_URL + '(?P<filename>[A-Za-z0-9_.-]+)$', views.firmware_download, name='firmwareDownload'),
@@ -39,3 +46,4 @@ urlpatterns = [
     path('vendor/<pk>/edit/', views.VendorUpdateView.as_view(), name='vendorUpdate'),
     path('vendor/<pk>/delete/', views.VendorDeleteView.as_view(), name='vendorDelete'),
 ]
+

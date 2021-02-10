@@ -2,11 +2,10 @@ from django.core.files.storage import FileSystemStorage
 from django.core.validators import RegexValidator
 from django.conf import settings
 from django.db import models
-from django.db.models.fields import (AutoFieldMixin, AutoFieldMeta,
-                       IntegerField)
 from django.dispatch import receiver
 
 import hashlib
+import json
 import os
 
 
@@ -92,8 +91,111 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             os.remove(old_file.path)
 
 
+class Config(models.Model):
+    configNameValidator = RegexValidator(
+        r'^[0-9a-zA-Z._-]+$',
+        'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
+
+    name = models.CharField(max_length=50,
+                            validators=[configNameValidator],
+                            unique=True)
+    template = models.TextField()
+    description = models.TextField(blank=True)
+
+    def data_to_dict(self):
+        result = dict()
+        for parameter in self.parameters.all():
+            result.update(parameter.data_to_dict())
+        return result
+
+    def __str__(self):
+        return self.name
+
+
+class ConfigParameter(models.Model):
+    configParameterNameValidator = RegexValidator(r'^[a-zA-Z_][0-9a-zA-Z._-]*$',
+                                                  'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
+
+    config = models.ForeignKey(Config,
+                               related_name='parameters',
+                               on_delete=models.CASCADE)
+    name = models.CharField(max_length=50,
+                            blank=False,
+                            validators=[configParameterNameValidator])
+    data = models.TextField(blank=True)
+
+
+    # TODO: Function to move out of the class
+    def index_to_column_name(self, index):
+        result = ''
+        while result == '' or (index >= 0):
+            r = index % 26
+            result = chr(65 + r) + result
+            index = (index // 26) - 1
+
+        return result
+
+
+    # TODO: Logic to move out of the class
+    def data_to_dict(self):
+        result = dict()
+
+        if self.data == '': return result
+        data_dict = json.loads(self.data)
+
+        columns = (data_dict['columns'] if 'columns' in data_dict else {'columns': {}})
+        columns_count = len(columns)
+        columns_name = []
+        for index in range(columns_count):
+            title = columns[index]['title']
+            if title == '':
+                title = self.index_to_column_name(index)
+            columns_name.append(title)
+
+        parameter_name = self.name
+        if not parameter_name:
+            parameter_name = columns_name[0]
+        elif parameter_name != columns_name[0]:
+            columns_name[0] = parameter_name
+
+        result[parameter_name] = dict()
+
+        data_rows = data_dict['data'] if 'data' in data_dict else {}
+
+        for data_row in data_rows:
+            columns_in_row = len(data_row)
+
+            if columns_in_row == 0:
+                continue
+
+            data_row_dict = dict()
+
+            empty = True # Empty rows are not inserted in the result
+            for index in range(min(len(columns_name), columns_in_row)):
+                if index == 0:
+                    key = data_row[index]
+                else:
+                    data_row_dict[columns_name[index]] = data_row[index]
+                if data_row[index]:
+                    empty = False
+                index += 1
+
+            if not empty:
+                result[parameter_name][key] = data_row_dict
+
+        return result
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        unique_together = ('config', 'name',)
+
+
 class ZtpScript(models.Model):
-    ztpNameValidator = RegexValidator(r'^[0-9a-zA-Z._-]+$', 'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
+    ztpNameValidator = RegexValidator(
+        r'^[0-9a-zA-Z._-]+$',
+        'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
 
     name = models.CharField(max_length=50,
                             validators=[ztpNameValidator],
@@ -114,14 +216,15 @@ class ZtpScript(models.Model):
 
 
 class ZtpParameter(models.Model):
-    ztpParameterNameValidator = RegexValidator(r'^[a-zA-Z_][0-9a-zA-Z._-]*$', 'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
+    ztpParameterNameValidator = RegexValidator(r'^[a-zA-Z_][0-9a-zA-Z._-]*$',
+                                               'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
 
     ztpScript = models.ForeignKey(ZtpScript,
                                   related_name='parameters',
                                   on_delete=models.CASCADE)
-    key = models.CharField(max_length=50,
-                           blank=False,
-                           validators=[ztpParameterNameValidator])
+    name = models.CharField(max_length=50,
+                            blank=False,
+                            validators=[ztpParameterNameValidator])
     value = models.CharField(max_length=200,
                              blank=True)
 
@@ -129,4 +232,4 @@ class ZtpParameter(models.Model):
         return self.value
 
     class Meta:
-        unique_together = ('ztpScript', 'key',)
+        unique_together = ('ztpScript', 'name',)

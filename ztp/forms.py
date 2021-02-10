@@ -1,24 +1,25 @@
 from django import forms
 
-from .models import ZtpParameter, ZtpScript
+from .models import Config, ZtpParameter, ZtpScript
 
 
-class ZtpParameterForm(forms.ModelForm):
+class ConfigForm(forms.ModelForm):
     class Meta:
-        model=ZtpParameter
-        fields=[ 'key', 'value' ]
+        model = Config
+        fields = ['name', 'description', 'template']
         widgets = {
-            'key': forms.TextInput(attrs={'required': True}),
-            'value': forms.TextInput(),
+            'name': forms.TextInput(attrs={'required': True}),
+            'description': forms.Textarea(),
+            'template': forms.Textarea(),
         }
 
 
 class ZtpScriptForm(forms.ModelForm):
     class Meta:
-        model=ZtpScript
-        fields=[ 'name', 'render_template', 'use_parameters',
-                 'accept_query_string', 'priority_query_string_over_arguments',
-                 'description', 'template' ]
+        model = ZtpScript
+        fields = ['name', 'render_template', 'use_parameters',
+                  'accept_query_string', 'priority_query_string_over_arguments',
+                  'description', 'template']
         widgets = {
             'name': forms.TextInput(attrs={'required': True}),
             'render_template': forms.CheckboxInput(),

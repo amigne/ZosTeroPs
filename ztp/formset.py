@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.forms.models import BaseInlineFormSet, inlineformset_factory
 
-from .models import ZtpParameter, ZtpScript
+from .models import Config, ConfigParameter, ZtpParameter, ZtpScript
 
 
 class BaseParameterFormSet(BaseInlineFormSet):
@@ -11,21 +11,31 @@ class BaseParameterFormSet(BaseInlineFormSet):
             # Don't bother validating the formset unless each form is valid on its own
             return
 
-        keys = []
+        names = []
         for form in self.forms:
             if self.can_delete and self._should_delete_form(form):
                 continue
-            key = form.cleaned_data.get('key')
-            if key in keys:
-                raise ValidationError('There must not be multiple parameters with the same key.')
-            keys.append(key)
+            name = form.cleaned_data.get('name')
+            if name in names:
+                raise ValidationError('There must not be multiple parameters with the same name.')
+            names.append(name)
+
+
+ConfigParameterFormSet = inlineformset_factory(
+    Config,
+    ConfigParameter,
+    formset=BaseParameterFormSet,
+    fields=['name', 'data'],
+    extra=1,
+    can_delete=True
+)
 
 
 ZtpParameterFormSet = inlineformset_factory(
     ZtpScript,
     ZtpParameter,
     formset=BaseParameterFormSet,
-    fields=['key', 'value'],
+    fields=['name', 'value'],
     extra=1,
     can_delete=True
     )

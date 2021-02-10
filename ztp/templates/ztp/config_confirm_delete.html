@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content_title %}Configuration #{{ config.id }} - Delete{% endblock content_title %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <p class="delete_confirm">You're about to delete the configuration <strong>{{ config.name }}</strong>.</p>
+        <p class="delete_confirm">Are you sure you want to delete it?</p>
+        <p class="delete_button"><button type="submit">Confirm</button></p>
+    </form>
+{% endblock content %}

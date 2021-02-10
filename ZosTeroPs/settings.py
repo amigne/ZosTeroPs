@@ -125,5 +125,7 @@ STATIC_URL = '/static/'
 ZTP_BASE_URL = 'http://127.0.0.1:8000'
 ZTP_BOOTSTRAP_URL = 'bootstrap/'
 
+ZTP_CONFIG_URL = 'config/'
+
 ZTP_FIRMWARES_PATH = 'firmwares/'
 ZTP_FIRMWARES_URL = 'firmwares/'
