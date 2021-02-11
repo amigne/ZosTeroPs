@@ -13,19 +13,19 @@ def populate_ztp_scripts(apps, schema_editor):
     ZtpParameter = apps.get_model('ztp', 'ZtpParameter')
     ztp_parameter = ZtpParameter(
         ztpScript=ztp_script,
-        key='SYSLOG',
+        name='SYSLOG',
         value='10.0.0.1',
     )
     ztp_parameter.save()
     ztp_parameter = ZtpParameter(
         ztpScript=ztp_script,
-        key='LOGAPI',
+         name='LOGAPI',
         value='http://10.0.0.1:8080/log',
     )
     ztp_parameter.save()
     ztp_parameter = ZtpParameter(
         ztpScript=ztp_script,
-        key='JSON',
+        name='JSON',
         value='http://10.0.0.1:8080/data',
     )
     ztp_parameter.save()

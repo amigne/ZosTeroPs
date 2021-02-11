@@ -9,3 +9,7 @@ It's a current WIP (*Work In Progress*) project, but it's expected to be fully o
 **ZosTeroPs** is a web system developed in Python using the Django framework.
 
 And now, give back to Caesar what belongs to Caesar: The idea of developing ZosTeroPs is consecutive to the discover of the [Tim Dorssers' ZTP project](https://github.com/tdorssers/ztp). This may explain some resemblance of the GUI or some code reuse. Tim's work as well as ZosTeroPs are both under MIT license.
+
+## Releases
+* v0.0.0 (February 11th, 2021) - Functional mockup. Tool should not be used for production, or only if you know what you're doing. Please note that the software design is not finalized and some features may evolve without consideration for backward compatibility. This includes data migrations! This warning will be persist until v1.0.0 is released. At that time, the development will have reached a certain level of maturity and backward compatibility will be ensured for any further v1.x.y versions.
+ 
