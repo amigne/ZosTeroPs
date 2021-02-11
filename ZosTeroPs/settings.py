@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ztp',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,5 @@ ZTP_CONFIG_URL = 'config/'
 
 ZTP_FIRMWARES_PATH = 'firmwares/'
 ZTP_FIRMWARES_URL = 'firmwares/'
+
+AUTH_USER_MODEL = 'user.User'
