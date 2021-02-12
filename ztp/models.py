@@ -3,6 +3,7 @@ from django.core.validators import RegexValidator
 from django.conf import settings
 from django.db import models
 from django.dispatch import receiver
+from django.urls import reverse_lazy
 
 import hashlib
 import json
@@ -17,6 +18,19 @@ class Vendor(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def url_delete(self):
+        return reverse_lazy('vendorDelete', kwargs={'pk': self.id})
+
+    @property
+    def url_detail(self):
+        return None
+        return reverse_lazy('vendorDetail', kwargs={'pk': self.id})
+
+    @property
+    def url_update(self):
+        return reverse_lazy('vendorUpdate', kwargs={'pk': self.id})
+
 
 class Platform(models.Model):
     vendor = models.ForeignKey(Vendor,
@@ -27,6 +41,19 @@ class Platform(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def url_delete(self):
+        return reverse_lazy('platformDelete', kwargs={'pk': self.id})
+
+    @property
+    def url_detail(self):
+        return None
+        return reverse_lazy('platformDetail', kwargs={'pk': self.id})
+
+    @property
+    def url_update(self):
+        return reverse_lazy('platformUpdate', kwargs={'pk': self.id})
 
     class Meta:
         unique_together = ('vendor', 'name',)
@@ -57,6 +84,18 @@ class Firmware(models.Model):
         self.md5_hash = md5.hexdigest()
         self.sha512_hash = sha512.hexdigest()
         super().save(**kwargs)
+
+    @property
+    def url_delete(self):
+        return reverse_lazy('firmwareDelete', kwargs={'pk': self.id})
+
+    @property
+    def url_detail(self):
+        return reverse_lazy('firmwareDetail', kwargs={'pk': self.id})
+
+    @property
+    def url_update(self):
+        return reverse_lazy('firmwareUpdate', kwargs={'pk': self.id})
 
 
 @receiver(models.signals.post_delete, sender=Firmware)
@@ -110,6 +149,18 @@ class Config(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def url_delete(self):
+        return reverse_lazy('configDelete', kwargs={'pk': self.id})
+
+    @property
+    def url_detail(self):
+        return reverse_lazy('configDetail', kwargs={'pk': self.id})
+
+    @property
+    def url_update(self):
+        return reverse_lazy('configUpdate', kwargs={'pk': self.id})
 
 
 class ConfigParameter(models.Model):
@@ -213,6 +264,18 @@ class ZtpScript(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def url_delete(self):
+        return reverse_lazy('ztpDelete', kwargs={'pk': self.id})
+
+    @property
+    def url_detail(self):
+        return reverse_lazy('ztpDetail', kwargs={'pk': self.id})
+
+    @property
+    def url_update(self):
+        return reverse_lazy('ztpUpdate', kwargs={'pk': self.id})
 
 
 class ZtpParameter(models.Model):

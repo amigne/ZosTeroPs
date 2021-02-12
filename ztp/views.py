@@ -1,23 +1,336 @@
+import locale
+
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
 from django.http import Http404, HttpResponse
 from django.template import Context, Template
-from django.template.response import SimpleTemplateResponse
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, ListView
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import DetailView, ListView, TemplateView
+from django.views.generic.base import ContextMixin as BaseContextMixin
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from .forms import ConfigForm, ZtpScriptForm
 from .formset import ConfigParameterFormSet, ZtpParameterFormSet
 from .models import Config, Firmware, Platform, Vendor, ZtpScript
 
-import locale
+
+class ContextMixin(BaseContextMixin):
+    """ Mixin that sets some context data common to the different view classes. """
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        # Workaround as self.object is not defined for list and detail views
+        object = getattr(self, 'object', None)
+
+        if hasattr(self, 'formset_class'):
+            if self.request.POST:
+                context_data['formset'] = self.formset_class(self.request.POST, instance=object)
+            else:
+                context_data['formset'] = self.formset_class(instance=object)
+
+        for attr in ['list_fields', 'menu_item', 'object_description',
+                     'object_description_plural', 'url_create']:
+            if hasattr(self, attr):
+                context_data[attr] = getattr(self, attr, None)
+
+        return context_data
+
+###
+### Home
+###
+class HomeView(ContextMixin, TemplateView):
+    menu_item = 'home'
+    template_name = 'ztp/home.html'
 
 
-def home(request):
-    return SimpleTemplateResponse('ztp/home.html', {'menuitem': 'home'})
+###
+### ZTP Script
+###
+class ZtpContextMixin(ContextMixin):
+    model = ZtpScript
+    menu_item = 'ztpScript'
+    object_description = _('ZTP script')
+    object_description_plural = _('ZTP scripts')
+    form_class = ZtpScriptForm
+    formset_class = ZtpParameterFormSet
+    list_fields = ['id', 'name', 'description']
+    url_create = reverse_lazy('ztpCreate')
 
 
+class ZtpCreateView(ZtpContextMixin, CreateView):
+    template_name = 'ztp/generic/form.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        context = self.get_context_data()
+
+        form = self.get_form()
+        formset = context['formset']
+        if form.is_valid() and formset.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            with transaction.atomic():
+                self.object = form.save()
+                formset.instance = self.object
+                formset.save()
+        return super(ZtpCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
+
+
+class ZtpDeleteView(ZtpContextMixin, DeleteView):
+    template_name = 'ztp/generic/confirm_delete.html'
+    success_url = reverse_lazy('ztpList')
+
+
+class ZtpDetailView(ZtpContextMixin, DetailView):
+    template_name = 'ztp/generic/detail.html'
+
+
+class ZtpListView(ZtpContextMixin, ListView):
+    template_name = 'ztp/generic/list.html'
+
+
+class ZtpUpdateView(ZtpContextMixin, UpdateView):
+    template_name = 'ztp/generic/form.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data()
+
+        form = self.get_form()
+        formset = context['formset']
+        if form.is_valid() and formset.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            with transaction.atomic():
+                self.object = form.save()
+                formset.instance = self.object
+                formset.save()
+        return super(ZtpUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
+
+
+###
+### Configuration
+###
+class ConfigContextMixin(ContextMixin):
+    model = Config
+    menu_item = 'config'
+    object_description = _('configuration')
+    object_description_plural = _('configurations')
+    form_class = ConfigForm
+    formset_class = ConfigParameterFormSet
+    list_fields = ['id', 'name', 'description']
+    url_create = reverse_lazy('configCreate')
+
+
+class ConfigCreateView(ConfigContextMixin, CreateView):
+    template_name = 'ztp/generic/form.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        context = self.get_context_data()
+
+        form = self.get_form()
+        formset = context['formset']
+        if form.is_valid() and formset.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            with transaction.atomic():
+                self.object = form.save()
+                formset.instance = self.object
+                formset.save()
+        return super(ConfigCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('configDetail', kwargs={'pk': self.object.pk})
+
+
+class ConfigDeleteView(ConfigContextMixin, DeleteView):
+    template_name = 'ztp/generic/confirm_delete.html'
+    success_url = reverse_lazy('configList')
+
+
+class ConfigDetailView(ConfigContextMixin, DetailView):
+    template_name = 'ztp/generic/detail.html'
+
+
+class ConfigListView(ConfigContextMixin, ListView):
+    template_name = 'ztp/generic/list.html'
+
+
+class ConfigUpdateView(ConfigContextMixin, UpdateView):
+    template_name = 'ztp/generic/form.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data()
+
+        form = self.get_form()
+        formset = context['formset']
+        if form.is_valid() and formset.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            with transaction.atomic():
+                self.object = form.save()
+                formset.instance = self.object
+                formset.save()
+        return super(ConfigUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('configDetail', kwargs={'pk': self.object.pk})
+
+
+###
+### Firmware
+###
+class FirmwareContextMixin(ContextMixin):
+    model = Firmware
+    menu_item = 'firmware'
+    object_description = _('firmware')
+    object_description_plural = _('firmwares')
+    list_fields = ['id', 'platform', 'file', 'description']
+    url_create = reverse_lazy('firmwareCreate')
+
+
+class FirmwareCreateView(FirmwareContextMixin, SuccessMessageMixin, CreateView):
+    template_name = 'ztp/generic/form.html'
+    fields = ['platform', 'file', 'description']
+    success_url = reverse_lazy('firmwareList')
+
+    def get_success_message(self, cleaned_data):
+        form = self.get_form()
+        instance = form.instance
+        locale.setlocale(locale.LC_ALL, '')
+        return f"Firmware {instance.file.name} successfully created! File size is {instance.filesize:n} bytes." \
+               f" MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
+
+
+class FirmwareDeleteView(FirmwareContextMixin, DeleteView):
+    template_name = 'ztp/generic/confirm_delete.html'
+    success_url = reverse_lazy('firmwareList')
+
+
+class FirmwareDetailView(FirmwareContextMixin, DetailView):
+    template_name = 'ztp/generic/detail.html'
+
+
+class FirmwareListView(FirmwareContextMixin, ListView):
+    template_name = 'ztp/generic/list.html'
+
+
+class FirmwareUpdateView(FirmwareContextMixin, SuccessMessageMixin, UpdateView):
+    template_name = 'ztp/generic/form.html'
+    fields = ['platform', 'file', 'description']
+    success_url = reverse_lazy('firmwareList')
+
+    def get_success_message(self, cleaned_data):
+        form = self.get_form()
+        instance = form.instance
+        locale.setlocale(locale.LC_ALL, '')
+        return f"Firmware {instance.file.name} successfully modified! File size is {instance.filesize:n} bytes. " \
+               f"MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
+
+
+###
+### Platform
+###
+class PlatformContextMixin(ContextMixin):
+    model = Platform
+    menu_item = 'platform'
+    object_description = _('platform')
+    object_description_plural = _('platforms')
+    list_fields = ['id', 'vendor', 'name', 'description']
+    url_create = reverse_lazy('platformCreate')
+
+
+class PlatformCreateView(PlatformContextMixin, CreateView):
+    template_name = 'ztp/generic/form.html'
+    fields = ['vendor', 'name', 'description']
+    success_url = reverse_lazy('platformList')
+
+
+class PlatformDeleteView(PlatformContextMixin, DeleteView):
+    template_name = 'ztp/generic/confirm_delete.html'
+    success_url = reverse_lazy('platformList')
+
+
+class PlatformListView(PlatformContextMixin, ListView):
+    template_name = 'ztp/generic/list.html'
+
+
+class PlatformUpdateView(PlatformContextMixin, UpdateView):
+    template_name = 'ztp/generic/form.html'
+    fields = ['vendor', 'name', 'description']
+    success_url = reverse_lazy('platformList')
+
+
+###
+### Platform
+###
+class VendorContextMixin(ContextMixin):
+    model = Vendor
+    menu_item = 'vendor'
+    object_description = _('vendor')
+    object_description_plural = _('vendors')
+    list_fields = ['id', 'name', 'description']
+    url_create = reverse_lazy('vendorCreate')
+
+
+class VendorCreateView(VendorContextMixin, CreateView):
+    template_name = 'ztp/generic/form.html'
+    fields = ['name', 'description']
+    success_url = reverse_lazy('vendorList')
+
+
+class VendorDeleteView(VendorContextMixin, DeleteView):
+    template_name = 'ztp/generic/confirm_delete.html'
+    success_url = reverse_lazy('vendorList')
+
+
+class VendorListView(VendorContextMixin, ListView):
+    template_name = 'ztp/generic/list.html'
+
+
+class VendorUpdateView(VendorContextMixin, UpdateView):
+    template_name = 'ztp/generic/form.html'
+    fields = ['name', 'description']
+    success_url = reverse_lazy('vendorList')
+
+
+###
+### Content delivery
+###
 def ztp_download(request, name):
     try:
         ztp_script = ZtpScript.objects.get(name=name)
@@ -47,115 +360,6 @@ def ztp_download(request, name):
     return HttpResponse(template.render(Context(context_dict)), content_type='text/plain')
 
 
-class ZtpCreateView(CreateView):
-    model = ZtpScript
-    template_name = 'ztp/ztpscript_form.html'
-    form_class = ZtpScriptForm
-    success_url = None
-
-    def get_context_data(self, **kwargs):
-        data = super(ZtpCreateView, self).get_context_data(**kwargs)
-        if self.request.POST:
-            data['formset'] = ZtpParameterFormSet(self.request.POST)
-        else:
-            data['formset'] = ZtpParameterFormSet()
-        return data
-
-    def post(self, request, *args, **kwargs):
-        self.object = None
-        context = self.get_context_data()
-
-        form = self.get_form()
-        formset = context['formset']
-        if form.is_valid() and formset.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['formset']
-        if formset.is_valid():
-            with transaction.atomic():
-                self.object = form.save()
-                formset.instance = self.object
-                formset.save()
-        return super(ZtpCreateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
-
-
-class ZtpDeleteView(DeleteView):
-    model = ZtpScript
-    context_object_name = 'ztpscript'
-    success_url = reverse_lazy('ztpList')
-
-    def get_context_data(self, **kwargs):
-        context = super(ZtpDeleteView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'ztpScript'
-        return context
-
-
-class ZtpDetailView(DetailView):
-    model = ZtpScript
-    context_object_name = 'ztpscript'
-
-    def get_context_data(self, **kwargs):
-        context = super(ZtpDetailView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'ztpScript'
-        return context
-
-
-class ZtpListView(ListView):
-    model = ZtpScript
-    context_object_name = 'ztpscripts'
-
-    def get_context_data(self, **kwargs):
-        context = super(ZtpListView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'ztpScript'
-        return context
-
-
-class ZtpUpdateView(UpdateView):
-    model = ZtpScript
-    template_name = 'ztp/ztpscript_form.html'
-    form_class = ZtpScriptForm
-    success_url = None
-
-    def get_context_data(self, **kwargs):
-        data = super(ZtpUpdateView, self).get_context_data(**kwargs)
-        if self.request.POST:
-            data['formset'] = ZtpParameterFormSet(self.request.POST, instance=self.object)
-        else:
-            data['formset'] = ZtpParameterFormSet(instance=self.object)
-        return data
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        context = self.get_context_data()
-
-        form = self.get_form()
-        formset = context['formset']
-        if form.is_valid() and formset.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['formset']
-        if formset.is_valid():
-            with transaction.atomic():
-                self.object = form.save()
-                formset.instance = self.object
-                formset.save()
-        return super(ZtpUpdateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
-
-
 def config_download(request, name):
     try:
         configuration = Config.objects.get(name=name)
@@ -179,116 +383,6 @@ def config_download(request, name):
     return HttpResponse(template.render(Context(context_dict)), content_type='text/plain')
 
 
-class ConfigCreateView(CreateView):
-    model = Config
-    template_name = 'ztp/config_form.html'
-    form_class = ConfigForm
-    success_url = None
-
-    def get_context_data(self, **kwargs):
-        context = super(ConfigCreateView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'config'
-        if self.request.POST:
-            context['formset'] = ConfigParameterFormSet(self.request.POST)
-        else:
-            context['formset'] = ConfigParameterFormSet()
-        return context
-
-    def post(self, request, *args, **kwargs):
-        self.object = None
-        context = self.get_context_data()
-
-        form = self.get_form()
-        formset = context['formset']
-        if form.is_valid() and formset.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['formset']
-        if formset.is_valid():
-            with transaction.atomic():
-                self.object = form.save()
-                formset.instance = self.object
-                formset.save()
-        return super(ConfigCreateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('configDetail', kwargs={'pk': self.object.pk})
-
-
-class ConfigDeleteView(DeleteView):
-    model = Config
-    context_object_name = 'config'
-    success_url = reverse_lazy('configList')
-
-    def get_context_data(self, **kwargs):
-        context = super(ConfigDeleteView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'config'
-        return context
-
-
-class ConfigDetailView(DetailView):
-    model = Config
-    context_object_name = 'config'
-
-    def get_context_data(self, **kwargs):
-        context = super(ConfigDetailView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'config'
-        return context
-
-
-class ConfigListView(ListView):
-    model = Config
-    context_object_name = 'configs'
-
-    def get_context_data(self, **kwargs):
-        context = super(ConfigListView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'config'
-        return context
-
-
-class ConfigUpdateView(UpdateView):
-    model = Config
-    template_name = 'ztp/config_form.html'
-    form_class = ConfigForm
-    success_url = None
-
-    def get_context_data(self, **kwargs):
-        data = super(ConfigUpdateView, self).get_context_data(**kwargs)
-        if self.request.POST:
-            data['formset'] = ConfigParameterFormSet(self.request.POST, instance=self.object)
-        else:
-            data['formset'] = ConfigParameterFormSet(instance=self.object)
-        return data
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        context = self.get_context_data()
-
-        form = self.get_form()
-        formset = context['formset']
-        if form.is_valid() and formset.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['formset']
-        if formset.is_valid():
-            with transaction.atomic():
-                self.object = form.save()
-                formset.instance = self.object
-                formset.save()
-        return super(ConfigUpdateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('configDetail', kwargs={'pk': self.object.pk})
-
-
 def firmware_download(request, filename):
     try:
         p = Firmware.objects.get(file=filename)
@@ -296,161 +390,3 @@ def firmware_download(request, filename):
         raise Http404('Firmware does not exist!')
     return HttpResponse(p.file.open('rb'), content_type='application/octet-stream')
 
-
-class FirmwareCreateView(SuccessMessageMixin, CreateView):
-    model = Firmware
-    fields = ['platform', 'file', 'description']
-    context_object_name = 'firmware'
-    success_url = reverse_lazy('firmwareList')
-
-    def get_context_data(self, **kwargs):
-        context = super(FirmwareCreateView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'firmware'
-        return context
-
-    def get_success_message(self, cleaned_data):
-        form = self.get_form()
-        instance = form.instance
-        locale.setlocale(locale.LC_ALL, '')
-        return f"Firmware {instance.file.name} successfully created! File size is {instance.filesize:n} bytes." \
-               f" MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
-
-
-class FirmwareDeleteView(DeleteView):
-    model = Firmware
-    context_object_name = 'firmware'
-    success_url = reverse_lazy('firmwareList')
-
-    def get_context_data(self, **kwargs):
-        context = super(FirmwareDeleteView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'firmware'
-        return context
-
-
-class FirmwareDetailView(DetailView):
-    model = Firmware
-    context_object_name = 'firmware'
-
-    def get_context_data(self, **kwargs):
-        context = super(FirmwareDetailView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'firmware'
-        return context
-
-
-class FirmwareListView(ListView):
-    model = Firmware
-    context_object_name = 'firmwares'
-
-    def get_context_data(self, **kwargs):
-        context = super(FirmwareListView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'firmware'
-        return context
-
-
-class FirmwareUpdateView(SuccessMessageMixin, UpdateView):
-    model = Firmware
-    fields = ['platform', 'file', 'description']
-    context_object_name = 'firmware'
-    success_url = reverse_lazy('firmwareList')
-
-    def get_context_data(self, **kwargs):
-        context = super(FirmwareUpdateView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'firmware'
-        return context
-
-    def get_success_message(self, cleaned_data):
-        form = self.get_form()
-        instance = form.instance
-        locale.setlocale(locale.LC_ALL, '')
-        return f"Firmware {instance.file.name} successfully modified! File size is {instance.filesize:n} bytes. " \
-               f"MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
-
-
-class PlatformCreateView(CreateView):
-    model = Platform
-    fields = ['vendor', 'name', 'description']
-    context_object_name = 'platform'
-    success_url = reverse_lazy('platformList')
-
-    def get_context_data(self, **kwargs):
-        context = super(PlatformCreateView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'platform'
-        return context
-
-
-class PlatformDeleteView(DeleteView):
-    model = Platform
-    context_object_name = 'platform'
-    success_url = reverse_lazy('platformList')
-
-    def get_context_data(self, **kwargs):
-        context = super(PlatformDeleteView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'platform'
-        return context
-
-
-class PlatformListView(ListView):
-    model = Platform
-    context_object_name = 'platforms'
-
-    def get_context_data(self, **kwargs):
-        context = super(PlatformListView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'platform'
-        return context
-
-
-class PlatformUpdateView(UpdateView):
-    model = Platform
-    fields = ['vendor', 'name', 'description']
-    context_object_name = 'platform'
-    success_url = reverse_lazy('platformList')
-
-    def get_context_data(self, **kwargs):
-        context = super(PlatformUpdateView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'platform'
-        return context
-
-
-class VendorCreateView(CreateView):
-    model = Vendor
-    fields = ['name', 'description']
-    context_object_name = 'vendor'
-    success_url = reverse_lazy('vendorList')
-
-    def get_context_data(self, **kwargs):
-        context = super(VendorCreateView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'vendor'
-        return context
-
-
-class VendorDeleteView(DeleteView):
-    model = Vendor
-    context_object_name = 'vendor'
-    success_url = reverse_lazy('vendorList')
-
-    def get_context_data(self, **kwargs):
-        context = super(VendorDeleteView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'vendor'
-        return context
-
-
-class VendorListView(ListView):
-    model = Vendor
-    context_object_name = 'vendors'
-
-    def get_context_data(self, **kwargs):
-        context = super(VendorListView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'vendor'
-        return context
-
-
-class VendorUpdateView(UpdateView):
-    model = Vendor
-    fields = ['name', 'description']
-    context_object_name = 'vendor'
-    success_url = reverse_lazy('vendorList')
-
-    def get_context_data(self, **kwargs):
-        context = super(VendorUpdateView, self).get_context_data(**kwargs)
-        context['menuitem'] = 'vendor'
-        return context

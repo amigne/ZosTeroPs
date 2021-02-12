@@ -88,14 +88,8 @@ form .error {
 form .has-error {
     color: #ff0000;
 }
-form .delete_confirm {
-    color: #ff0000;
-    text-align: center;
-    font-size: large;
-}
-form .delete_button {
-    text-align: center;
-}
+
+
 
 /* Form ZTP Scripts */
 .description textarea {
@@ -125,65 +119,6 @@ form .delete_button {
 }
 
 
-/* Table list */
-table.table_list {
-    border-collapse: collapse;
-    width: 100%;
-}
-table.table_list tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-table.table_list tr:hover {
-    background-color: #ddd;
-}
-table.table_list th, table.table_list td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-table.table_list th {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    text-align: left;
-    background-color: #af4c50;
-    color: #fff;
-}
-
-/* Table list items */
-table.table_list .id { width: 40px!important; }
-table.table_list th.id { text-align: center; }
-table.table_list td.id { text-align: right; }
-table.table_list .name { width: 30%; }
-table.table_list .name a {
-    color: black;
-    font-weight: bold;
-    text-decoration: none;
-}
-table.table_list .description { }
-table.table_list .action { width: 50px!important; }
-table.table_list th.action { text-align: center; }
-table.table_list th.action a {
-    color: #fff;
-    text-decoration: none;
-}
-table.table_list td.action { text-align: right; }
-table.table_list td.action a {
-    color: #000;
-    text-decoration: none;
-}
-
-/* Table detail */
-table.detail {
-    border-collapse: collapse;
-    width: 100%
-}
-table.detail th, table.detail td {
-    border: 0;
-    padding: 8px;
-}
-table.detail th {
-    vertical-align: top;
-    text-align: right;
-}
 
 /* Table update (legacy) */
 table.table_update {
@@ -218,24 +153,7 @@ table.update tfoot td {
 }
 
 
-/* Table detail: ZTP Scripts */
-table.detail table.parameters th.key {
-    text-align: right;
-}
-table.detail table.parameters tbody th,
-table.detail table.parameters tbody td {
-    font-weight: normal;
-    font-family: 'Courier New', monospace;
-}
 
-table.detail td.template pre {
-    background-color: black;
-    color: white;
-    width: 100%;
-    padding: 5px;
-    line-height: 1.2;
-    font-size: medium;
-}
 
 /* Table parameters */
 table.parameters {
@@ -245,67 +163,6 @@ table.parameters {
 table.parameters th {
     width: 50%;
     text-align: left;
-}
-
-/* Table firmware list */
-table.table_list .firmware_id { width: 40px!important; }
-table.table_list th.firmware_id { text-align: center; }
-table.table_list td.firmware_id { text-align: right; }
-table.table_list .firmware_vendor { }
-table.table_list .firmware_filename { width: 30%; }
-table.table_list .firmware_filename a {
-    color: black;
-    font-weight: bold;
-    text-decoration: none;
-}
-table.table_list .firmware_description { }
-table.table_list .firmware_action { width: 50px!important; }
-table.table_list th.firmware_action { text-align: center; }
-table.table_list th.firmware_action a {
-    color: #fff;
-    text-decoration: none;
-}
-table.table_list td.firmware_action { text-align: right; }
-table.table_list td.firmware_action a {
-    color: #000;
-    text-decoration: none;
-}
-
-/* Table platform list */
-table.table_list .platform_id { width: 40px!important; }
-table.table_list th.platform_id { text-align: center; }
-table.table_list td.platform_id { text-align: right; }
-table.table_list .platform_vendor { }
-table.table_list .platform_name { width: 30%; }
-table.table_list .platform_description { }
-table.table_list .platform_action { width: 50px!important; }
-table.table_list th.platform_action { text-align: center; }
-table.table_list th.platform_action a {
-    color: #fff;
-    text-decoration: none;
-}
-table.table_list td.platform_action { text-align: right; }
-table.table_list td.platform_action a {
-    color: #000;
-    text-decoration: none;
-}
-
-/* Table vendor list */
-table.table_list .vendor_id { width: 40px!important; }
-table.table_list th.vendor_id { text-align: center; }
-table.table_list td.vendor_id { text-align: right; }
-table.table_list .vendor_name { width: 40%; }
-table.table_list .vendor_description { }
-table.table_list .vendor_action { width: 50px!important; }
-table.table_list th.vendor_action { text-align: center; }
-table.table_list th.vendor_action a {
-    color: #fff;
-    text-decoration: none;
-}
-table.table_list td.vendor_action { text-align: right; }
-table.table_list td.vendor_action a {
-    color: #000;
-    text-decoration: none;
 }
 
 /* Table update */
@@ -356,3 +213,114 @@ fieldset a {
     color: #999999;
 }
 
+/*********************************** Form ***********************************/
+
+
+
+/********************************** Detail **********************************/
+table.detail {
+    border-collapse: collapse;
+    width: 100%
+}
+table.detail th, table.detail td {
+    border: 0;
+    padding: 8px;
+}
+table.detail th {
+    vertical-align: top;
+    text-align: right;
+}
+
+/* Parameters */
+table.detail table.parameters th.key {
+    text-align: right;
+}
+table.detail table.parameters tbody th,
+table.detail table.parameters tbody td {
+    font-weight: normal;
+    font-family: 'Courier New', monospace;
+}
+
+/* Template */
+table.detail td.template pre {
+    background-color: black;
+    color: white;
+    width: 100%;
+    padding: 5px;
+    line-height: 1.2;
+    font-size: medium;
+}
+
+/********************************** List ***********************************/
+
+table.list {
+    border-collapse: collapse;
+    width: 100%;
+}
+table.list tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+table.list tr:hover {
+    background-color: #ddd;
+}
+table.list th, table.list td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+table.list th {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: left;
+    background-color: #af4c50;
+    color: #fff;
+}
+
+/* ID */
+table.list .id { width: 40px!important; }
+table.list th.id { text-align: center; }
+table.list td.id { text-align: right; }
+
+/* Vendor */
+table.list .vendor { }
+
+/* Platform */
+table.list .platform { }
+
+/* Name */
+table.list .name { width: 30%; }
+table.list .name a {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* File */
+table.list .file { width: 30%; }
+table.list .file a {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Description */
+table.list .description { }
+
+/* Action */
+table.list .action { width: 50px!important; }
+table.list th.action { text-align: center; }
+table.list th.action a {
+    color: #fff;
+    text-decoration: none;
+}
+table.list td.action { text-align: right; }
+table.list td.action a {
+    color: #000;
+    text-decoration: none;
+}
+
+/****************************** Delete forms *******************************/
+form.delete p {
+    color: #ff0000;
+    text-align: center;
+    font-size: large;
+}

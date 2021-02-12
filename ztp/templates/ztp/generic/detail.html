@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content_title %}{{ object_description|capfirst }} #{{ object.id }} - {% trans "Details" %}{% endblock content_title %}
+
+{% block content %}
+    <table class="detail {{ menu_item }}">
+        <tbody>
+            {% if object.platform %}
+                <tr>
+                    <th class="platform">{% trans "Platform" %}</th>
+                    <td class="platform">{{ object.platform.name }} - {{ object.platform.vendor.name }}</td>
+                </tr>
+            {% endif %}
+            {% if object.name %}
+                <tr>
+                    <th class="name">{% trans "Name" %}</th>
+                    <td class="name">{{ object.name }}</td>
+                </tr>
+            {% endif %}
+            {% if object.file %}
+                <tr>
+                    <th class="filename">{% trans "Filename" %}</th>
+                    <td class="filename">{{ object.file.name }}</td>
+                </tr>
+            {% endif %}
+            {% if object.description %}
+                <tr>
+                    <th class="description">{% trans "Description" %}</th>
+                    <td class="description">{{ object.description }}</td>
+                </tr>
+            {% endif %}
+            {% if object.filesize %}
+                <tr>
+                    <th class="filesize">{% trans "File size" %}</th>
+                    <td class="filesize">{{ object.filesize }} {% trans "bytes" %}</td>
+                </tr>
+            {% endif %}
+            {% if object.md5_hash %}
+                <tr>
+                    <th class="md5hash">{% trans "MD5 hash" %}</th>
+                    <td class="md5hash">{{ object.md5_hash }}</td>
+                </tr>
+            {% endif %}
+            {% if object.sha512_hash %}
+            <tr>
+                <th class="sha512hash">{% trans "SHA512 hash" %}</th>
+                <td class="sha512hash">{{ firmware.sha512_hash }}</td>
+            </tr>
+            {% endif %}
+            {% if object.description %}
+                <tr>
+                    <th class="url_firmware">{% trans "Download URL" %}</th>
+                    <td class="url_firmware"><a href="/{{ object.file.url }}" target="_blank">{{ object.file.url }}</a></td>
+                </tr>
+            {% endif %}
+            {% if menu_item == "ztpScript" %}
+                <tr>
+                    <th class="options">{% trans "Options" %}</th>
+                    <td class="options">
+                        <input type="checkbox" id="id_render_template"
+                               {% if object.render_template %}checked{% endif %}
+                               disabled>
+                        <label for="id_render_template">{% trans "Render template" %}</label><br/>
+
+                        <input type="checkbox" id="id_use_parameters"
+                               {% if object.use_parameters %}checked{% endif %}
+                               disabled>
+                        <label for="id_use_parameters">{% trans "Use parameters" %}</label><br/>
+
+                        <input type="checkbox" id="id_accept_query_string"
+                               {% if object.accept_query_string %}checked{% endif %}
+                               disabled>
+                        <label for="id_accept_query_string">{% trans "Accept query string" %}</label><br/>
+
+                        <input type="checkbox" id="id_priority_query_string_over_arguments"
+                               {% if object.priority_query_string_over_arguments %}checked{% endif %}
+                               disabled>
+                        <label for="id_priority_query_string_over_arguments">{% trans "Priority query string over arguments" %}</label>
+                </td>
+            </tr>
+            {% endif %}
+            {% if object.parameters %}
+                <tr>
+                    <th class="parameters">{% trans "Parameters" %}</th>
+                    <td class="parameters">
+                    {% if menu_item == "config" %}
+                        <fieldset>
+                            {% for param in object.parameters.all %}
+                                <div class="link-formset">
+                                    <div class="name">{{ param.name }}</div>
+                                    <div class="data">
+                                        <input type="hidden" id="data-{{ param.name }}" value="{{ param.data }}" />
+                                        <div id="data-{{ param.name }}-jexcel" class="jexcel_instance"></div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </fieldset>
+                    {% elif menu_item == "ztpScript" %}
+                        <table class="parameters">
+                            <thead>
+                                <tr>
+                                    <th class="name">{% trans "Name" %}</th>
+                                    <th class="value">{% trans "Value" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for param in object.parameters.all %}
+                                    <tr>
+                                        <th class="key"> &#x7b;&#x7b; {{ param.name }} &#x7d;&#x7d;</th>
+                                        <td class="value">{{ param.value }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </tr>
+            {% endif %}
+            {% if object.template %}
+                <tr>
+                    <th class="template">{% trans "Template" %}</th>
+                    <td class="template"><pre>{{ object.template }}</pre></td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock content %}
+
+{% block css_xtra %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jexcel/4.5.2/jexcel.min.css" integrity="sha512-WB/kEaOfg0GNR4kgcutxGokTJwOHScl+1IWlUwobvYi8USQ2ML9mn3794NPSpInbVc6ISnUM6kXZq7hg6Vk1vg==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static "ztp/css/jsuites.css" %}" type="text/css" />
+{% endblock css_xtra %}
+
+{% block js_xtra %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jexcel/4.5.2/jexcel.min.js" integrity="sha512-wMMvCzGFoMkqblq/fcXTGli56kJQGAXsP6c2oriVYpzjXC/g6JRlvJe7zVoQZsOadgxECkr5tf4DIaJjofYGlA==" crossorigin="anonymous"></script>
+    <script src="{% static "ztp/js/jsuites.js" %}"></script>
+    <script>
+        function update_jexcel_first_column_header(jexcel_obj, title) {
+            if (title !== '') {
+                jexcel_obj.setHeader(0, title);
+            }
+        }
+
+        function load_jexcel_data(stylesheet_id) {
+            let data = $('#' + stylesheet_id.replace(/-jexcel$/, ''));
+
+            let data_value = data.val();
+            if (data_value === '') {
+                data_value = '{"columns":[{"width":150},{"width":150}],"data":[["",""],["",""]]}';
+            }
+
+            options = JSON.parse(data_value);
+            options['updateTable'] = function(el, cell, x, y, source, value, id) {
+                cell.classList.add('readonly');
+            };
+
+            return jexcel_obj = jexcel(document.getElementById(stylesheet_id), options);
+        }
+    </script>
+    <script>
+        $(function () {
+            $('.jexcel_instance').each(function(index, el) {
+                jexcel_obj = load_jexcel_data(el.id);
+            });
+        })
+    </script>
+{% endblock js_xtra %}
