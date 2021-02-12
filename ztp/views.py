@@ -296,7 +296,7 @@ class PlatformUpdateView(PlatformContextMixin, UpdateView):
 
 
 ###
-### Platform
+### Vendor
 ###
 class VendorContextMixin(ContextMixin):
     model = Vendor
