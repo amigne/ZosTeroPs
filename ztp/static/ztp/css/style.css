@@ -66,6 +66,35 @@ ul.messages li.success { color: forestgreen; }
     text-decoration: none;
 }
 
+/* About */
+.about h2 {
+    text-align: center;
+}
+.about p {
+    text-align: center;
+}
+.about ul li {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+.about a {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+.about .container {
+    display: flex;
+    justify-content: center;
+}
+.about .copyright {
+    border: 0px solid black;
+    background-color: #dddddd;
+    padding: 10px;
+    max-width: 600px;
+    text-align: left;
+    font-family: 'Courier New', monospace;
+}
+
 /* Forms */
 input[type=text], input[type=file], select, option, textarea {
     width: 100%;

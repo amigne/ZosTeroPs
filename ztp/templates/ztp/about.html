@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content_title %}{% trans "About" %}{% endblock content_title %}
+
+{% block content %}
+    <div class="about">
+        <h2>ZosTeroPs</h2>
+        <p><strong>{% trans "Version:" %}</strong> {% trans "development" %}</p>
+        <p><strong>{% trans "Author:" %}</strong> Yann Gauteron</p>
+        <p><strong>{% trans "Website:" %}</strong> <a href="https://github.com/amigne/ZosTeroPs" target="_blank">https://github.com/amigne/ZosTeroPs</a></p>
+        <p><strong>{% trans "License:" %}</strong> {% trans "MIT License" %}</p>
+        <div class="container">
+            <div class="copyright">
+                MIT License<br /><br/>
+
+                Copyright (c) 2021 Yann Gauteron<br /><br/>
+
+                Permission is hereby granted, free of charge, to any person obtaining a copy
+                of this software and associated documentation files (the "Software"), to deal
+                in the Software without restriction, including without limitation the rights
+                to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                copies of the Software, and to permit persons to whom the Software is
+                furnished to do so, subject to the following conditions:<br /><br/>
+
+                The above copyright notice and this permission notice shall be included in all
+                copies or substantial portions of the Software.<br /><br/>
+
+                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                SOFTWARE.<br /><br/>
+
+                This software embeds parts of code of the following softwares that are also
+                under MIT License:
+                <ul>
+                    <li>jSuites: Copyright (c) 2019 Paul Hodel</li>
+                </ul>
+
+                This software uses some libraries that are also under MIT License:
+                <ul>
+                    <li>Tim Dorssers' ZTP: Copyright (c) 2019 Tim Dorssers</li>
+                    <li>jQuery: Copyright OpenJS Foundation and other contributors, https://openjsf.org/</li>
+                    <li>Jexcel</li>
+                </ul>
+
+                This software uses some libraries that are under the New BSD License:
+                <ul>
+                    <li>jQuery Formset: Copyright (c) 2009, Stanislaus Madueke</li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}

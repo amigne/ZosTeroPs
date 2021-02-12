@@ -19,6 +19,7 @@
         <a href="{% url 'platformList' %}"{% if menu_item == 'platform' %} class="active"{% endif %}>Platforms</a>
         <a href="{% url 'vendorList' %}"{% if menu_item == 'vendor' %} class="active"{% endif %}>Vendors</a>
         {% comment "Future development" %} <a href="#"{% if menuitem == 'log' %} class="active"{% endif %}>Logs</a>{% endcomment %}
+        <a href="{% url 'about' %}"{% if menu_item == 'about' %} class="active"{% endif %}>About</a>
     </nav>
     {% if messages %}
         <ul class="messages">

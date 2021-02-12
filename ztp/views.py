@@ -46,6 +46,14 @@ class HomeView(ContextMixin, TemplateView):
 
 
 ###
+### About
+###
+class AboutView(ContextMixin, TemplateView):
+    menu_item = 'about'
+    template_name = 'ztp/about.html'
+
+
+###
 ### ZTP Script
 ###
 class ZtpContextMixin(ContextMixin):

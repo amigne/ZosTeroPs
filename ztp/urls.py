@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     # Home
     path('', views.HomeView.as_view(), name='home'),
+    path('about/', views.AboutView.as_view(), name='about'),
 
     # ZTP Scripts
     url('^' + settings.ZTP_BOOTSTRAP_URL + '(?P<name>[A-Za-z0-9_.-]+)$', views.ztp_download, name='ztpDownload'),
