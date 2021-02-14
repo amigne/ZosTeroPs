@@ -12,4 +12,4 @@ And now, give back to Caesar what belongs to Caesar: The idea of developing ZosT
 
 ## Releases
 * v0.0.0 (February 11th, 2021) - Functional mockup. Tool should not be used for production, or only if you know what you're doing. Please note that the software design is not finalized and some features may evolve without consideration for backward compatibility. This includes data migrations! This warning will be persist until v1.0.0 is released. At that time, the development will have reached a certain level of maturity and backward compatibility will be ensured for any further v1.x.y versions.
- 
+* v0.0.0a (February 14th, 2021) - Fixing a regression with an obsolete CDN Javascript library. This library is now embedded into this package.
