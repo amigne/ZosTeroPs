@@ -8,6 +8,7 @@
     <form method="post"{% if menu_item == "firmware" %} enctype="multipart/form-data"{% endif %}>
         {% csrf_token %}
         {{ formset.management_form }}
+            <p class="error"></p>
         {% for error in form.non_field_errors %}
             <p class="error">{{ error }}</p>
         {% endfor %}
@@ -237,10 +238,9 @@
                                             {% endwith %}
 
                                             {% with field=parameter.name %}
-                                                <label for="{{ field.id_for_label }}" class="config_parameter_label">{{ field.label }}</label>
-                                                <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                <!--label for="{{ field.id_for_label }}" class="config_parameter_label">{{ field.label }}</label-->
+                                                <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
                                                        {% if field.value %}value="{{ field.value }}"{% endif %}
-                                                       {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
                                                        id="{{ field.id_for_label }}">
                                                 {% for error in field.errors %}
                                                     <p class="field-error">{{ error }}</p>
@@ -252,7 +252,7 @@
                                                 <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
                                                        {% if field.value %}value="{{ field.value }}"{% endif %}
                                                        id="{{ field.id_for_label }}">
-                                                <div id="{{ field.id_for_label }}-jexcel" class="jexcel_instance"></div>
+                                                <div id="{{ field.id_for_label }}-jstable" class="jstable_instance"></div>
                                                 {% for error in field.errors %}
                                                     <p class="field-error">{{ error }}</p>
                                                 {% endfor %}
@@ -302,14 +302,14 @@
 
 {% block css_xtra %}
     {% if menu_item == "config" %}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jexcel/4.5.2/jexcel.min.css" integrity="sha512-WB/kEaOfg0GNR4kgcutxGokTJwOHScl+1IWlUwobvYi8USQ2ML9mn3794NPSpInbVc6ISnUM6kXZq7hg6Vk1vg==" crossorigin="anonymous" />
+        <link rel="stylesheet" href="{% static "ztp/css/jsTable.css" %}" type="text/css" />
         <link rel="stylesheet" href="{% static "ztp/css/jsuites.css" %}" type="text/css" />
     {% endif %}
 {% endblock css_xtra %}
 
 {% block js_xtra %}
     {% if menu_item == "config" %}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jexcel/4.5.2/jexcel.min.js" integrity="sha512-wMMvCzGFoMkqblq/fcXTGli56kJQGAXsP6c2oriVYpzjXC/g6JRlvJe7zVoQZsOadgxECkr5tf4DIaJjofYGlA==" crossorigin="anonymous"></script>
+        <script src="{% static "ztp/js/jsTable.js" %}"></script>
         <script src="{% static "ztp/js/jsuites.js" %}"></script>
         <script>
             function onElementInserted(containerSelector, elementSelector, callback) {
@@ -332,72 +332,148 @@
             }
         </script>
         <script>
-            function update_jexcel_first_column_header(jexcel_obj, title) {
+            function update_jstable_first_column_header(jstable_obj, title) {
                 if (title !== '') {
-                    jexcel_obj.setHeader(0, title);
+                    jstable_obj.setHeader(0, title);
                 }
             }
 
-            function load_jexcel_data(stylesheet_id) {
-                let data_id = stylesheet_id.replace(/-jexcel$/, '');
+            function isEmptyData(data) {
+                for (let i = 0; i < data.length; ++i) {
+                    for (let j = 0; j < data[i].length; ++j) {
+                        if (data[i][j] !== '') {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            function areInitialColumnsTitles(columns) {
+                for (let i = 0; i < columns.length; ++i) {
+                    let columnName = 'title' in columns[i] ? columns[i]['title'] : '';
+                    if (columnName !== jsTable.getColumnName(i)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function getFirstColumnTitle(columns) {
+                if (columns.length > 0 && 'title' in columns[0]) {
+                    return columns[0]['title'];
+                }
+                return '';
+            }
+
+            function load_jstable_data(spreadsheet_id) {
+                let data_id = spreadsheet_id.replace(/-jstable$/, '');
                 let name_id = data_id.replace(/-[^-]*$/, '') + '-name';
 
-                let data = $('#' + data_id);
-                let name = $('#' + name_id);
+                let data_element = $('#' + data_id);
+                let name_element = $('#' + name_id);
 
-                let data_value = data.val();
-                if (data_value === '') {
-                    data_value = '{"columns":[{"width":150},{"width":150}],"data":[["",""],["",""]]}';
+                let data_value = data_element.val();
+
+                let options = {
+                    minDimensions: [2, 2],
+                    defaultColWidth: 120,
+                };
+                if (data_value !== '') {
+                    try {
+                        options = Object.assign({}, options, JSON.parse(data_value));
+                    } catch (e) {}
                 }
 
-                let jexcel_obj = jexcel(document.getElementById(stylesheet_id), JSON.parse(data_value));
-                let name_value = name.val();
-                update_jexcel_first_column_header(jexcel_obj, name_value);
+                let jstable_obj = jsTable(document.getElementById(spreadsheet_id), options);
+                let name_value = name_element.val();
+                update_jstable_first_column_header(jstable_obj, name_value);
 
-                name.keyup(function(){
-                    let name_value = name.val();
+                name_element.keyup(function(){
+                    let name_value = name_element.val();
                     if (name_value === '') {
-                        name.val(jexcel_obj.getHeader(0).substring(0,1));
+                        name_element.val(jstable_obj.getHeader(0).substring(0,1));
                     }
-                    update_jexcel_first_column_header(jexcel_obj, name_value);
+                    update_jstable_first_column_header(jstable_obj, name_value);
                 });
 
-                return jexcel_obj;
+                return jstable_obj;
             }
-            function save_jexcel_data(jexcel_objs) {
-                for (let stylesheet_id in jexcel_objs) {
-                    let jexcel_obj = jexcel_objs[stylesheet_id];
 
-                    let data_id = stylesheet_id.replace(/-jexcel$/, '');
+            function findDuplicates(dict) {
+                let hash = Object.create(null);
+                let result = Object.create(null);
+
+                Object.keys(dict).forEach(k => {
+                    let grp = dict[k];
+                    (grp in hash) ? hash[grp].push(k): (hash[grp] = [k]);
+                });
+
+                for (let key in hash) {
+                    if (hash[key].length > 1) {
+                        result[key] = hash[key].toString();
+                    }
+                }
+
+                return result
+            }
+
+            function save_jstable_data(jstable_instances) {
+                let names = {};
+
+                for (let spreadsheet_id in jstable_instances) {
+                    let jstable_instance = jstable_instances[spreadsheet_id];
+
+                    let data_id = spreadsheet_id.replace(/-jstable$/, '');
                     let name_id = data_id.replace(/-[^-]*$/, '') + '-name';
 
-                    let data = $('#' + data_id);
-                    let name = $('#' + name_id);
+                    let data_element = $('#' + data_id);
+                    let name_element = $('#' + name_id);
 
-                    update_jexcel_first_column_header(jexcel_obj, name.val());
-                    let config = jexcel_obj.getConfig();
+                    let table_data = jstable_instance.getData();
+                    let table_columns = jstable_instance.getColumnsProperties();
+                    let isSet = (! areInitialColumnsTitles(table_columns)) || (! isEmptyData(table_data));
 
-                    data.val(JSON.stringify(config));
+                    if (isSet) {
+                        // name_element.val(getFirstColumnTitle(table_columns));
+                        /*data_element.val(JSON.stringify({
+                            data: table_data,
+                            columns: table_columns,
+                        }));*/
+                    }
+
+                    names[spreadsheet_id] = getFirstColumnTitle(table_columns);
                 }
+
+                let duplicates = findDuplicates(names);
+                console.log(duplicates);
+                if (Object.keys(duplicates).length > 0) {
+                    for (let key in duplicates) {
+                        $('.error').first().text('Duplicate key "' + key + '" found for parameters.');
+                    }
+                    return false;
+                }
+
+                return true;
             }
         </script>
         <script>
-            let jexcel_objs = {};
+            let jstable_objs = {};
 
             $(function() {
                 let stylesheet_id;
                 {% for parameter in formset %}
-                    stylesheet_id = '{{ parameter.data.id_for_label }}-jexcel';
-                    jexcel_objs[stylesheet_id] = load_jexcel_data(stylesheet_id);
+                    stylesheet_id = '{{ parameter.data.id_for_label }}-jstable';
+                    jstable_objs[stylesheet_id] = load_jstable_data(stylesheet_id);
                 {% endfor %}
 
-                onElementInserted('body', '.jexcel_instance', function (element) {
+                onElementInserted('body', '.jstable_instance', function (element) {
                     stylesheet_id = element.id;
-                    jexcel_objs[stylesheet_id] = load_jexcel_data(stylesheet_id);
+                    jstable_objs[stylesheet_id] = load_jstable_data(stylesheet_id);
                 });
 
                 $("form").submit(function () {
-                    save_jexcel_data(jexcel_objs);
+                     return save_jstable_data(jstable_objs);
                 });
             })
         </script>
