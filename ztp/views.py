@@ -360,9 +360,9 @@ def ztp_download(request, name):
             parameters_context_dict[param['name']] = param['value']
 
     if ztp_script.priority_query_string_over_arguments:
-        context_dict = parameters_context_dict | query_string_context_dict
+        context_dict = { **parameters_context_dict, **query_string_context_dict }
     else:
-        context_dict = query_string_context_dict | parameters_context_dict
+        context_dict = { **query_string_context_dict, **parameters_context_dict }
 
     template = Template(ztp_script.template)
     return HttpResponse(template.render(Context(context_dict)), content_type='text/plain')
