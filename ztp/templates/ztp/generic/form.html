@@ -308,6 +308,18 @@
 {% endblock css_xtra %}
 
 {% block js_xtra %}
+    {% if menu_item == "ztpScript" or menu_item == "config" %}
+        <script src="{% static "ztp/js/jquery.formset.js" %}"></script>
+        <script>
+            $.fn.formset.defaults['prefix'] = 'parameters';
+            $(function() {
+                $('.link-formset').formset({
+                    addText: '{% trans "Add Parameter" %}',
+                    deleteText: '{% trans "Remove Parameter" %}'
+                });
+            });
+        </script>
+    {% endif %}
     {% if menu_item == "config" %}
         <script src="{% static "ztp/js/jsTable.js" %}"></script>
         <script src="{% static "ztp/js/jsuites.js" %}"></script>
@@ -435,18 +447,18 @@
                     let isSet = (! areInitialColumnsTitles(table_columns)) || (! isEmptyData(table_data));
 
                     if (isSet) {
-                        // name_element.val(getFirstColumnTitle(table_columns));
-                        /*data_element.val(JSON.stringify({
+                        name_element.val(getFirstColumnTitle(table_columns));
+                        data_element.val(JSON.stringify({
                             data: table_data,
                             columns: table_columns,
-                        }));*/
+                        }));
+                        names[spreadsheet_id] = getFirstColumnTitle(table_columns);
+                    } else {
+                        name_element.val('');
+                        data_element.val('');
                     }
-
-                    names[spreadsheet_id] = getFirstColumnTitle(table_columns);
                 }
-
                 let duplicates = findDuplicates(names);
-                console.log(duplicates);
                 if (Object.keys(duplicates).length > 0) {
                     for (let key in duplicates) {
                         $('.error').first().text('Duplicate key "' + key + '" found for parameters.');
@@ -476,18 +488,6 @@
                      return save_jstable_data(jstable_objs);
                 });
             })
-        </script>
-    {% endif %}
-    {% if menu_item == "ztpScript" or menu_item == "config" %}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.min.js" integrity="sha512-ltwjKsDTo3hW/wV66ZaEkf2wOAFxmg7rWM76J8kOcYKLSKy44WBYO/BFaNNH3NGDS8BSz3meB9wtSnm41oL+pA==" crossorigin="anonymous"></script>
-        <script>
-            $.fn.formset.defaults['prefix'] = 'parameters';
-            $(function() {
-                $('.link-formset').formset({
-                    addText: '{% trans "Add Parameter" %}',
-                    deleteText: '{% trans "Remove Parameter" %}'
-                });
-            });
         </script>
     {% endif %}
 {% endblock js_xtra %}
