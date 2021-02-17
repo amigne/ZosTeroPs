@@ -1,5 +1,6 @@
 import locale
 
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
 from django.http import Http404, HttpResponse
@@ -30,8 +31,10 @@ class ContextMixin(BaseContextMixin):
             else:
                 context_data['formset'] = self.formset_class(instance=object)
 
-        for attr in ['list_fields', 'menu_item', 'object_description',
-                     'object_description_plural', 'url_create']:
+        for attr in ['can_add', 'can_change', 'can_delete', 'can_list',
+                     'can_view', 'list_fields', 'menu_item',
+                     'object_description', 'object_description_plural',
+                     'url_create']:
             if hasattr(self, attr):
                 context_data[attr] = getattr(self, attr, None)
 
@@ -56,7 +59,7 @@ class AboutView(ContextMixin, TemplateView):
 ###
 ### ZTP Script
 ###
-class ZtpContextMixin(ContextMixin):
+class ZtpContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = ZtpScript
     menu_item = 'ztpScript'
     object_description = _('ZTP script')
@@ -66,9 +69,30 @@ class ZtpContextMixin(ContextMixin):
     list_fields = ['id', 'name', 'description']
     url_create = reverse_lazy('ztpCreate')
 
+    @property
+    def can_add(self):
+        return self.request.user.has_perm('ztp.add_ztpscript')
+
+    @property
+    def can_change(self):
+        return self.request.user.has_perm('ztp.change_ztpscript')
+
+    @property
+    def can_delete(self):
+        return self.request.user.has_perm('ztp.delete_ztpscript')
+
+    @property
+    def can_list(self):
+        return self.request.user.has_perm('ztp.list_ztpscript')
+
+    @property
+    def can_view(self):
+        return self.request.user.has_perm('ztp.view_ztpscript')
+
 
 class ZtpCreateView(ZtpContextMixin, CreateView):
     template_name = 'ztp/generic/form.html'
+    permission_required = 'ztp.add_ztpscript'
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -92,24 +116,38 @@ class ZtpCreateView(ZtpContextMixin, CreateView):
         return super(ZtpCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
+        if (self.can_view):
+            return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
+        elif (self.can_list):
+            return reverse_lazy('ztpList')
+        else:
+            return reverse_lazy('home')
 
 
 class ZtpDeleteView(ZtpContextMixin, DeleteView):
     template_name = 'ztp/generic/confirm_delete.html'
-    success_url = reverse_lazy('ztpList')
+    permission_required = 'ztp.delete_ztpscript'
+
+    def get_success_url(self):
+        if (self.can_list):
+            return reverse_lazy('ztpList')
+        else:
+            return reverse_lazy('home')
 
 
 class ZtpDetailView(ZtpContextMixin, DetailView):
     template_name = 'ztp/generic/detail.html'
+    permission_required = 'ztp.view_ztpscript'
 
 
 class ZtpListView(ZtpContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
+    permission_required = 'ztp.list_ztpscript'
 
 
 class ZtpUpdateView(ZtpContextMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
+    permission_required = 'ztp.change_ztpscript'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -133,13 +171,17 @@ class ZtpUpdateView(ZtpContextMixin, UpdateView):
         return super(ZtpUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
-
+        if (self.can_view):
+            return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
+        elif (self.can_list):
+            return reverse_lazy('ztpList')
+        else:
+            return reverse_lazy('home')
 
 ###
 ### Configuration
 ###
-class ConfigContextMixin(ContextMixin):
+class ConfigContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Config
     menu_item = 'config'
     object_description = _('configuration')
@@ -149,9 +191,30 @@ class ConfigContextMixin(ContextMixin):
     list_fields = ['id', 'name', 'description']
     url_create = reverse_lazy('configCreate')
 
+    @property
+    def can_add(self):
+        return self.request.user.has_perm('ztp.add_config')
+
+    @property
+    def can_change(self):
+        return self.request.user.has_perm('ztp.change_config')
+
+    @property
+    def can_delete(self):
+        return self.request.user.has_perm('ztp.delete_config')
+
+    @property
+    def can_list(self):
+        return self.request.user.has_perm('ztp.list_config')
+
+    @property
+    def can_view(self):
+        return self.request.user.has_perm('ztp.view_config')
+
 
 class ConfigCreateView(ConfigContextMixin, CreateView):
     template_name = 'ztp/generic/form.html'
+    permission_required = 'ztp.add_config'
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -175,24 +238,39 @@ class ConfigCreateView(ConfigContextMixin, CreateView):
         return super(ConfigCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('configDetail', kwargs={'pk': self.object.pk})
+        if (self.can_view):
+            return reverse_lazy('configDetail', kwargs={'pk': self.object.pk})
+        elif (self.can_list):
+            return reverse_lazy('configList')
+        else:
+            return reverse_lazy('home')
 
 
 class ConfigDeleteView(ConfigContextMixin, DeleteView):
     template_name = 'ztp/generic/confirm_delete.html'
     success_url = reverse_lazy('configList')
+    permission_required = 'ztp.delete_config'
+
+    def get_success_url(self):
+        if (self.can_list):
+            return reverse_lazy('configList')
+        else:
+            return reverse_lazy('home')
 
 
 class ConfigDetailView(ConfigContextMixin, DetailView):
     template_name = 'ztp/generic/detail.html'
+    permission_required = 'ztp.view_config'
 
 
 class ConfigListView(ConfigContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
+    permission_required = 'ztp.list_config'
 
 
 class ConfigUpdateView(ConfigContextMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
+    permission_required = 'ztp.change_config'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -216,13 +294,18 @@ class ConfigUpdateView(ConfigContextMixin, UpdateView):
         return super(ConfigUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('configDetail', kwargs={'pk': self.object.pk})
+        if (self.can_view):
+            return reverse_lazy('configDetail', kwargs={'pk': self.object.pk})
+        elif (self.can_list):
+            return reverse_lazy('configList')
+        else:
+            return reverse_lazy('home')
 
 
 ###
 ### Firmware
 ###
-class FirmwareContextMixin(ContextMixin):
+class FirmwareContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Firmware
     menu_item = 'firmware'
     object_description = _('firmware')
@@ -230,11 +313,31 @@ class FirmwareContextMixin(ContextMixin):
     list_fields = ['id', 'platform', 'file', 'description']
     url_create = reverse_lazy('firmwareCreate')
 
+    @property
+    def can_add(self):
+        return self.request.user.has_perm('ztp.add_firmware')
+
+    @property
+    def can_change(self):
+        return self.request.user.has_perm('ztp.change_firmware')
+
+    @property
+    def can_delete(self):
+        return self.request.user.has_perm('ztp.delete_firmware')
+
+    @property
+    def can_list(self):
+        return self.request.user.has_perm('ztp.list_firmware')
+
+    @property
+    def can_view(self):
+        return self.request.user.has_perm('ztp.view_firmware')
+
 
 class FirmwareCreateView(FirmwareContextMixin, SuccessMessageMixin, CreateView):
     template_name = 'ztp/generic/form.html'
     fields = ['platform', 'file', 'description']
-    success_url = reverse_lazy('firmwareList')
+    permission_required = 'ztp.add_firmware'
 
     def get_success_message(self, cleaned_data):
         form = self.get_form()
@@ -243,24 +346,42 @@ class FirmwareCreateView(FirmwareContextMixin, SuccessMessageMixin, CreateView):
         return f"Firmware {instance.file.name} successfully created! File size is {instance.filesize:n} bytes." \
                f" MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
 
+    def get_success_url(self):
+        if (self.can_view):
+            return reverse_lazy('firmwareDetail', kwargs={'pk': self.object.pk})
+        elif (self.can_list):
+            return reverse_lazy('firmwareList')
+        else:
+            return reverse_lazy('home')
+
 
 class FirmwareDeleteView(FirmwareContextMixin, DeleteView):
     template_name = 'ztp/generic/confirm_delete.html'
-    success_url = reverse_lazy('firmwareList')
+    permission_required = 'ztp.delete_firmware'
+
+    def get_success_url(self):
+        if (self.can_view):
+            return reverse_lazy('firmwareDetail', kwargs={'pk': self.object.pk})
+        elif (self.can_list):
+            return reverse_lazy('firmwareList')
+        else:
+            return reverse_lazy('home')
 
 
 class FirmwareDetailView(FirmwareContextMixin, DetailView):
     template_name = 'ztp/generic/detail.html'
+    permission_required = 'ztp.view_firmware'
 
 
 class FirmwareListView(FirmwareContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
+    permission_required = 'ztp.list_firmware'
 
 
 class FirmwareUpdateView(FirmwareContextMixin, SuccessMessageMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
     fields = ['platform', 'file', 'description']
-    success_url = reverse_lazy('firmwareList')
+    permission_required = 'ztp.change_firmware'
 
     def get_success_message(self, cleaned_data):
         form = self.get_form()
@@ -269,11 +390,17 @@ class FirmwareUpdateView(FirmwareContextMixin, SuccessMessageMixin, UpdateView):
         return f"Firmware {instance.file.name} successfully modified! File size is {instance.filesize:n} bytes. " \
                f"MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
 
+    def get_success_url(self):
+        if (self.can_list):
+            return reverse_lazy('firmwareList')
+        else:
+            return reverse_lazy('home')
+
 
 ###
 ### Platform
 ###
-class PlatformContextMixin(ContextMixin):
+class PlatformContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Platform
     menu_item = 'platform'
     object_description = _('platform')
@@ -281,32 +408,70 @@ class PlatformContextMixin(ContextMixin):
     list_fields = ['id', 'vendor', 'name', 'description']
     url_create = reverse_lazy('platformCreate')
 
+    @property
+    def can_add(self):
+        return self.request.user.has_perm('ztp.add_platform')
+
+    @property
+    def can_change(self):
+        return self.request.user.has_perm('ztp.change_platform')
+
+    @property
+    def can_delete(self):
+        return self.request.user.has_perm('ztp.delete_platform')
+
+    @property
+    def can_list(self):
+        return self.request.user.has_perm('ztp.list_platform')
+
+    @property
+    def can_view(self):
+        return False # self.request.user.has_perm('ztp.view_platform')
+
 
 class PlatformCreateView(PlatformContextMixin, CreateView):
     template_name = 'ztp/generic/form.html'
     fields = ['vendor', 'name', 'description']
-    success_url = reverse_lazy('platformList')
+    permission_required = 'ztp.add_platform'
+
+    def get_success_url(self):
+        if (self.can_list):
+            return reverse_lazy('platformList')
+        else:
+            return reverse_lazy('home')
 
 
 class PlatformDeleteView(PlatformContextMixin, DeleteView):
     template_name = 'ztp/generic/confirm_delete.html'
-    success_url = reverse_lazy('platformList')
+    permission_required = 'ztp.delete_platform'
+
+    def get_success_url(self):
+        if (self.can_list):
+            return reverse_lazy('platformList')
+        else:
+            return reverse_lazy('home')
 
 
 class PlatformListView(PlatformContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
+    permission_required = 'ztp.list_platform'
 
 
 class PlatformUpdateView(PlatformContextMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
     fields = ['vendor', 'name', 'description']
-    success_url = reverse_lazy('platformList')
+    permission_required = 'ztp.change_platform'
 
+    def get_success_url(self):
+        if (self.can_list):
+            return reverse_lazy('platformList')
+        else:
+            return reverse_lazy('home')
 
 ###
 ### Vendor
 ###
-class VendorContextMixin(ContextMixin):
+class VendorContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Vendor
     menu_item = 'vendor'
     object_description = _('vendor')
@@ -314,27 +479,65 @@ class VendorContextMixin(ContextMixin):
     list_fields = ['id', 'name', 'description']
     url_create = reverse_lazy('vendorCreate')
 
+    @property
+    def can_add(self):
+        return self.request.user.has_perm('ztp.add_vendor')
+
+    @property
+    def can_change(self):
+        return self.request.user.has_perm('ztp.change_vendor')
+
+    @property
+    def can_delete(self):
+        return self.request.user.has_perm('ztp.delete_vendor')
+
+    @property
+    def can_list(self):
+        return self.request.user.has_perm('ztp.list_vendor')
+
+    @property
+    def can_view(self):
+        return False # self.request.user.has_perm('ztp.view_vendor')
+
 
 class VendorCreateView(VendorContextMixin, CreateView):
     template_name = 'ztp/generic/form.html'
     fields = ['name', 'description']
-    success_url = reverse_lazy('vendorList')
+    permission_required = 'ztp.add_vendor'
+
+    def get_success_url(self):
+        if (self.can_list):
+            return reverse_lazy('vendorList')
+        else:
+            return reverse_lazy('home')
 
 
 class VendorDeleteView(VendorContextMixin, DeleteView):
     template_name = 'ztp/generic/confirm_delete.html'
-    success_url = reverse_lazy('vendorList')
+    permission_required = 'ztp.delete_vendor'
+
+    def get_success_url(self):
+        if (self.can_list):
+            return reverse_lazy('vendorList')
+        else:
+            return reverse_lazy('home')
 
 
 class VendorListView(VendorContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
+    permission_required = 'ztp.list_vendor'
 
 
 class VendorUpdateView(VendorContextMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
     fields = ['name', 'description']
-    success_url = reverse_lazy('vendorList')
+    permission_required = 'ztp.change_vendor'
 
+    def get_success_url(self):
+        if (self.can_list):
+            return reverse_lazy('vendorList')
+        else:
+            return reverse_lazy('home')
 
 ###
 ### Content delivery

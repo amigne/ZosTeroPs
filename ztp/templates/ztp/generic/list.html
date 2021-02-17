@@ -23,7 +23,7 @@
                         <th class="platform">{% trans "Platform" %}</th>
                     {% endif %}
                 {% endfor %}
-                <th class="action"><a href="{{ url_create }}"><i class="far fa-plus-square"></i></a></th>
+                <th class="action">{% if can_add %}<a href="{{ url_create }}"><i class="far fa-plus-square"></i></a>{% endif %}</th>
             </tr>
         </thead>
         <tbody>
@@ -33,9 +33,9 @@
                         {% if field == 'id' %}
                             <td class="id">{{ object.id }}</td>
                         {% elif field == 'name' %}
-                            <td class="name">{% if object.url_detail %}<a href="{{ object.url_detail }}">{{ object.name }}</a>{% else %}{{ object.name }}{% endif %}</td>
+                            <td class="name">{% if can_view and object.url_detail %}<a href="{{ object.url_detail }}">{{ object.name }}</a>{% else %}{{ object.name }}{% endif %}</td>
                         {% elif field == 'file' %}
-                            <td class="file"><a href="{{ object.url_detail }}">{{ object.file.name }}</a> <small>({{ object.file.size|intcomma }} {% trans "bytes" %})</small></td>
+                            <td class="file">{% if can_view %}<a href="{{ object.url_detail }}">{{ object.file.name }}</a>{% else %}{{ object.file.name }}{% endif %} <small>({{ object.file.size|intcomma }} {% trans "bytes" %})</small></td>
                         {% elif field == 'description' %}
                             <td class="description">{{ object.description }}</td>
                         {% elif field == 'vendor' %}
@@ -45,8 +45,8 @@
                         {% endif %}
                     {% endfor %}
                     <td class="action">
-                        <a href="{{ object.url_delete }}"><i class="fas fa-trash"></i></a>&nbsp;&nbsp;
-                        <a href="{{ object.url_update }}"><i class="fas fa-edit"></i></a>
+                        {% if can_delete %}<a href="{{ object.url_delete }}"><i class="fas fa-trash"></i></a>{% endif %}&nbsp;&nbsp;
+                        {% if can_change %}<a href="{{ object.url_update }}"><i class="fas fa-edit"></i></a>{% endif %}
                     </td>
                 </tr>
             {% endfor %}

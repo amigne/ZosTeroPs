@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 import hashlib
 import json
@@ -25,11 +26,16 @@ class Vendor(models.Model):
     @property
     def url_detail(self):
         return None
-        return reverse_lazy('vendorDetail', kwargs={'pk': self.id})
+        # return reverse_lazy('vendorDetail', kwargs={'pk': self.id})
 
     @property
     def url_update(self):
         return reverse_lazy('vendorUpdate', kwargs={'pk': self.id})
+
+    class Meta:
+        permissions = (
+            ('list_vendor', _('Can list vendor')),
+        )
 
 
 class Platform(models.Model):
@@ -49,7 +55,7 @@ class Platform(models.Model):
     @property
     def url_detail(self):
         return None
-        return reverse_lazy('platformDetail', kwargs={'pk': self.id})
+        # return reverse_lazy('platformDetail', kwargs={'pk': self.id})
 
     @property
     def url_update(self):
@@ -57,7 +63,9 @@ class Platform(models.Model):
 
     class Meta:
         unique_together = ('vendor', 'name',)
-
+        permissions = (
+            ('list_platform', _('Can list platform')),
+        )
 
 class Firmware(models.Model):
     platform = models.ForeignKey(Platform,
@@ -96,6 +104,11 @@ class Firmware(models.Model):
     @property
     def url_update(self):
         return reverse_lazy('firmwareUpdate', kwargs={'pk': self.id})
+
+    class Meta:
+        permissions = (
+            ('list_firmware', _('Can list firmware')),
+        )
 
 
 @receiver(models.signals.post_delete, sender=Firmware)
@@ -161,6 +174,11 @@ class Config(models.Model):
     @property
     def url_update(self):
         return reverse_lazy('configUpdate', kwargs={'pk': self.id})
+
+    class Meta:
+        permissions = (
+            ('list_config', _('Can list config')),
+        )
 
 
 class ConfigParameter(models.Model):
@@ -276,6 +294,11 @@ class ZtpScript(models.Model):
     @property
     def url_update(self):
         return reverse_lazy('ztpUpdate', kwargs={'pk': self.id})
+
+    class Meta:
+        permissions = (
+            ('list_ztpscript', _('Can list ztp script')),
+        )
 
 
 class ZtpParameter(models.Model):

@@ -13,11 +13,21 @@
 
     <nav class="menu">
         <a href="{% url 'home' %}"{% if menu_item == 'home' %} class="active"{% endif %}>Home</a>
-        <a href="{% url 'ztpList' %}"{% if menu_item == 'ztpScript' %} class="active"{% endif %}>ZTP Scripts</a>
-        <a href="{% url 'configList' %}"{% if menu_item == 'config' %} class="active"{% endif %}>Configurations</a>
-        <a href="{% url 'firmwareList' %}"{% if menu_item == 'firmware' %} class="active"{% endif %}>Firmwares</a>
-        <a href="{% url 'platformList' %}"{% if menu_item == 'platform' %} class="active"{% endif %}>Platforms</a>
-        <a href="{% url 'vendorList' %}"{% if menu_item == 'vendor' %} class="active"{% endif %}>Vendors</a>
+        {% if perms.ztp.list_ztpscript %}
+            <a href="{% url 'ztpList' %}"{% if menu_item == 'ztpScript' %} class="active"{% endif %}>ZTP Scripts</a>
+        {% endif %}
+        {% if perms.ztp.list_config %}
+            <a href="{% url 'configList' %}"{% if menu_item == 'config' %} class="active"{% endif %}>Configurations</a>
+        {% endif %}
+        {% if perms.ztp.list_firmware %}
+            <a href="{% url 'firmwareList' %}"{% if menu_item == 'firmware' %} class="active"{% endif %}>Firmwares</a>
+        {% endif %}
+        {% if perms.ztp.list_platform %}
+            <a href="{% url 'platformList' %}"{% if menu_item == 'platform' %} class="active"{% endif %}>Platforms</a>
+        {% endif %}
+        {% if perms.ztp.list_vendor %}
+            <a href="{% url 'vendorList' %}"{% if menu_item == 'vendor' %} class="active"{% endif %}>Vendors</a>
+        {% endif %}
         {% comment "Future development" %} <a href="#"{% if menuitem == 'log' %} class="active"{% endif %}>Logs</a>{% endcomment %}
         <a href="{% url 'about' %}"{% if menu_item == 'about' %} class="active"{% endif %}>About</a>
     </nav>
