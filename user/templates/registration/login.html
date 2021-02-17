@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content_title %}{% trans 'Log-in' %}{% endblock content_title %}
+
+{% block content %}
+    <div class="login">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% for error in form.non_field_errors %}
+                <p class="error">{{ error }}</p>
+            {% endfor %}
+            <table class="login-form">
+                <thead>
+                    <tr>
+                        <th colspan="2">{% trans 'Log-in' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% with field=form.username %}
+                            <th><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                            <td>
+                                <input type="text" name="{{ field.name }}"
+                                       {% if field.value %}value="{{ field.value }}"{% endif %}
+                                       {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                       id="{{ field.id_for_label }}"
+                                       {% if field.field.required %}required=""{% endif %}
+                                       autofocus="" autocapitalize="none" autocomplete="username">
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            </td>
+                        {% endwith %}
+                    </tr>
+                    <tr>
+                        {% with field=form.password %}
+                            <th><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                            <td><input type="password" name="{{ field.name }}"
+                                   {% if field.value %}value="{{ field.value }}"{% endif %}
+                                   {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.field.required %}required=""{% endif %}
+                                   autocomplete="current-password">
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}</td>
+                        {% endwith %}
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="action" colspan="2"><button type="submit">Log-in</button></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    </div>
+{% endblock content %}

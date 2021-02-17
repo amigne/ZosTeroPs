@@ -96,7 +96,8 @@ ul.messages li.success { color: forestgreen; }
 }
 
 /* Forms */
-input[type=text], input[type=file], select, option, textarea {
+input[type=text], input[type=file], input[type=password], select, option,
+textarea {
     width: 100%;
 }
 textarea {
@@ -117,8 +118,6 @@ form .error {
 form .has-error {
     color: #ff0000;
 }
-
-
 
 /* Form ZTP Scripts */
 .description textarea {
@@ -146,8 +145,6 @@ form .has-error {
 .vendor_description textarea {
     height: 100px;
 }
-
-
 
 /* Table update (legacy) */
 table.table_update {
@@ -180,9 +177,6 @@ table.update th {
 table.update tfoot td {
     text-align: center;
 }
-
-
-
 
 /* Table parameters */
 table.parameters {
@@ -352,4 +346,21 @@ form.delete p {
     color: #ff0000;
     text-align: center;
     font-size: large;
+}
+
+/********************************* Log-in **********************************/
+
+.login {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.login-form {
+    justify-content: center;
+    width: 200px;
+    border: 1px;
+}
+.login-form tfoot td {
+    text-align: center;
 }
