@@ -12,13 +12,14 @@
     {% block body_title %}<h3>ZosTeroPs</h3>{% endblock body_title %}
 
     <nav class="menu">
-        <a href="{% url 'home' %}"{% if menuitem == 'home' %} class="active"{% endif %}>Home</a>
-        <a href="{% url 'ztpList' %}"{% if menuitem == 'ztpScript' %} class="active"{% endif %}>ZTP Scripts</a>
-        <a href="{% url 'configList' %}"{% if menuitem == 'config' %} class="active"{% endif %}>Configurations</a>
-        <a href="{% url 'firmwareList' %}"{% if menuitem == 'firmware' %} class="active"{% endif %}>Firmwares</a>
-        <a href="{% url 'platformList' %}"{% if menuitem == 'platform' %} class="active"{% endif %}>Platforms</a>
-        <a href="{% url 'vendorList' %}"{% if menuitem == 'vendor' %} class="active"{% endif %}>Vendors</a>
+        <a href="{% url 'home' %}"{% if menu_item == 'home' %} class="active"{% endif %}>Home</a>
+        <a href="{% url 'ztpList' %}"{% if menu_item == 'ztpScript' %} class="active"{% endif %}>ZTP Scripts</a>
+        <a href="{% url 'configList' %}"{% if menu_item == 'config' %} class="active"{% endif %}>Configurations</a>
+        <a href="{% url 'firmwareList' %}"{% if menu_item == 'firmware' %} class="active"{% endif %}>Firmwares</a>
+        <a href="{% url 'platformList' %}"{% if menu_item == 'platform' %} class="active"{% endif %}>Platforms</a>
+        <a href="{% url 'vendorList' %}"{% if menu_item == 'vendor' %} class="active"{% endif %}>Vendors</a>
         {% comment "Future development" %} <a href="#"{% if menuitem == 'log' %} class="active"{% endif %}>Logs</a>{% endcomment %}
+        <a href="{% url 'about' %}"{% if menu_item == 'about' %} class="active"{% endif %}>About</a>
     </nav>
     {% if messages %}
         <ul class="messages">

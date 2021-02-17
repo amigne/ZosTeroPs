@@ -1,0 +1,493 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content_title %}{{ object_description|capfirst }} {% if object.id %}#{{ object.id }} - Edit{% else %}- New{% endif %}{% endblock content_title %}
+
+{% block content %}
+    <form method="post"{% if menu_item == "firmware" %} enctype="multipart/form-data"{% endif %}>
+        {% csrf_token %}
+        {{ formset.management_form }}
+            <p class="error"></p>
+        {% for error in form.non_field_errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        {% for error in formset.non_form_errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        <table class="update {{ menu_item }}">
+            <tbody>
+                {% if form.vendor %}
+                    <tr>
+                        {% with field=form.vendor %}
+                            <th class="platform_{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                            <td class="platform_{{ field.name }}">
+                                <select name="{{ field.name }}"
+                                        id="{{ field.id_for_label }}"
+                                       {% if field.errors %}class="has-error"{% endif %}
+                                       {% if field.field.required %}required{% endif %}>
+                                    {% for value, display in form.fields.vendor.choices %}
+                                        <option value="{{ value }}"{% if value|stringformat:'s' == field.value|stringformat:'s' %} selected{% endif %}>{{ display }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            </td>
+                        {% endwith %}
+                    </tr>
+                {% endif %}
+                {% if form.platform %}
+                    <tr>
+                        {% with field=form.platform %}
+                            <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                            <td class="{{ field.name }}">
+                                <select name="{{ field.name }}"
+                                        id="{{ field.id_for_label }}"
+                                       {% if field.errors %}class="has-error"{% endif %}
+                                       {% if field.field.required %}required{% endif %}>
+                                    {% for value, display in form.fields.platform.choices %}
+                                        <option value="{{ value }}"{% if value|stringformat:'s' == field.value|stringformat:'s' %} selected{% endif %}>{{ display }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            </td>
+                        {% endwith %}
+                    </tr>
+                {% endif %}
+                {% if form.name %}
+                    <tr>
+                        {% with field=form.name %}
+                            <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                            <td class="{{ field.name }}">
+                                <input type="text" name="{{ field.name }}"
+                                       id="{{ field.id_for_label }}"
+                                       {% if field.errors %}class="has-error"{% endif %}
+                                       placeholder="{{ field.label|lower }}"
+                                       {% if field.field.required %}required{% endif %}
+                                       {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                       {% if field.value %}value="{{ field.value }}"{% endif %}>
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            </td>
+                        {% endwith %}
+                    </tr>
+                {% endif %}
+                {% if form.file %}
+                    <tr>
+                        {% with field=form.file %}
+                            <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                            <td class="{{ field.name }}">
+                                {% if field.value %}Currently: {{ field.value }}<br />Change:{% endif %}
+                                <input type="file" name="{{ field.name }}"
+                                       id="{{ field.id_for_label }}"
+                                       {% if field.errors %}class="has-error"{% endif %}
+                                       placeholder="{{ field.label|lower }}"
+                                       {% if field.field.required and not field.value %}required{% endif %}
+                                       {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                       {% if field.value %}value="{{ field.value }}"{% endif %}>
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            </td>
+                        {% endwith %}
+                    </tr>
+                {% endif %}
+                {% if form.description %}
+                    <tr>
+                        {% with field=form.description %}
+                            <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                            <td class="{{ field.name }}">
+                                <textarea name="{{ field.name }}"
+                                          id="{{ field.id_for_label }}"
+                                          {% if field.errors %}class="has-error"{% endif %}
+                                          placeholder="{{ field.label|lower }}"
+                                          {% if field.field.required %}required{% endif %}
+                                          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                    >{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            </td>
+                        {% endwith %}
+                    </tr>
+                {% endif %}
+                {% if menu_item == "ztpScript" %}
+                    <tr>
+                        <th class="options">Options</th>
+                        <td class="options">
+                            {% with field=form.render_template %}
+                                <input type="checkbox" name="{{ field.name }}"
+                                       id="{{ field.id_for_label }}"
+                                       {% if field.errors %}class="has-error"{% endif %}
+                                       {% if field.value %}checked{% endif %}
+                                       {% if field.field.required %}required{% endif %}>
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endwith %}<br />
+
+                            {% with field=form.use_parameters %}
+                                <input type="checkbox" name="{{ field.name }}"
+                                       id="{{ field.id_for_label }}"
+                                       {% if field.errors %}class="has-error"{% endif %}
+                                       {% if field.value %}checked{% endif %}
+                                       {% if field.field.required %}required{% endif %}>
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endwith %}<br />
+
+                            {% with field=form.accept_query_string %}
+                                <input type="checkbox" name="{{ field.name }}"
+                                       id="{{ field.id_for_label }}"
+                                       {% if field.errors %}class="has-error"{% endif %}
+                                       {% if field.value %}checked{% endif %}
+                                       {% if field.field.required %}required{% endif %}>
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endwith %}
+                            <br />
+
+                            {% with field=form.priority_query_string_over_arguments %}
+                                <input type="checkbox" name="{{ field.name }}"
+                                       id="{{ field.id_for_label }}"
+                                       {% if field.errors %}class="has-error"{% endif %}
+                                       {% if field.value %}checked{% endif %}
+                                       {% if field.field.required %}required{% endif %}>
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            {% endwith %}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if formset %}
+                    <tr>
+                        <th class="parameters">Parameters</th>
+                        <td class="parameters">
+                            <fieldset>
+                                {% if menu_item == "ztpScript" %}
+                                    <table class="parameters">
+                                        <thead>
+                                            <tr>
+                                                <th>{% trans "Name" %}</th>
+                                                <th>{% trans "Value" %}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for parameter in formset %}
+                                                <tr class="link-formset">
+                                                    <th>
+                                                        {% with field=parameter.id %}
+                                                            <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                                   {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                                   id="{{ field.id_for_label }}">
+                                                                {% for error in field.errors %}
+                                                                    <p class="field-error">{{ error }}</p>
+                                                                {% endfor %}
+                                                        {% endwith %}
+                                                        {% with field=parameter.name %}
+                                                            <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                            <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                                   {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                                   {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                                                   id="{{ field.id_for_label }}">
+                                                            {% for error in field.errors %}
+                                                                <p class="field-error">{{ error }}</p>
+                                                            {% endfor %}
+                                                        {% endwith %}
+                                                    </th>
+                                                    <td>
+                                                        {% with field=parameter.value %}
+                                                            <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                            <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                                   {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                                   {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                                                   id="{{ field.id_for_label }}">
+                                                                {% for error in field.errors %}
+                                                                    <p class="field-error">{{ error }}</p>
+                                                                {% endfor %}
+                                                        {% endwith %}
+                                                        {% with field=parameter.DELETE %}
+                                                            <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                            <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                                   {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                                   id="{{ field.id_for_label }}">
+                                                        {% endwith %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% elif menu_item == "config" %}
+                                    {% for parameter in formset %}
+                                        <div class="link-formset">
+                                            {% with field=parameter.id %}
+                                                <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                       {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                       id="{{ field.id_for_label }}">
+                                            {% endwith %}
+
+                                            {% with field=parameter.name %}
+                                                <!--label for="{{ field.id_for_label }}" class="config_parameter_label">{{ field.label }}</label-->
+                                                <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                       {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                       id="{{ field.id_for_label }}">
+                                                {% for error in field.errors %}
+                                                    <p class="field-error">{{ error }}</p>
+                                                {% endfor %}
+                                            {% endwith %}
+
+                                            {% with field=parameter.data %}
+                                                <label for="{{ field.id_for_label }}" class="config_parameter_label">{{ field.label }}</label>
+                                                <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                       {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                       id="{{ field.id_for_label }}">
+                                                <div id="{{ field.id_for_label }}-jstable" class="jstable_instance"></div>
+                                                {% for error in field.errors %}
+                                                    <p class="field-error">{{ error }}</p>
+                                                {% endfor %}
+                                            {% endwith %}
+
+                                            {% with field=parameter.DELETE %}
+                                                <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                       {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                       id="{{ field.id_for_label }}">
+                                            {% endwith %}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </fieldset>
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if form.template %}
+                    <tr>
+                        {% with field=form.template %}
+                            <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
+                            <td class="{{ field.name }}">
+                                <textarea name="{{ field.name }}"
+                                          id="{{ field.id_for_label }}"
+                                          {% if field.errors %}class="has-error"{% endif %}
+                                          placeholder="{{ field.label|lower }}"
+                                          {% if field.field.required %}required{% endif %}
+                                          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                    >{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                                {% for error in field.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            </td>
+                        {% endwith %}
+                    </tr>
+                {% endif %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="action" colspan="2"><button type="submit">{% if object.id %}{% trans "Update" %}{% else %}{% trans "Create" %}{% endif %}</button></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+{% endblock content %}
+
+{% block css_xtra %}
+    {% if menu_item == "config" %}
+        <link rel="stylesheet" href="{% static "ztp/css/jsTable.css" %}" type="text/css" />
+        <link rel="stylesheet" href="{% static "ztp/css/jsuites.css" %}" type="text/css" />
+    {% endif %}
+{% endblock css_xtra %}
+
+{% block js_xtra %}
+    {% if menu_item == "ztpScript" or menu_item == "config" %}
+        <script src="{% static "ztp/js/jquery.formset.js" %}"></script>
+        <script>
+            $.fn.formset.defaults['prefix'] = 'parameters';
+            $(function() {
+                $('.link-formset').formset({
+                    addText: '{% trans "Add Parameter" %}',
+                    deleteText: '{% trans "Remove Parameter" %}'
+                });
+            });
+        </script>
+    {% endif %}
+    {% if menu_item == "config" %}
+        <script src="{% static "ztp/js/jsTable.js" %}"></script>
+        <script src="{% static "ztp/js/jsuites.js" %}"></script>
+        <script>
+            function onElementInserted(containerSelector, elementSelector, callback) {
+                let onMutationsObserved = function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.addedNodes.length) {
+                            let elements = $(mutation.addedNodes).find(elementSelector);
+                            for (let i = 0, len = elements.length; i < len; ++i) {
+                                callback(elements[i]);
+                            }
+                        }
+                    });
+                };
+
+                let target = $(containerSelector)[0];
+                let config = { childList: true, subtree: true };
+                let MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+                let observer = new MutationObserver(onMutationsObserved);
+                observer.observe(target, config);
+            }
+        </script>
+        <script>
+            function update_jstable_first_column_header(jstable_obj, title) {
+                if (title !== '') {
+                    jstable_obj.setHeader(0, title);
+                }
+            }
+
+            function isEmptyData(data) {
+                for (let i = 0; i < data.length; ++i) {
+                    for (let j = 0; j < data[i].length; ++j) {
+                        if (data[i][j] !== '') {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            function areInitialColumnsTitles(columns) {
+                for (let i = 0; i < columns.length; ++i) {
+                    let columnName = 'title' in columns[i] ? columns[i]['title'] : '';
+                    if (columnName !== jsTable.getColumnName(i)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function getFirstColumnTitle(columns) {
+                if (columns.length > 0 && 'title' in columns[0]) {
+                    return columns[0]['title'];
+                }
+                return '';
+            }
+
+            function load_jstable_data(spreadsheet_id) {
+                let data_id = spreadsheet_id.replace(/-jstable$/, '');
+                let name_id = data_id.replace(/-[^-]*$/, '') + '-name';
+
+                let data_element = $('#' + data_id);
+                let name_element = $('#' + name_id);
+
+                let data_value = data_element.val();
+
+                let options = {
+                    minDimensions: [2, 2],
+                    defaultColWidth: 120,
+                };
+                if (data_value !== '') {
+                    try {
+                        options = Object.assign({}, options, JSON.parse(data_value));
+                    } catch (e) {}
+                }
+
+                let jstable_obj = jsTable(document.getElementById(spreadsheet_id), options);
+                let name_value = name_element.val();
+                update_jstable_first_column_header(jstable_obj, name_value);
+
+                name_element.keyup(function(){
+                    let name_value = name_element.val();
+                    if (name_value === '') {
+                        name_element.val(jstable_obj.getHeader(0).substring(0,1));
+                    }
+                    update_jstable_first_column_header(jstable_obj, name_value);
+                });
+
+                return jstable_obj;
+            }
+
+            function findDuplicates(dict) {
+                let hash = Object.create(null);
+                let result = Object.create(null);
+
+                Object.keys(dict).forEach(k => {
+                    let grp = dict[k];
+                    (grp in hash) ? hash[grp].push(k): (hash[grp] = [k]);
+                });
+
+                for (let key in hash) {
+                    if (hash[key].length > 1) {
+                        result[key] = hash[key].toString();
+                    }
+                }
+
+                return result
+            }
+
+            function save_jstable_data(jstable_instances) {
+                let names = {};
+
+                for (let spreadsheet_id in jstable_instances) {
+                    let jstable_instance = jstable_instances[spreadsheet_id];
+
+                    let data_id = spreadsheet_id.replace(/-jstable$/, '');
+                    let name_id = data_id.replace(/-[^-]*$/, '') + '-name';
+
+                    let data_element = $('#' + data_id);
+                    let name_element = $('#' + name_id);
+
+                    let table_data = jstable_instance.getData();
+                    let table_columns = jstable_instance.getColumnsProperties();
+                    let isSet = (! areInitialColumnsTitles(table_columns)) || (! isEmptyData(table_data));
+
+                    if (isSet) {
+                        name_element.val(getFirstColumnTitle(table_columns));
+                        data_element.val(JSON.stringify({
+                            data: table_data,
+                            columns: table_columns,
+                        }));
+                        names[spreadsheet_id] = getFirstColumnTitle(table_columns);
+                    } else {
+                        name_element.val('');
+                        data_element.val('');
+                    }
+                }
+                let duplicates = findDuplicates(names);
+                if (Object.keys(duplicates).length > 0) {
+                    for (let key in duplicates) {
+                        $('.error').first().text('Duplicate key "' + key + '" found for parameters.');
+                    }
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
+        <script>
+            let jstable_objs = {};
+
+            $(function() {
+                let stylesheet_id;
+                {% for parameter in formset %}
+                    stylesheet_id = '{{ parameter.data.id_for_label }}-jstable';
+                    jstable_objs[stylesheet_id] = load_jstable_data(stylesheet_id);
+                {% endfor %}
+
+                onElementInserted('body', '.jstable_instance', function (element) {
+                    stylesheet_id = element.id;
+                    jstable_objs[stylesheet_id] = load_jstable_data(stylesheet_id);
+                });
+
+                $("form").submit(function () {
+                     return save_jstable_data(jstable_objs);
+                });
+            })
+        </script>
+    {% endif %}
+{% endblock js_xtra %}

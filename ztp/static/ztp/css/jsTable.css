@@ -1,0 +1,537 @@
+:root {
+    --jsTable-border-color: #000;
+}
+
+.jsTable_container {
+    display: inline-block;
+    padding-right: 2px;
+    box-sizing: border-box;
+    overscroll-behavior: contain;
+    outline: none;
+}
+
+.jsTable_content {
+    display: inline-block;
+    box-sizing: border-box;
+    padding-right: 3px;
+    padding-bottom: 3px;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: #666 transparent;
+}
+
+@supports (-moz-appearance: none) {
+    .jsTable_content { padding-right: 10px; }
+}
+
+.jsTable_content::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.jsTable_content::-webkit-scrollbar-track {
+    background: #eee;
+}
+
+.jsTable_content::-webkit-scrollbar-thumb {
+  background: #666;
+}
+
+.jsTable {
+    border-collapse: separate;
+    table-layout: fixed;
+    white-space: nowrap;
+    empty-cells: show;
+    background-color: #fff;
+    width: 0;
+
+    border-top: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.jsTable > thead > tr > td
+{
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    background-color: #f3f3f3;
+    padding: 2px;
+    cursor: pointer;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.jsTable > thead > tr > td.dragging
+{
+    background-color: #fff;
+    opacity: 0.5;
+}
+
+.jsTable > thead > tr > td.selected
+{
+    background-color: #dcdcdc;
+}
+
+.jsTable > thead > tr > td.arrow-up
+{
+    background-repeat: no-repeat;
+    background-position: center right 5px;
+    background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath d='M7 14l5-5 5 5H7z' fill='gray'/%3E%3C/svg%3E");
+    text-decoration: underline;
+}
+
+.jsTable > thead > tr > td.arrow-down
+{
+    background-repeat: no-repeat;
+    background-position: center right 5px;
+    background-image: url("data:image/svg+xml,%0A%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='none' d='M0 0h24v24H0V0z'/%3E%3Cpath d='M7 10l5 5 5-5H7z' fill='gray'/%3E%3C/svg%3E");
+    text-decoration: underline;
+}
+
+.jsTable > tbody > tr > td:first-child
+{
+    position: relative;
+    background-color: #f3f3f3;
+    text-align: center;
+}
+
+.jsTable > tbody.resizable > tr > td:first-child::before
+{
+    content: '\00a0';
+    width: 100%;
+    height: 3px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    cursor: row-resize;
+}
+
+.jsTable > tbody.draggable > tr > td:first-child::after
+{
+    content: '\00a0';
+    width: 3px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: move;
+}
+
+.jsTable > tbody > tr.dragging > td
+{
+    background-color: #eee;
+    opacity: 0.5;
+}
+
+.jsTable > tbody > tr > td
+{
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    padding: 4px;
+    white-space: nowrap;
+    box-sizing: border-box;
+    line-height: 1em;
+}
+
+.jsTable > tbody > tr > td:last-child
+{
+    overflow: hidden;
+}
+
+.jsTable > tbody > tr > td > img
+{
+    display: inline-block;
+    max-width: 100px;
+}
+
+.jsTable > tbody > tr > td.readonly
+{
+    color: rgba(0, 0, 0, 0.3)
+}
+.jsTable > tbody > tr.selected > td:first-child
+{
+    background-color: #dcdcdc;
+}
+.jsTable > tbody > tr > td > select,
+.jsTable > tbody > tr > td > input,
+.jsTable > tbody > tr > td > textarea
+{
+    border: 0;
+    border-radius: 0;
+    outline: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    padding-right: 2px;
+    background-color: transparent;
+    box-sizing: border-box;
+}
+
+.jsTable > tbody > tr > td > textarea
+{
+    resize: none;
+    padding-top: 6px !important;
+}
+
+.jsTable > tbody > tr > td > input[type=checkbox]
+{
+    width: 12px;
+    margin-top: 2px;
+}
+.jsTable > tbody > tr > td > input[type=radio]
+{
+    width: 12px;
+    margin-top: 2px;
+}
+
+.jsTable > tbody > tr > td > select
+{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    background-position-y: 40%;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSdibGFjaycgaGVpZ2h0PScyNCcgdmlld0JveD0nMCAwIDI0IDI0JyB3aWR0aD0nMjQnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHBhdGggZD0nTTcgMTBsNSA1IDUtNXonLz48cGF0aCBkPSdNMCAwaDI0djI0SDB6JyBmaWxsPSdub25lJy8+PC9zdmc+);
+}
+
+.jsTable > tbody > tr > td > .color
+{
+    width: 90%;
+    height: 10px;
+    margin: auto;
+}
+
+.jsTable > tbody > tr > td > a {
+    text-decoration: underline;
+}
+
+.jsTable > tbody > tr > td.highlight > a {
+    color: blue;
+    cursor: pointer;
+}
+
+.jsTable > tfoot > tr > td
+{
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    background-color: #f3f3f3;
+    padding: 2px;
+    cursor: pointer;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.jsTable .highlight {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.jsTable .highlight-top {
+    border-top: 1px solid #000;
+    box-shadow: 0 -1px #ccc;
+}
+
+.jsTable .highlight-left {
+    border-left: 1px solid #000;
+    box-shadow: -1px 0 #ccc;
+}
+
+.jsTable .highlight-right {
+    border-right: 1px solid #000;
+}
+
+.jsTable .highlight-bottom {
+    border-bottom: 1px solid #000;
+}
+
+.jsTable .highlight-top.highlight-left {
+    box-shadow: -1px -1px #ccc;
+    -webkit-box-shadow: -1px -1px #ccc;
+    -moz-box-shadow: -1px -1px #ccc;
+}
+
+.jsTable .highlight-selected
+{
+    background-color: rgba(0, 0, 0, 0.0);
+}
+.jsTable .selection
+{
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.jsTable .selection-left
+{
+    border-left: 1px dotted #000;
+}
+.jsTable .selection-right
+{
+    border-right: 1px dotted #000;
+}
+.jsTable .selection-top
+{
+    border-top: 1px dotted #000;
+}
+.jsTable .selection-bottom
+{
+    border-bottom: 1px dotted #000;
+}
+.jsTable_corner
+{
+    position: absolute;
+    background-color: rgb(0, 0, 0);
+    height: 1px;
+    width: 1px;
+    border: 1px solid rgb(255, 255, 255);
+    top: -2000px;
+    left: -2000px;
+    cursor: crosshair;
+    box-sizing: initial;
+    z-index: 30;
+    padding: 2px;
+}
+
+.jsTable .editor
+{
+    outline: 0 solid transparent;
+    overflow: visible;
+    white-space: nowrap;
+    text-align: left;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: visible!important;
+}
+
+.jsTable .editor > input
+{
+    padding-left: 4px;
+}
+
+.jsTable .editor .jclose:after
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    content: 'close';
+    font-family: 'Material icons';
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    cursor: pointer;
+    text-shadow: 0 0 5px #fff;
+}
+
+.jsTable, .jsTable td, .jsTable_corner
+{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+.jsTable_textarea
+{
+    position: absolute;
+    top: -999px;
+    left: -999px;
+    width: 1px;
+    height: 1px;
+}
+
+.jsTable .onDrag
+{
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.jsTable .error
+{
+    border: 1px solid red;
+}
+
+.jsTable thead td.resizing
+{
+    border-right-style: dotted !important;
+    border-right-color: red !important;
+}
+
+.jsTable tbody tr.resizing > td
+{
+    border-bottom-style: dotted !important;
+    border-bottom-color: red !important;
+}
+
+.jsTable tbody td.resizing
+{
+    border-right-style: dotted !important;
+    border-right-color: red !important;
+}
+
+.jsTable .jdropdown-header
+{
+    border: 0 !important;
+    outline: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    padding-left: 8px !important;
+}
+
+.jsTable .sp-replacer
+{
+    margin: 2px;
+    border: 0
+}
+
+.jsTable > thead > tr.jsTable_filter > td > input
+{
+    border: 0;
+    width: 100%;
+    outline: none;
+}
+
+.jsTable_about {
+    float: right;
+    font-size: 0.7em;
+    padding: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: none;
+}
+.jsTable_about a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.jsTable_about img {
+    display: none;
+}
+
+.jsTable_filter
+{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.jsTable_filter > div
+{
+    padding: 8px;
+    align-items: center;
+}
+
+.jsTable_pagination
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.jsTable_pagination > div
+{
+    display: flex;
+    padding: 10px;
+}
+
+.jsTable_pagination > div:last-child
+{
+    padding-right:10px;
+    padding-top:10px;
+}
+
+.jsTable_pagination > div > div
+{
+    text-align: center;
+    width: 36px;
+    height: 36px;
+    line-height: 34px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin-left: 2px;
+    cursor: pointer;
+}
+
+.jsTable_page
+{
+    font-size: 0.8em;
+}
+
+.jsTable_page_selected
+{
+    font-weight: bold;
+    background-color: #f3f3f3;
+}
+
+.jsTable .dragging-left
+{
+    background-repeat: no-repeat;
+    background-position:top 50% left 0px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M14 7l-5 5 5 5V7z'/%3E%3Cpath fill='none' d='M24 0v24H0V0h24z'/%3E%3C/svg%3E");
+}
+
+.jsTable .dragging-right
+{
+    background-repeat: no-repeat;
+    background-position:top 50% right 0px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M10 17l5-5-5-5v10z'/%3E%3Cpath fill='none' d='M0 24V0h24v24H0z'/%3E%3C/svg%3E");
+}
+
+.jsTable .copying-top {
+    border-top: 1px dashed #000;
+}
+
+.jsTable .copying-left {
+    border-left: 1px dashed #000;
+}
+
+.jsTable .copying-right {
+    border-right: 1px dashed #000;
+}
+
+.jsTable .copying-bottom {
+    border-bottom: 1px dashed #000;
+}
+
+.jsTable .jsTable_column_filter {
+    background-repeat: no-repeat;
+    background-position: top 50% right 5px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='gray' width='18px' height='18px'%3E%3Cpath d='M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 0;
+    padding-left: 6px;
+    padding-right: 20px;
+}
+
+.jsTable thead .jsTable_freezed {
+    left: 0;
+    z-index: 3 !important;
+    box-shadow: 2px 0 2px 0.2px #ccc !important;
+    -webkit-box-shadow: 2px 0 2px 0.2px #ccc !important;
+    -moz-box-shadow: 2px 0 2px 0.2px #ccc !important;
+}
+
+.jsTable tbody .jsTable_freezed {
+    position: relative;
+    background-color: #fff;
+    box-shadow: 1px 1px 1px 1px #ccc !important;
+    -webkit-box-shadow: 2px 4px 4px 0.1px #ccc !important;
+    -moz-box-shadow: 2px 4px 4px 0.1px #ccc !important;
+}

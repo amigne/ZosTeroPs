@@ -16,9 +16,10 @@ class BaseParameterFormSet(BaseInlineFormSet):
             if self.can_delete and self._should_delete_form(form):
                 continue
             name = form.cleaned_data.get('name')
-            if name in names:
-                raise ValidationError('There must not be multiple parameters with the same name.')
-            names.append(name)
+            if name:
+                if name in names:
+                    raise ValidationError(f'There must not be multiple parameters with the same name.')
+                names.append(name)
 
 
 ConfigParameterFormSet = inlineformset_factory(

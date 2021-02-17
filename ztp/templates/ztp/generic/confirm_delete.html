@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content_title %}{{ object_description|capfirst }} #{{ object.id }} - {% trans "Delete" %}{% endblock content_title %}
+
+{% block content %}
+    <form method="post" class="delete {{ menu_item }}">
+        {% csrf_token %}
+        <p>{% blocktranslate %}
+                You're about to delete the {{ object_description }} <strong>{{ object }}</strong>.
+            {% endblocktranslate %}</p>
+        <p>{% trans "Are you sure you want to delete it?" %}</p>
+        <p><button type="submit">{% trans "Confirm" %}</button></p>
+    </form>
+{% endblock content %}
