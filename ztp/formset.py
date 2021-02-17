@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.forms.models import BaseInlineFormSet, inlineformset_factory
-
+from django.utils.translation import gettext as _
 from .models import Config, ConfigParameter, ZtpParameter, ZtpScript
 
 
@@ -18,7 +18,7 @@ class BaseParameterFormSet(BaseInlineFormSet):
             name = form.cleaned_data.get('name')
             if name:
                 if name in names:
-                    raise ValidationError(f'There must not be multiple parameters with the same name.')
+                    raise ValidationError(_('There must not be multiple parameters with the same name.'))
                 names.append(name)
 
 

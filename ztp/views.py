@@ -116,9 +116,9 @@ class ZtpCreateView(ZtpContextMixin, CreateView):
         return super(ZtpCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        if (self.can_view):
+        if self.can_view:
             return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
-        elif (self.can_list):
+        elif self.can_list:
             return reverse_lazy('ztpList')
         else:
             return reverse_lazy('home')
@@ -129,7 +129,7 @@ class ZtpDeleteView(ZtpContextMixin, DeleteView):
     permission_required = 'ztp.delete_ztpscript'
 
     def get_success_url(self):
-        if (self.can_list):
+        if self.can_list:
             return reverse_lazy('ztpList')
         else:
             return reverse_lazy('home')
@@ -171,9 +171,9 @@ class ZtpUpdateView(ZtpContextMixin, UpdateView):
         return super(ZtpUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        if (self.can_view):
+        if self.can_view:
             return reverse_lazy('ztpDetail', kwargs={'pk': self.object.pk})
-        elif (self.can_list):
+        elif self.can_list:
             return reverse_lazy('ztpList')
         else:
             return reverse_lazy('home')
@@ -238,9 +238,9 @@ class ConfigCreateView(ConfigContextMixin, CreateView):
         return super(ConfigCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        if (self.can_view):
+        if self.can_view:
             return reverse_lazy('configDetail', kwargs={'pk': self.object.pk})
-        elif (self.can_list):
+        elif self.can_list:
             return reverse_lazy('configList')
         else:
             return reverse_lazy('home')
@@ -252,7 +252,7 @@ class ConfigDeleteView(ConfigContextMixin, DeleteView):
     permission_required = 'ztp.delete_config'
 
     def get_success_url(self):
-        if (self.can_list):
+        if self.can_list:
             return reverse_lazy('configList')
         else:
             return reverse_lazy('home')
@@ -294,9 +294,9 @@ class ConfigUpdateView(ConfigContextMixin, UpdateView):
         return super(ConfigUpdateView, self).form_valid(form)
 
     def get_success_url(self):
-        if (self.can_view):
+        if self.can_view:
             return reverse_lazy('configDetail', kwargs={'pk': self.object.pk})
-        elif (self.can_list):
+        elif self.can_list:
             return reverse_lazy('configList')
         else:
             return reverse_lazy('home')
@@ -347,9 +347,9 @@ class FirmwareCreateView(FirmwareContextMixin, SuccessMessageMixin, CreateView):
                f" MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
 
     def get_success_url(self):
-        if (self.can_view):
+        if self.can_view:
             return reverse_lazy('firmwareDetail', kwargs={'pk': self.object.pk})
-        elif (self.can_list):
+        elif self.can_list:
             return reverse_lazy('firmwareList')
         else:
             return reverse_lazy('home')
@@ -360,9 +360,9 @@ class FirmwareDeleteView(FirmwareContextMixin, DeleteView):
     permission_required = 'ztp.delete_firmware'
 
     def get_success_url(self):
-        if (self.can_view):
+        if self.can_view:
             return reverse_lazy('firmwareDetail', kwargs={'pk': self.object.pk})
-        elif (self.can_list):
+        elif self.can_list:
             return reverse_lazy('firmwareList')
         else:
             return reverse_lazy('home')
@@ -391,7 +391,7 @@ class FirmwareUpdateView(FirmwareContextMixin, SuccessMessageMixin, UpdateView):
                f"MD5 hash is {instance.md5_hash}. SHA512 hash is {instance.sha512_hash}."
 
     def get_success_url(self):
-        if (self.can_list):
+        if self.can_list:
             return reverse_lazy('firmwareList')
         else:
             return reverse_lazy('home')
@@ -435,7 +435,7 @@ class PlatformCreateView(PlatformContextMixin, CreateView):
     permission_required = 'ztp.add_platform'
 
     def get_success_url(self):
-        if (self.can_list):
+        if self.can_list:
             return reverse_lazy('platformList')
         else:
             return reverse_lazy('home')
@@ -446,7 +446,7 @@ class PlatformDeleteView(PlatformContextMixin, DeleteView):
     permission_required = 'ztp.delete_platform'
 
     def get_success_url(self):
-        if (self.can_list):
+        if self.can_list:
             return reverse_lazy('platformList')
         else:
             return reverse_lazy('home')
@@ -463,7 +463,7 @@ class PlatformUpdateView(PlatformContextMixin, UpdateView):
     permission_required = 'ztp.change_platform'
 
     def get_success_url(self):
-        if (self.can_list):
+        if self.can_list:
             return reverse_lazy('platformList')
         else:
             return reverse_lazy('home')
@@ -506,7 +506,7 @@ class VendorCreateView(VendorContextMixin, CreateView):
     permission_required = 'ztp.add_vendor'
 
     def get_success_url(self):
-        if (self.can_list):
+        if self.can_list:
             return reverse_lazy('vendorList')
         else:
             return reverse_lazy('home')
@@ -517,7 +517,7 @@ class VendorDeleteView(VendorContextMixin, DeleteView):
     permission_required = 'ztp.delete_vendor'
 
     def get_success_url(self):
-        if (self.can_list):
+        if self.can_list:
             return reverse_lazy('vendorList')
         else:
             return reverse_lazy('home')
@@ -534,7 +534,7 @@ class VendorUpdateView(VendorContextMixin, UpdateView):
     permission_required = 'ztp.change_vendor'
 
     def get_success_url(self):
-        if (self.can_list):
+        if self.can_list:
             return reverse_lazy('vendorList')
         else:
             return reverse_lazy('home')

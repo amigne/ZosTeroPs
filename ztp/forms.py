@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Config, ZtpParameter, ZtpScript
+from .models import Config, ZtpScript
 
 
 class ConfigForm(forms.ModelForm):
