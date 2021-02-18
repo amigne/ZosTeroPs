@@ -10,26 +10,73 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import environ
+
+from django.utils.translation import gettext_lazy as _
 from pathlib import Path
+
+
+# Instantiate .env processor and set default values
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# DEBUG mode should be used for development only
+DEBUG = env('DEBUG')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+SECRET_KEY = env('SECRET_KEY')
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '&&tnr)l9nhz@)3mgwo)p1ewsbdw1vx*7p0=@46c-ojp(d=fhe7'
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+###############################################################################
 
-ALLOWED_HOSTS = []
+### ZTP application
+ZTP_BASE_URL = 'http://127.0.0.1:8000'
+ZTP_BOOTSTRAP_URL = 'bootstrap/'
 
+ZTP_CONFIG_URL = 'config/'
 
-# Application definition
+ZTP_FIRMWARES_PATH = 'firmwares/'
+ZTP_FIRMWARES_URL = 'firmwares/'
 
+### Internationalization
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+TIME_ZONE = env('TIME_ZONE', default='UTC')
+LANGUAGE_CODE = env('LANGUAGE_CODE', default='en')
+
+### Authentications and logons
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
+
+AUTH_USER_MODEL = 'user.User'
+AUTH_PASSWORD_VALIDATORS = [
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+]
+
+### Static files
+STATIC_URL = '/static/'
+
+### Databases
+DATABASES = {
+    'default': env.db(),
+}
+
+### URL and routes
+ROOT_URLCONF = 'ZosTeroPs.urls'
+
+### WSGI
+WSGI_APPLICATION = 'ZosTeroPs.wsgi.application'
+
+### Django applications
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,9 +89,11 @@ INSTALLED_APPS = [
     'user',
 ]
 
+### Middlewares
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -52,8 +101,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ZosTeroPs.urls'
-
+### Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -70,68 +118,3 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'ZosTeroPs.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.1/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-
-STATIC_URL = '/static/'
-
-ZTP_BASE_URL = 'http://127.0.0.1:8000'
-ZTP_BOOTSTRAP_URL = 'bootstrap/'
-
-ZTP_CONFIG_URL = 'config/'
-
-ZTP_FIRMWARES_PATH = 'firmwares/'
-ZTP_FIRMWARES_URL = 'firmwares/'
-
-AUTH_USER_MODEL = 'user.User'
