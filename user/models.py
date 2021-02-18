@@ -9,4 +9,5 @@ class User(AbstractUser):
 
     Username and password are required. Other fields are optional.
     """
-    pass
+    class Meta(AbstractUser.Meta):
+        swappable = 'AUTH_USER_MODEL'

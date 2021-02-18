@@ -15,7 +15,6 @@ import environ
 from django.utils.translation import gettext_lazy as _
 from pathlib import Path
 
-
 # Instantiate .env processor and set default values
 env = environ.Env(
     DEV=(bool, False),
@@ -36,9 +35,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
-###############################################################################
-
-### ZTP application
+# ZTP application
 ZTP_BASE_URL = 'http://127.0.0.1:8000'
 ZTP_BOOTSTRAP_URL = 'bootstrap/'
 
@@ -47,7 +44,7 @@ ZTP_CONFIG_URL = 'config/'
 ZTP_FIRMWARES_PATH = 'firmwares/'
 ZTP_FIRMWARES_URL = 'firmwares/'
 
-### Internationalization
+# Internationalization
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -58,34 +55,38 @@ LANGUAGES = (
     ('fr', _('French')),
 )
 
-### Authentications and logons
+# Authentications and logons
+LOGIN_URL = 'user:login'
+LOGOUT_URL = 'user:logout'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = 'user.User'
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
 
-### Static files
+# Static files
 STATIC_URL = '/static/'
 
-### Databases
+# Databases
 DATABASES = {
     'default': env.db(),
 }
 
-### URL and routes
+# URL and routes
 ROOT_URLCONF = 'ZosTeroPs.urls'
 
-### WSGI
+# WSGI
 WSGI_APPLICATION = 'ZosTeroPs.wsgi.application'
 
-### Django applications
+# Django applications
 INSTALLED_APPS = [
+    'ztp',
+    'user',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -93,15 +94,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ztp',
-    'user',
 ]
 if DEV:
     INSTALLED_APPS += [
         'rosetta',
     ]
 
-### Middlewares
+# Middlewares
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -113,12 +112,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-### Templates
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,3 +128,16 @@ TEMPLATES = [
         },
     },
 ]
+
+# E-mails
+EMAIL_BACKEND = env(
+    'EMAIL_BACKEND',
+    default=(
+        'django.core.mail.backends.console.EmailBackend' if DEV else 'django.core.mail.backends.smtp.EmailBackend'))
+EMAIL_HOST = env('EMAIL_HOST', default='localhost')
+EMAIL_PORT = env.int('EMAIL_PORT', default=25)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=False)
+EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL', default=False)
+DEFAULT_FROM_EMAIL= env('DEFAULT_FROM_EMAIL', default='webmaster@localhost')

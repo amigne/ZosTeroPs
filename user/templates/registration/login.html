@@ -53,6 +53,9 @@
                     <tr>
                         <td class="action" colspan="2"><button type="submit">{% trans 'Log-in' %}</button></td>
                     </tr>
+                    <tr>
+                        <td class="lost-password" colspan="2"><a href="{% url 'user:password_reset' %}">{% trans 'Lost password?' %}</a></td>
+                    </tr>
                 </tfoot>
             </table>
         </form>

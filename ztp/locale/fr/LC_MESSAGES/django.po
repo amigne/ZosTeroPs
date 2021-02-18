@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 16:47+0100\n"
-"PO-Revision-Date: 2021-02-18 17:00+0000\n"
+"POT-Creation-Date: 2021-02-18 22:38+0100\n"
+"PO-Revision-Date: 2021-02-18 18:45+0000\n"
 "Last-Translator: b'  <yann@gauteron.me>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -28,10 +28,10 @@ msgstr "Il ne peut pas y avoir plusieurs paramètres avec le même nom."
 msgid "name"
 msgstr "nom"
 
-#: .\ztp\models.py:17 .\ztp\models.py:47 .\ztp\models.py:79
-#: .\ztp\models.py:157 .\ztp\models.py:284
+#: .\ztp\models.py:17 .\ztp\models.py:47 .\ztp\models.py:79 .\ztp\models.py:157
+#: .\ztp\models.py:284
 msgid "description"
-msgstr ""
+msgstr "description"
 
 #: .\ztp\models.py:36 .\ztp\views.py:477
 msgid "vendor"
@@ -113,7 +113,7 @@ msgstr "Scripts ZTP"
 #: .\ztp\templates\base.html:22 .\ztp\templates\ztp\home.html:26
 #: .\ztp\templates\ztp\home.html:28
 msgid "Configurations"
-msgstr ""
+msgstr "Configurations"
 
 #: .\ztp\templates\base.html:25 .\ztp\templates\ztp\home.html:40
 #: .\ztp\templates\ztp\home.html:42
@@ -132,7 +132,7 @@ msgstr "Fabricant"
 
 #: .\ztp\templates\base.html:33 .\ztp\templates\ztp\home.html:72
 msgid "Logs"
-msgstr ""
+msgstr "Journaux"
 
 #: .\ztp\templates\base.html:34 .\ztp\templates\ztp\about.html:4
 msgid "About"
@@ -172,7 +172,7 @@ msgstr "Licence :"
 
 #: .\ztp\templates\ztp\about.html:12
 msgid "MIT License"
-msgstr ""
+msgstr "MIT License"
 
 #: .\ztp\templates\ztp\generic\confirm_delete.html:4
 msgid "Delete"
@@ -182,11 +182,13 @@ msgstr "Supprimer"
 #, python-format
 msgid ""
 "\n"
-"                You're about to delete the %(object_description)s <strong>%(object)s</strong>.\n"
+"                You're about to delete the %(object_description)s <strong>"
+"%(object)s</strong>.\n"
 "            "
 msgstr ""
 "\n"
-"Vous êtes sur le point de supprimer l'élément suivant : %(object_description)s <strong>%(object)s</strong>."
+"Vous êtes sur le point de supprimer l'élément suivant : "
+"%(object_description)s <strong>%(object)s</strong>."
 
 #: .\ztp\templates\ztp\generic\confirm_delete.html:12
 msgid "Are you sure you want to delete it?"
@@ -219,7 +221,7 @@ msgstr "Nom de fichier"
 #: .\ztp\templates\ztp\generic\detail.html:30
 #: .\ztp\templates\ztp\generic\list.html:19
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: .\ztp\templates\ztp\generic\detail.html:36
 msgid "File size"
@@ -237,7 +239,7 @@ msgstr "URL de téléchargement"
 #: .\ztp\templates\ztp\generic\detail.html:60
 #: .\ztp\templates\ztp\generic\form.html:120
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 #: .\ztp\templates\ztp\generic\detail.html:65
 msgid "Render template"
@@ -303,7 +305,7 @@ msgstr "Retirer un paramètre"
 
 #: .\ztp\templates\ztp\generic\list.html:13
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: .\ztp\templates\ztp\generic\list.html:17
 msgid "File"
@@ -317,12 +319,13 @@ msgstr "Fabricant"
 msgid ""
 "ZosTeroPs manages the ZTP (Zero Touch Provisioning) of your network devices."
 msgstr ""
-"ZosTeroPs gère le mécanisme ZTP (Zero Touch Provisioning) de vos équipements"
-" réseau."
+"ZosTeroPs gère le mécanisme ZTP (Zero Touch Provisioning) de vos équipements "
+"réseau."
 
 #: .\ztp\templates\ztp\home.html:9
 msgid ""
-"The system contains different parts that permit to customize the process depending\n"
+"The system contains different parts that permit to customize the process "
+"depending\n"
 "            on the vendor and the platform of your network devices."
 msgstr ""
 "Le système possède différentes parties qui permettent de personnaliser le "
@@ -332,9 +335,12 @@ msgstr ""
 #: .\ztp\templates\ztp\home.html:18
 msgid ""
 "collects your ZTP bootstrap scripts that are\n"
-"                    first downloaded by the network devices. Multiple scripts can be defined\n"
-"                    to support multiple platforms with different bootstrap conditions. All\n"
-"                    scripts are text-based (not binary) that can define variable substitution.\n"
+"                    first downloaded by the network devices. Multiple "
+"scripts can be defined\n"
+"                    to support multiple platforms with different bootstrap "
+"conditions. All\n"
+"                    scripts are text-based (not binary) that can define "
+"variable substitution.\n"
 "                "
 msgstr ""
 "collecte vos scripts de démarrage ZTP qui sont téléchargés en premier par "
@@ -347,14 +353,21 @@ msgstr ""
 msgid ""
 "\n"
 "                    defines your configuration templates that\n"
-"                    can be copied by the ZTP script to your device, if it supports this\n"
-"                    possibility. Splitting the bootstrap and the configuration permits to have\n"
-"                    a more generic bootstrap script and custom configurations for specific\n"
+"                    can be copied by the ZTP script to your device, if it "
+"supports this\n"
+"                    possibility. Splitting the bootstrap and the "
+"configuration permits to have\n"
+"                    a more generic bootstrap script and custom "
+"configurations for specific\n"
 "                    platforms or for specific devices.\n"
 "                "
 msgstr ""
 "\n"
-"déclare les modèles de configuration qui peuvent être récupérés par le script ZTP si l'équipement supporte cette fonctionnalité. Séparer le script de démarrage et la configuration permet de déclarer un script de démarrage plus générique avec des configurations personnalisées spécifiques en fonction de la plateforme ou d'un équipement particulier."
+"déclare les modèles de configuration qui peuvent être récupérés par le "
+"script ZTP si l'équipement supporte cette fonctionnalité. Séparer le script "
+"de démarrage et la configuration permet de déclarer un script de démarrage "
+"plus générique avec des configurations personnalisées spécifiques en "
+"fonction de la plateforme ou d'un équipement particulier."
 
 #: .\ztp\templates\ztp\home.html:44
 msgid ""
@@ -364,7 +377,8 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"collecte tous les logiciels qui peuvent être téléchargés par l'équipement géré."
+"collecte tous les logiciels qui peuvent être téléchargés par l'équipement "
+"géré."
 
 #: .\ztp\templates\ztp\home.html:55
 msgid ""
@@ -409,11 +423,11 @@ msgstr "Scripts ZTP"
 
 #: .\ztp\views.py:187
 msgid "configuration"
-msgstr ""
+msgstr "configuration"
 
 #: .\ztp\views.py:188
 msgid "configurations"
-msgstr ""
+msgstr "configurations"
 
 #: .\ztp\views.py:311
 msgid "firmware"

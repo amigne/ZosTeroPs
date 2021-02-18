@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 16:47+0100\n"
-"PO-Revision-Date: 2021-02-18 16:01+0000\n"
+"POT-Creation-Date: 2021-02-18 22:38+0100\n"
+"PO-Revision-Date: 2021-02-18 22:46+0000\n"
 "Last-Translator: b'  <yann@gauteron.me>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -24,3 +24,92 @@ msgstr ""
 #: .\user\templates\registration\login.html:54
 msgid "Log-in"
 msgstr "Connexion"
+
+#: .\user\templates\registration\login.html:57
+msgid "Lost password?"
+msgstr "Mot-de-passe perdu ?"
+
+#: .\user\templates\registration\password_reset_complete.html:4
+#| msgid "Password reset"
+msgid "Password reset complete"
+msgstr "La réinitialisation du mot-de-passe est terminée."
+
+#: .\user\templates\registration\password_reset_complete.html:7
+#, python-format
+msgid ""
+"Your new password has been set. You can now <a "
+"href=\"%(login_url)s\">login</a>."
+msgstr ""
+"Votre nouveau mot-de-passe a été enregistré. Vous pouvez maintenant vous <a "
+"href=\"%(login_url)s\">connecter</a>."
+
+#: .\user\templates\registration\password_reset_confirm.html:4
+#: .\user\templates\registration\password_reset_confirm.html:16
+#| msgid "Lost password?"
+msgid "Set a new password"
+msgstr "Enregistrer un nouveau mot-de-passe"
+
+#: .\user\templates\registration\password_reset_confirm.html:19
+msgid ""
+"Please, set your new password twice so it can be checked it is correctly "
+"input."
+msgstr ""
+"S'il vous plaît, entrez votre nouveau mot-de-passe deux fois afin de "
+"vérifier qu'il soit correctement saisi."
+
+#: .\user\templates\registration\password_reset_confirm.html:56
+#| msgid "Lost password?"
+msgid "Set the password"
+msgstr "Enregistrer le mot-de-passe"
+
+#: .\user\templates\registration\password_reset_done.html:4
+#| msgid "Lost password?"
+msgid "Reset your password"
+msgstr "Réinitialiser votre mot-de-passe"
+
+#: .\user\templates\registration\password_reset_done.html:7
+#| msgid ""
+#| "Please, enter your e-mail address and you will receive instructions to "
+#| "change your password."
+msgid "We've emailed you instructions for setting your password."
+msgstr ""
+"Nous vous avons envoyé par e-mail les instructions pour définir votre mot-"
+"de-passe."
+
+#: .\user\templates\registration\password_reset_done.html:8
+msgid ""
+"If you don't receive an e-mail, please make sure you've entered the address "
+"you registered with."
+msgstr ""
+"Si vous ne recevez pas d'e-mail, veuillez vous assurer que vous avez bien "
+"saisi l'adresse e-mail avec laquelle vous êtes enregistré."
+
+#: .\user\templates\registration\password_reset_email.html:2
+#, python-format
+msgid ""
+"Someone asked for password reset for email %(email)s. Follow the link below:"
+msgstr ""
+"Quelqu'un a demandé à réinitialiser le mot-de-passe pour l'adresse e-mail "
+"%(email)s. Suivez le lien suivant :"
+
+#: .\user\templates\registration\password_reset_email.html:5
+#, python-format
+msgid "Your username, in case you've forgotten: %(user)s"
+msgstr "Votre nom d'utilisateur, si vous l'aviez oublié : %(user)s"
+
+#: .\user\templates\registration\password_reset_form.html:4
+#: .\user\templates\registration\password_reset_form.html:16
+#: .\user\templates\registration\password_reset_form.html:41
+msgid "Password reset"
+msgstr "Réinitialiser le mot-de-passe"
+
+#: .\user\templates\registration\password_reset_form.html:19
+msgid ""
+"Please, enter your e-mail address and you will receive instructions to "
+"change your password."
+msgstr ""
+"Veuillez indiquer votre adresse e-mail et vous recevrez les instructions "
+"pour changer votre mot-de-passe."
+
+#~ msgid "Email"
+#~ msgstr "Adresse e-mail"

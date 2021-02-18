@@ -361,6 +361,22 @@ form.delete p {
     width: 450px;
     border: 1px;
 }
+.password-reset thead td {
+    font-size: small;
+    text-align: center;
+}
 .login-form tfoot td {
     text-align: center;
+}
+.login-form tfoot a {
+    font-size: smaller;
+    font-variant: all-small-caps;
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+}
+p a {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
 }
