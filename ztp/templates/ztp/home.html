@@ -1,40 +1,78 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block content_title %}Home{% endblock content_title %}
+{% block content_title %}{% trans 'Home' %}{% endblock content_title %}
 
 {% block content %}
     <div class="home">
-        <p>ZosTeroPs manages the ZTP (Zero Touch Provisioning) of your network devices.</p>
-        <p>The system contains different parts that permit to customize the process depending
-            on the vendor and the platform of your network devices.</p>
+        <p>{% blocktrans %}ZosTeroPs manages the ZTP (Zero Touch Provisioning) of your network devices.{% endblocktrans %}</p>
+        <p>{% blocktrans %}The system contains different parts that permit to customize the process depending
+            on the vendor and the platform of your network devices.{% endblocktrans %}</p>
         <ul>
             <li>
-                <a href="#">ZTP Scripts</a> (not implemented) collects your ZTP bootstrap scripts that are
-                first downloaded by the network devices. Multiple scripts can be defined
-                to support multiple platforms with different bootstrap conditions. All
-                scripts are text-based (not binary) that can define variable substitution.
+                {% if perms.ztp.list_ztpscript %}
+                    <a href="{% url 'ztpList' %}">{% trans 'ZTP Scripts' %}</a>
+                {% else %}
+                    {% trans 'ZTP Scripts' %}
+                {% endif %}
+                {% blocktrans %}collects your ZTP bootstrap scripts that are
+                    first downloaded by the network devices. Multiple scripts can be defined
+                    to support multiple platforms with different bootstrap conditions. All
+                    scripts are text-based (not binary) that can define variable substitution.
+                {% endblocktrans %}
             </li>
             <li>
-                <a href="#">Configurations</a> (not implemented) defines your configuration templates that
-                can be copied by the ZTP script to your device, if it supports this
-                possibility. Splitting the bootstrap and the configuration permits to have
-                a more generic bootstrap script and custom configurations for specific
-                platforms or for specific devices.
+                {% if perms.ztp.list_config %}
+                    <a href="{% url 'configList' %}">{% trans 'Configurations' %}</a>
+                {% else %}
+                    {% trans 'Configurations' %}
+                {% endif %}
+                {% blocktrans %}
+                    defines your configuration templates that
+                    can be copied by the ZTP script to your device, if it supports this
+                    possibility. Splitting the bootstrap and the configuration permits to have
+                    a more generic bootstrap script and custom configurations for specific
+                    platforms or for specific devices.
+                {% endblocktrans %}
             </li>
             <li>
-                <a href="{% url 'firmwareList' %}">Firmwares</a> collects all the firmwares (softwares) that can
-                be downloaded by the managed devices.
+                {% if perms.ztp.list_firmware %}
+                    <a href="{% url 'firmwareList' %}">{% trans 'Firmwares' %}</a>
+                {% else %}
+                    {% trans 'Firmwares' %}
+                {% endif %}
+                {% blocktrans %}
+                    collects all the firmwares (softwares) that can
+                    be downloaded by the managed devices.
+                {% endblocktrans %}
             </li>
             <li>
-                <a href="{% url 'platformList' %}">Platforms</a> manages the categories of
-                the network devices of a given vendor.
+                {% if perms.ztp.list_platform %}
+                    <a href="{% url 'platformList' %}">{% trans 'Platforms' %}</a>
+                {% else %}
+                    {% trans 'Platforms' %}
+                {% endif %}
+                {% blocktrans %}
+                    manages the categories of
+                    the network devices of a given vendor.
+                {% endblocktrans %}
             </li>
             <li>
-                <a href="{% url 'vendorList' %}">Vendors</a> manages the vendors of the
-                network devices.
+                {% if perms.ztp.list_vendor %}
+                    <a href="{% url 'vendorList' %}">{% trans 'Vendors' %}</a>
+                {% else %}
+                    {% trans 'Vendors' %}
+                {% endif %}
+                {% blocktrans %}
+                    manages the vendors of the
+                    network devices.
+                {% endblocktrans %}
             </li>
             <li>
-                <a href="#">Log</a> (not implemented) displays the logs of ZosTeroPs.
+                {% trans 'Logs' %} {% trans '(not implemented)' %}
+                {% blocktrans %}
+                    displays the logs of ZosTeroPs.
+                {% endblocktrans %}
             </li>
         </ul>
     </div>

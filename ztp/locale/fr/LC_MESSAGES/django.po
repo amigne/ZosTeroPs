@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 16:32+0100\n"
-"PO-Revision-Date: 2021-02-18 16:34+0000\n"
+"POT-Creation-Date: 2021-02-18 16:47+0100\n"
+"PO-Revision-Date: 2021-02-18 17:00+0000\n"
 "Last-Translator: b'  <yann@gauteron.me>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -101,35 +101,36 @@ msgstr "Peut lister les scripts ZTP"
 msgid "value"
 msgstr "valeur"
 
-#: .\ztp\templates\base.html:17
+#: .\ztp\templates\base.html:17 .\ztp\templates\ztp\home.html:4
 msgid "Home"
 msgstr "Accueil"
 
-#: .\ztp\templates\base.html:19
-#| msgid "ZTP scripts"
+#: .\ztp\templates\base.html:19 .\ztp\templates\ztp\home.html:14
+#: .\ztp\templates\ztp\home.html:16
 msgid "ZTP Scripts"
 msgstr "Scripts ZTP"
 
-#: .\ztp\templates\base.html:22
+#: .\ztp\templates\base.html:22 .\ztp\templates\ztp\home.html:26
+#: .\ztp\templates\ztp\home.html:28
 msgid "Configurations"
 msgstr ""
 
-#: .\ztp\templates\base.html:25
-#| msgid "firmwares"
+#: .\ztp\templates\base.html:25 .\ztp\templates\ztp\home.html:40
+#: .\ztp\templates\ztp\home.html:42
 msgid "Firmwares"
 msgstr "Logiciels"
 
-#: .\ztp\templates\base.html:28
-#| msgid "Platform"
+#: .\ztp\templates\base.html:28 .\ztp\templates\ztp\home.html:51
+#: .\ztp\templates\ztp\home.html:53
 msgid "Platforms"
 msgstr "Plateforme"
 
-#: .\ztp\templates\base.html:31
-#| msgid "Vendor"
+#: .\ztp\templates\base.html:31 .\ztp\templates\ztp\home.html:62
+#: .\ztp\templates\ztp\home.html:64
 msgid "Vendors"
 msgstr "Fabricant"
 
-#: .\ztp\templates\base.html:33
+#: .\ztp\templates\base.html:33 .\ztp\templates\ztp\home.html:72
 msgid "Logs"
 msgstr ""
 
@@ -311,6 +312,92 @@ msgstr "Fichier"
 #: .\ztp\templates\ztp\generic\list.html:21
 msgid "Vendor"
 msgstr "Fabricant"
+
+#: .\ztp\templates\ztp\home.html:8
+msgid ""
+"ZosTeroPs manages the ZTP (Zero Touch Provisioning) of your network devices."
+msgstr ""
+"ZosTeroPs gère le mécanisme ZTP (Zero Touch Provisioning) de vos équipements"
+" réseau."
+
+#: .\ztp\templates\ztp\home.html:9
+msgid ""
+"The system contains different parts that permit to customize the process depending\n"
+"            on the vendor and the platform of your network devices."
+msgstr ""
+"Le système possède différentes parties qui permettent de personnaliser le "
+"processus en fonction du fabricant et de la plateforme de vos équipements "
+"réseau."
+
+#: .\ztp\templates\ztp\home.html:18
+msgid ""
+"collects your ZTP bootstrap scripts that are\n"
+"                    first downloaded by the network devices. Multiple scripts can be defined\n"
+"                    to support multiple platforms with different bootstrap conditions. All\n"
+"                    scripts are text-based (not binary) that can define variable substitution.\n"
+"                "
+msgstr ""
+"collecte vos scripts de démarrage ZTP qui sont téléchargés en premier par "
+"vos équipements réseau. Plusieurs scripts peuvent être déclarés afin de "
+"supporter plusieurs plateformes avec des conditions de démarrages "
+"différentes. Tous les scripts sont basés sur du texte (pas de codes "
+"binaires) et peuvent définir des valeurs de substitution."
+
+#: .\ztp\templates\ztp\home.html:30
+msgid ""
+"\n"
+"                    defines your configuration templates that\n"
+"                    can be copied by the ZTP script to your device, if it supports this\n"
+"                    possibility. Splitting the bootstrap and the configuration permits to have\n"
+"                    a more generic bootstrap script and custom configurations for specific\n"
+"                    platforms or for specific devices.\n"
+"                "
+msgstr ""
+"\n"
+"déclare les modèles de configuration qui peuvent être récupérés par le script ZTP si l'équipement supporte cette fonctionnalité. Séparer le script de démarrage et la configuration permet de déclarer un script de démarrage plus générique avec des configurations personnalisées spécifiques en fonction de la plateforme ou d'un équipement particulier."
+
+#: .\ztp\templates\ztp\home.html:44
+msgid ""
+"\n"
+"                    collects all the firmwares (softwares) that can\n"
+"                    be downloaded by the managed devices.\n"
+"                "
+msgstr ""
+"\n"
+"collecte tous les logiciels qui peuvent être téléchargés par l'équipement géré."
+
+#: .\ztp\templates\ztp\home.html:55
+msgid ""
+"\n"
+"                    manages the categories of\n"
+"                    the network devices of a given vendor.\n"
+"                "
+msgstr ""
+"\n"
+"gère les catégories d'équipement réseau d'un fabricant particulier."
+
+#: .\ztp\templates\ztp\home.html:66
+msgid ""
+"\n"
+"                    manages the vendors of the\n"
+"                    network devices.\n"
+"                "
+msgstr ""
+"\n"
+"gère les fabricants d'équipements réseau."
+
+#: .\ztp\templates\ztp\home.html:72
+msgid "(not implemented)"
+msgstr "(pas implémenté)"
+
+#: .\ztp\templates\ztp\home.html:73
+msgid ""
+"\n"
+"                    displays the logs of ZosTeroPs.\n"
+"                "
+msgstr ""
+"\n"
+"affiche les journaux de ZosTeroPs."
 
 #: .\ztp\views.py:65
 msgid "ZTP script"
