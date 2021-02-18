@@ -12,9 +12,9 @@ import os
 
 
 class Vendor(models.Model):
-    name = models.CharField(max_length=50,
+    name = models.CharField(_('name'), max_length=50,
                             unique=True)
-    description = models.TextField(blank=True)
+    description = models.TextField(_('description'), blank=True)
 
     def __str__(self):
         return self.name
@@ -33,6 +33,7 @@ class Vendor(models.Model):
         return reverse_lazy('vendorUpdate', kwargs={'pk': self.id})
 
     class Meta:
+        verbose_name = _('vendor')
         permissions = (
             ('list_vendor', _('Can list vendor')),
         )
@@ -42,8 +43,8 @@ class Platform(models.Model):
     vendor = models.ForeignKey(Vendor,
                                related_name='platforms',
                                on_delete=models.PROTECT)
-    name = models.CharField(max_length=50)
-    description = models.TextField(blank=True)
+    name = models.CharField(_('name'), max_length=50)
+    description = models.TextField(_('description'), blank=True)
 
     def __str__(self):
         return self.name
@@ -67,17 +68,18 @@ class Platform(models.Model):
             ('list_platform', _('Can list platform')),
         )
 
+
 class Firmware(models.Model):
     platform = models.ForeignKey(Platform,
                                  related_name='firmwares',
                                  on_delete=models.CASCADE)
-    file = models.FileField(unique=True,
+    file = models.FileField(_('file'), unique=True,
                             storage=FileSystemStorage(location=settings.ZTP_FIRMWARES_PATH,
                                                       base_url=settings.ZTP_FIRMWARES_URL))
-    description = models.TextField(blank=True)
-    filesize = models.IntegerField()
-    md5_hash = models.CharField(max_length=32)
-    sha512_hash = models.CharField(max_length=128)
+    description = models.TextField(_('description'), blank=True)
+    filesize = models.IntegerField(_('filesize'))
+    md5_hash = models.CharField(_('MD5 hash'), max_length=32)
+    sha512_hash = models.CharField(_('SHA512 hash'), max_length=128)
 
     def __str__(self):
         return self.file.name
@@ -148,11 +150,11 @@ class Config(models.Model):
         r'^[0-9a-zA-Z._-]+$',
         'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
 
-    name = models.CharField(max_length=50,
+    name = models.CharField(_('name'), max_length=50,
                             validators=[configNameValidator],
                             unique=True)
-    template = models.TextField()
-    description = models.TextField(blank=True)
+    template = models.TextField(_('template'))
+    description = models.TextField(_('description'), blank=True)
 
     def data_to_dict(self):
         result = dict()
@@ -188,10 +190,10 @@ class ConfigParameter(models.Model):
     config = models.ForeignKey(Config,
                                related_name='parameters',
                                on_delete=models.CASCADE)
-    name = models.CharField(max_length=50,
+    name = models.CharField(_('name'), max_length=50,
                             blank=False,
                             validators=[configParameterNameValidator])
-    data = models.TextField(blank=True)
+    data = models.TextField(_('data'), blank=True)
 
 
     # TODO: Function to move out of the class
@@ -266,19 +268,20 @@ class ZtpScript(models.Model):
         r'^[0-9a-zA-Z._-]+$',
         'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
 
-    name = models.CharField(max_length=50,
+    name = models.CharField(_('name'), max_length=50,
                             validators=[ztpNameValidator],
                             unique=True)
-    render_template = models.BooleanField(blank=False,
+    render_template = models.BooleanField(_('render template'), blank=False,
                                           default=True)
-    use_parameters = models.BooleanField(blank=False,
+    use_parameters = models.BooleanField(_('use parameters'), blank=False,
                                          default=True)
-    accept_query_string = models.BooleanField(blank=False,
+    accept_query_string = models.BooleanField(_('accept_query_string'), blank=False,
                                               default=False)
-    priority_query_string_over_arguments = models.BooleanField(blank=False,
+    priority_query_string_over_arguments = models.BooleanField(_('priority query string over arguments'),
+                                                               blank=False,
                                                                default=False)
-    template = models.TextField()
-    description = models.TextField(blank=True)
+    template = models.TextField(_('template'))
+    description = models.TextField(_('description'), blank=True)
 
     def __str__(self):
         return self.name
@@ -308,10 +311,10 @@ class ZtpParameter(models.Model):
     ztpScript = models.ForeignKey(ZtpScript,
                                   related_name='parameters',
                                   on_delete=models.CASCADE)
-    name = models.CharField(max_length=50,
+    name = models.CharField(_('name'), max_length=50,
                             blank=False,
                             validators=[ztpParameterNameValidator])
-    value = models.CharField(max_length=200,
+    value = models.CharField(_('value'), max_length=200,
                              blank=True)
 
     def __str__(self):

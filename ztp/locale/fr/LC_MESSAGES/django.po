@@ -1,0 +1,349 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-02-18 16:32+0100\n"
+"PO-Revision-Date: 2021-02-18 16:34+0000\n"
+"Last-Translator: b'  <yann@gauteron.me>'\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Translated-Using: django-rosetta 0.9.5\n"
+
+#: .\ztp\formset.py:21
+msgid "There must not be multiple parameters with the same name."
+msgstr "Il ne peut pas y avoir plusieurs paramètres avec le même nom."
+
+#: .\ztp\models.py:15 .\ztp\models.py:46 .\ztp\models.py:153
+#: .\ztp\models.py:193 .\ztp\models.py:271 .\ztp\models.py:314
+msgid "name"
+msgstr "nom"
+
+#: .\ztp\models.py:17 .\ztp\models.py:47 .\ztp\models.py:79
+#: .\ztp\models.py:157 .\ztp\models.py:284
+msgid "description"
+msgstr ""
+
+#: .\ztp\models.py:36 .\ztp\views.py:477
+msgid "vendor"
+msgstr "fabricant"
+
+#: .\ztp\models.py:38
+msgid "Can list vendor"
+msgstr "Peut lister les fabricants"
+
+#: .\ztp\models.py:68
+msgid "Can list platform"
+msgstr "Peut lister les plateformes"
+
+#: .\ztp\models.py:76
+msgid "file"
+msgstr "fichier"
+
+#: .\ztp\models.py:80
+msgid "filesize"
+msgstr "taille du fichier"
+
+#: .\ztp\models.py:81 .\ztp\templates\ztp\generic\detail.html:42
+msgid "MD5 hash"
+msgstr "somme de contrôle MD5"
+
+#: .\ztp\models.py:82 .\ztp\templates\ztp\generic\detail.html:48
+msgid "SHA512 hash"
+msgstr "somme de contrôle SHA512"
+
+#: .\ztp\models.py:112
+msgid "Can list firmware"
+msgstr "Peut lister les logiciels"
+
+#: .\ztp\models.py:156 .\ztp\models.py:283
+msgid "template"
+msgstr "modèle"
+
+#: .\ztp\models.py:182
+msgid "Can list config"
+msgstr "Peut lister les configurations"
+
+#: .\ztp\models.py:196
+msgid "data"
+msgstr "données"
+
+#: .\ztp\models.py:274
+msgid "render template"
+msgstr "interprétation du modèle"
+
+#: .\ztp\models.py:276
+msgid "use parameters"
+msgstr "substitution des paramètres"
+
+#: .\ztp\models.py:278
+msgid "accept_query_string"
+msgstr "accepte la chaîne de caractères de requête"
+
+#: .\ztp\models.py:280
+msgid "priority query string over arguments"
+msgstr "chaîne de caractères de requête prioritaire sur les arguments"
+
+#: .\ztp\models.py:303
+msgid "Can list ztp script"
+msgstr "Peut lister les scripts ZTP"
+
+#: .\ztp\models.py:317
+msgid "value"
+msgstr "valeur"
+
+#: .\ztp\templates\base.html:17
+msgid "Home"
+msgstr "Accueil"
+
+#: .\ztp\templates\base.html:19
+#| msgid "ZTP scripts"
+msgid "ZTP Scripts"
+msgstr "Scripts ZTP"
+
+#: .\ztp\templates\base.html:22
+msgid "Configurations"
+msgstr ""
+
+#: .\ztp\templates\base.html:25
+#| msgid "firmwares"
+msgid "Firmwares"
+msgstr "Logiciels"
+
+#: .\ztp\templates\base.html:28
+#| msgid "Platform"
+msgid "Platforms"
+msgstr "Plateforme"
+
+#: .\ztp\templates\base.html:31
+#| msgid "Vendor"
+msgid "Vendors"
+msgstr "Fabricant"
+
+#: .\ztp\templates\base.html:33
+msgid "Logs"
+msgstr ""
+
+#: .\ztp\templates\base.html:34 .\ztp\templates\ztp\about.html:4
+msgid "About"
+msgstr "À propos..."
+
+#: .\ztp\templates\base.html:36
+msgid "Login"
+msgstr "Connexion"
+
+#: .\ztp\templates\base.html:38
+msgid "User Profile"
+msgstr "Profil utilisateur"
+
+#: .\ztp\templates\base.html:39
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: .\ztp\templates\ztp\about.html:9
+msgid "Version:"
+msgstr "Version :"
+
+#: .\ztp\templates\ztp\about.html:9
+msgid "development"
+msgstr "développement"
+
+#: .\ztp\templates\ztp\about.html:10
+msgid "Author:"
+msgstr "Auteur :"
+
+#: .\ztp\templates\ztp\about.html:11
+msgid "Website:"
+msgstr "Site web :"
+
+#: .\ztp\templates\ztp\about.html:12
+msgid "License:"
+msgstr "Licence :"
+
+#: .\ztp\templates\ztp\about.html:12
+msgid "MIT License"
+msgstr ""
+
+#: .\ztp\templates\ztp\generic\confirm_delete.html:4
+msgid "Delete"
+msgstr "Supprimer"
+
+#: .\ztp\templates\ztp\generic\confirm_delete.html:9
+#, python-format
+msgid ""
+"\n"
+"                You're about to delete the %(object_description)s <strong>%(object)s</strong>.\n"
+"            "
+msgstr ""
+"\n"
+"Vous êtes sur le point de supprimer l'élément suivant : %(object_description)s <strong>%(object)s</strong>."
+
+#: .\ztp\templates\ztp\generic\confirm_delete.html:12
+msgid "Are you sure you want to delete it?"
+msgstr "Êtes-vous certain de vouloir supprimer cet élément ?"
+
+#: .\ztp\templates\ztp\generic\confirm_delete.html:13
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: .\ztp\templates\ztp\generic\detail.html:5
+msgid "Details"
+msgstr "Détails"
+
+#: .\ztp\templates\ztp\generic\detail.html:12
+#: .\ztp\templates\ztp\generic\list.html:23
+msgid "Platform"
+msgstr "Plateforme"
+
+#: .\ztp\templates\ztp\generic\detail.html:18
+#: .\ztp\templates\ztp\generic\detail.html:104
+#: .\ztp\templates\ztp\generic\form.html:182
+#: .\ztp\templates\ztp\generic\list.html:15
+msgid "Name"
+msgstr "Nom"
+
+#: .\ztp\templates\ztp\generic\detail.html:24
+msgid "Filename"
+msgstr "Nom de fichier"
+
+#: .\ztp\templates\ztp\generic\detail.html:30
+#: .\ztp\templates\ztp\generic\list.html:19
+msgid "Description"
+msgstr ""
+
+#: .\ztp\templates\ztp\generic\detail.html:36
+msgid "File size"
+msgstr "Taille du fichier"
+
+#: .\ztp\templates\ztp\generic\detail.html:37
+#: .\ztp\templates\ztp\generic\list.html:38
+msgid "bytes"
+msgstr "octets"
+
+#: .\ztp\templates\ztp\generic\detail.html:54
+msgid "Download URL"
+msgstr "URL de téléchargement"
+
+#: .\ztp\templates\ztp\generic\detail.html:60
+#: .\ztp\templates\ztp\generic\form.html:120
+msgid "Options"
+msgstr ""
+
+#: .\ztp\templates\ztp\generic\detail.html:65
+msgid "Render template"
+msgstr "Interprétation du modèle"
+
+#: .\ztp\templates\ztp\generic\detail.html:70
+msgid "Use parameters"
+msgstr "Substitution des paramètres"
+
+#: .\ztp\templates\ztp\generic\detail.html:75
+msgid "Accept query string"
+msgstr "Accepte la chaîne de caractères de requête"
+
+#: .\ztp\templates\ztp\generic\detail.html:80
+msgid "Priority query string over arguments"
+msgstr "Chaîne de caractères de requête prioritaire sur les arguments"
+
+#: .\ztp\templates\ztp\generic\detail.html:86
+#: .\ztp\templates\ztp\generic\form.html:175
+msgid "Parameters"
+msgstr "Paramètres"
+
+#: .\ztp\templates\ztp\generic\detail.html:105
+#: .\ztp\templates\ztp\generic\form.html:183
+msgid "Value"
+msgstr "Valeur"
+
+#: .\ztp\templates\ztp\generic\detail.html:122
+msgid "Template"
+msgstr "Modèle"
+
+#: .\ztp\templates\ztp\generic\form.html:5
+msgid "Edit"
+msgstr "Édition"
+
+#: .\ztp\templates\ztp\generic\form.html:5
+msgid "New"
+msgstr "Nouveau"
+
+#: .\ztp\templates\ztp\generic\form.html:84
+msgid "Currently:"
+msgstr "Actuellement :"
+
+#: .\ztp\templates\ztp\generic\form.html:84
+msgid "Change:"
+msgstr "Changer :"
+
+#: .\ztp\templates\ztp\generic\form.html:296
+msgid "Update"
+msgstr "Mise à jour"
+
+#: .\ztp\templates\ztp\generic\form.html:296
+msgid "Create"
+msgstr "Créer"
+
+#: .\ztp\templates\ztp\generic\form.html:317
+msgid "Add Parameter"
+msgstr "Ajouter un paramètre"
+
+#: .\ztp\templates\ztp\generic\form.html:318
+msgid "Remove Parameter"
+msgstr "Retirer un paramètre"
+
+#: .\ztp\templates\ztp\generic\list.html:13
+msgid "ID"
+msgstr ""
+
+#: .\ztp\templates\ztp\generic\list.html:17
+msgid "File"
+msgstr "Fichier"
+
+#: .\ztp\templates\ztp\generic\list.html:21
+msgid "Vendor"
+msgstr "Fabricant"
+
+#: .\ztp\views.py:65
+msgid "ZTP script"
+msgstr "Script ZTP"
+
+#: .\ztp\views.py:66
+msgid "ZTP scripts"
+msgstr "Scripts ZTP"
+
+#: .\ztp\views.py:187
+msgid "configuration"
+msgstr ""
+
+#: .\ztp\views.py:188
+msgid "configurations"
+msgstr ""
+
+#: .\ztp\views.py:311
+msgid "firmware"
+msgstr "logiciel"
+
+#: .\ztp\views.py:312
+msgid "firmwares"
+msgstr "logiciels"
+
+#: .\ztp\views.py:406
+msgid "platform"
+msgstr "plateforme"
+
+#: .\ztp\views.py:407
+msgid "platforms"
+msgstr "plateformes"
+
+#: .\ztp\views.py:478
+msgid "vendors"
+msgstr "fabricants"

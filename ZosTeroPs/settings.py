@@ -18,12 +18,16 @@ from pathlib import Path
 
 # Instantiate .env processor and set default values
 env = environ.Env(
-    DEBUG=(bool, False)
+    DEV=(bool, False),
+    DEBUG=(bool, False),
 )
 environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# DEV indicates that the setup is used in an development environment
+DEV = env('DEV')
 
 # DEBUG mode should be used for development only
 DEBUG = env('DEBUG')
@@ -49,6 +53,10 @@ USE_L10N = True
 USE_TZ = True
 TIME_ZONE = env('TIME_ZONE', default='UTC')
 LANGUAGE_CODE = env('LANGUAGE_CODE', default='en')
+LANGUAGES = (
+    ('en', _('English')),
+    ('fr', _('French')),
+)
 
 ### Authentications and logons
 LOGIN_REDIRECT_URL = 'home'
@@ -88,6 +96,10 @@ INSTALLED_APPS = [
     'ztp',
     'user',
 ]
+if DEV:
+    INSTALLED_APPS += [
+        'rosetta',
+    ]
 
 ### Middlewares
 MIDDLEWARE = [

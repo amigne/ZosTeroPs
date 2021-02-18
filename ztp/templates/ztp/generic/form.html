@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 
-{% block content_title %}{{ object_description|capfirst }} {% if object.id %}#{{ object.id }} - Edit{% else %}- New{% endif %}{% endblock content_title %}
+{% block content_title %}{{ object_description|capfirst }} {% if object.id %}#{{ object.id }} - {% trans 'Edit' %}{% else %}- {% trans 'New' %}{% endif %}{% endblock content_title %}
 
 {% block content %}
     <form method="post"{% if menu_item == "firmware" %} enctype="multipart/form-data"{% endif %}>
@@ -81,7 +81,7 @@
                         {% with field=form.file %}
                             <th class="{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
                             <td class="{{ field.name }}">
-                                {% if field.value %}Currently: {{ field.value }}<br />Change:{% endif %}
+                                {% if field.value %}{% trans 'Currently:' %} {{ field.value }}<br />{% trans 'Change:' %}{% endif %}
                                 <input type="file" name="{{ field.name }}"
                                        id="{{ field.id_for_label }}"
                                        {% if field.errors %}class="has-error"{% endif %}
@@ -117,7 +117,7 @@
                 {% endif %}
                 {% if menu_item == "ztpScript" %}
                     <tr>
-                        <th class="options">Options</th>
+                        <th class="options">{% trans 'Options' %}</th>
                         <td class="options">
                             {% with field=form.render_template %}
                                 <input type="checkbox" name="{{ field.name }}"
@@ -172,7 +172,7 @@
                 {% endif %}
                 {% if formset %}
                     <tr>
-                        <th class="parameters">Parameters</th>
+                        <th class="parameters">{% trans 'Parameters' %}</th>
                         <td class="parameters">
                             <fieldset>
                                 {% if menu_item == "ztpScript" %}
