@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.management import create_permissions
 from django.contrib.auth.models import Group, Permission
 from django.db import migrations
@@ -69,6 +70,12 @@ def populate_auth_groups(apps, schema_editor):
     administrators.save()
     administrators.permissions.set(administrators_permissions)
 
+    User = get_user_model()
+    admin = User(username='admin')
+    admin.set_password('admin')
+    admin.is_superuser = True
+    admin.is_staff = True
+    admin.save()
 
 
 class Migration(migrations.Migration):
