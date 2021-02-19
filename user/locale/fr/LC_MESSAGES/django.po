@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 22:38+0100\n"
-"PO-Revision-Date: 2021-02-18 22:46+0000\n"
-"Last-Translator: b'  <yann@gauteron.me>'\n"
+"POT-Creation-Date: 2021-02-19 16:44+0100\n"
+"PO-Revision-Date: 2021-02-19 16:52+0000\n"
+"Last-Translator: b'Yann Gauteron <yann@gauteron.me>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -29,23 +29,37 @@ msgstr "Connexion"
 msgid "Lost password?"
 msgstr "Mot-de-passe perdu ?"
 
-#: .\user\templates\registration\password_reset_complete.html:4
+#: .\user\templates\registration\password_change_form.html:4
 #| msgid "Password reset"
-msgid "Password reset complete"
-msgstr "La réinitialisation du mot-de-passe est terminée."
+msgid "Password change"
+msgstr "Modification du mot-de-passe"
 
-#: .\user\templates\registration\password_reset_complete.html:7
-#, python-format
+#: .\user\templates\registration\password_change_form.html:16
+#: .\user\templates\registration\password_reset_form.html:4
+#: .\user\templates\registration\password_reset_form.html:16
+#: .\user\templates\registration\password_reset_form.html:41
+msgid "Password reset"
+msgstr "Réinitialiser le mot-de-passe"
+
+#: .\user\templates\registration\password_change_form.html:19
+#| msgid ""
+#| "Please, set your new password twice so it can be checked it is correctly "
+#| "input."
 msgid ""
-"Your new password has been set. You can now <a "
-"href=\"%(login_url)s\">login</a>."
+"Please, enter your old (current) password and set your new password twice\n"
+"                            so it can be checked it is correctly input."
 msgstr ""
-"Votre nouveau mot-de-passe a été enregistré. Vous pouvez maintenant vous <a "
-"href=\"%(login_url)s\">connecter</a>."
+"S'il vous plaît, entrez votre ancien (actuel) mot-de-passe puis saisissez "
+"votre nouveau mot-de-passe deux fois afin de vérifier qu'il n'y ait pas "
+"d'erreur."
+
+#: .\user\templates\registration\password_change_form.html:72
+#| msgid "Set the password"
+msgid "Update password"
+msgstr "Mettre à jour le mot-de-passe"
 
 #: .\user\templates\registration\password_reset_confirm.html:4
 #: .\user\templates\registration\password_reset_confirm.html:16
-#| msgid "Lost password?"
 msgid "Set a new password"
 msgstr "Enregistrer un nouveau mot-de-passe"
 
@@ -58,19 +72,14 @@ msgstr ""
 "vérifier qu'il soit correctement saisi."
 
 #: .\user\templates\registration\password_reset_confirm.html:56
-#| msgid "Lost password?"
 msgid "Set the password"
 msgstr "Enregistrer le mot-de-passe"
 
 #: .\user\templates\registration\password_reset_done.html:4
-#| msgid "Lost password?"
 msgid "Reset your password"
 msgstr "Réinitialiser votre mot-de-passe"
 
 #: .\user\templates\registration\password_reset_done.html:7
-#| msgid ""
-#| "Please, enter your e-mail address and you will receive instructions to "
-#| "change your password."
 msgid "We've emailed you instructions for setting your password."
 msgstr ""
 "Nous vous avons envoyé par e-mail les instructions pour définir votre mot-"
@@ -97,12 +106,6 @@ msgstr ""
 msgid "Your username, in case you've forgotten: %(user)s"
 msgstr "Votre nom d'utilisateur, si vous l'aviez oublié : %(user)s"
 
-#: .\user\templates\registration\password_reset_form.html:4
-#: .\user\templates\registration\password_reset_form.html:16
-#: .\user\templates\registration\password_reset_form.html:41
-msgid "Password reset"
-msgstr "Réinitialiser le mot-de-passe"
-
 #: .\user\templates\registration\password_reset_form.html:19
 msgid ""
 "Please, enter your e-mail address and you will receive instructions to "
@@ -110,6 +113,51 @@ msgid ""
 msgstr ""
 "Veuillez indiquer votre adresse e-mail et vous recevrez les instructions "
 "pour changer votre mot-de-passe."
+
+#: .\user\templates\user\profile_form.html:5
+msgid "User profile - Edit"
+msgstr "Profil utilisateur - Édition"
+
+#: .\user\templates\user\profile_form.html:69
+msgid "Update"
+msgstr "Mettre à jour"
+
+#: .\user\templates\user\profile_form.html:69
+msgid "Create"
+msgstr "Créer"
+
+#: .\user\templates\user\profile_form.html:72
+#| msgid "Set a new password"
+msgid "Change password?"
+msgstr "Modifier le mot-de-passer ?"
+
+#: .\user\templates\user\profile_form.html:93
+msgid "Add Parameter"
+msgstr "Ajouter un paramètre"
+
+#: .\user\templates\user\profile_form.html:94
+msgid "Remove Parameter"
+msgstr "Retirer un paramètre"
+
+#: .\user\views.py:18
+msgid "Your profile has successfully been updated."
+msgstr "Votre profil a été mis à jour avec succès."
+
+#: .\user\views.py:47
+msgid "Your password has successfully been updated."
+msgstr "Votre mot-de-passe a été modifié avec succès."
+
+#: .\user\views.py:60
+#| msgid ""
+#| "Your new password has been set. You can now <a "
+#| "href=\"%(login_url)s\">login</a>."
+msgid "Your new password has been set. You can now login."
+msgstr ""
+"Votre nouveau mot-de-passe a été enregistré. Vous pouvez maintenant vous "
+"connecter."
+
+#~ msgid "Password reset complete"
+#~ msgstr "La réinitialisation du mot-de-passe est terminée."
 
 #~ msgid "Email"
 #~ msgstr "Adresse e-mail"
