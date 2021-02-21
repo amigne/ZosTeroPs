@@ -69,6 +69,64 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
 
+LDAP_AUTHENTICATION = env.bool('LDAP_AUTHENTICATION', False)
+if LDAP_AUTHENTICATION:
+    import ldap
+    from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+
+    AUTHENTICATION_BACKENDS = env.tuple('AUTHENTICATION_BACKENDS',
+                                        default=('django_auth_ldap.backend.LDAPBackend', 'django.contrib.auth.backends.ModelBackend',))
+    AUTH_LDAP_SERVER_URI = env('AUTH_LDAP_SERVER_URI', default='ldap://localhost')
+    AUTH_LDAP_BIND_DN = env('AUTH_LDAP_BIND_DN', default='cn=admin,dc=example,dc=com')
+    AUTH_LDAP_BIND_PASSWORD = env('AUTH_LDAP_BIND_PASSWORD', default='admin')
+
+    AUTH_LDAP_USER_DN_TEMPLATE = env('AUTH_LDAP_USER_DN_TEMPLATE', default='uid=%(user)s,ou=Users,dc=example,dc=com')
+
+    AUTH_LDAP_USER_ATTR_MAP = env.dict('AUTH_LDAP_USER_ATTR_MAP', default={
+        'first_name': 'givenName',
+        'last_name': 'sn',
+        'email': 'mail',
+    })
+
+    AUTH_LDAP_REQUIRE_GROUP = env('AUTH_LDAP_REQUIRE_GROUP', default='cn=zosterops,ou=Groups,dc=example,dc=com')
+    AUTH_LDAP_DENY_GROUP = env('AUTH_LDAP_DENY_GROUP', default='cn=zosterops-disabled,ou=Groups,dc=example,dc=com')
+
+    AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
+    AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_ACTIVE = env('AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_ACTIVE',
+                                                  default='cn=zosterops,ou=Groups,dc=example,dc=com')
+    AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_STAFF = env('AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_STAFF',
+                                                 default='cn=zosterops-staff,ou=Groups,dc=example,dc=com')
+    AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_SUPERUSER = env('AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_SUPERUSER',
+                                                     default='cn=zosterops-superuser,ou=Groups,dc=example,dc=com')
+    if AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_ACTIVE:
+        AUTH_LDAP_USER_FLAGS_BY_GROUP['is_active'] = AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_ACTIVE
+    if AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_STAFF:
+        AUTH_LDAP_USER_FLAGS_BY_GROUP['is_staff'] = AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_STAFF
+    if AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_SUPERUSER:
+        AUTH_LDAP_USER_FLAGS_BY_GROUP['is_superuser'] = AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_SUPERUSER
+
+    AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_ACTIVE = 'cn=zosterops,ou=Groups,dc=example,dc=com'
+    AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_STAFF = 'cn=zosterops-staff,ou=Groups,dc=example,dc=com'
+    AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_SUPERUSER = 'cn=zosterops-superuser,ou=Groups,dc=example,dc=com'
+
+    AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(
+        name_attr=env('AUTH_LDAP_GROUP_TYPE_NAME_ATTR', default='cn'))
+
+    AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+        env('AUTH_LDAP_GROUP_SEARCH_BASE_DN', default='ou=Groups,dc=example,dc=com'),
+        ldap.SCOPE_SUBTREE,
+        env('AUTH_LDAP_GROUP_SEARCH_FILTER_STR', default='(objectClass=groupOfNames)'),
+    )
+
+    AUTH_LDAP_MIRROR_GROUPS = env.tuple('AUTH_LDAP_MIRROR_GROUPS',
+                                        default=('Administrators', 'Operators', 'Readers', 'Observers',))
+
+    AUTH_LDAP_ALWAYS_UPDATE_USER = env.bool('AUTH_LDAP_ALWAYS_UPDATE_USER', default=True)
+
+    AUTH_LDAP_FIND_GROUP_PERMS = env.bool('AUTH_LDAP_FIND_GROUP_PERMS', default=True)
+
+    AUTH_LDAP_CACHE_TIMEOUT = env.int('AUTH_LDAP_CACHE_TIMEOUT', default=0)
+
 # Static files
 STATIC_URL = '/static/'
 
@@ -99,6 +157,13 @@ if DEV:
     INSTALLED_APPS += [
         'rosetta',
     ]
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "loggers": {"django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]}},
+}
 
 # Middlewares
 MIDDLEWARE = [

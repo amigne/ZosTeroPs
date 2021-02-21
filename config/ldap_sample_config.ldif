@@ -1,0 +1,141 @@
+# Organizational Unit for users
+dn: ou=Users,dc=example,dc=com
+objectClass: organizationalUnit
+ou: Users
+
+# Organizational Unit for groups
+dn: ou=Groups,dc=example,dc=com
+objectClass: organizationalUnit
+ou: Groups
+
+# Fake user permits to have at least one member in each group
+dn: uid=fake,ou=Users,dc=example,dc=com
+cn: Fake User
+uid: fake
+mail: fake@example.com
+sn: User
+userPassword: abcd1234
+objectClass: person
+objectClass: inetOrgPerson
+
+dn: uid=regulartest,ou=Users,dc=example,dc=com
+cn: Regular Test User
+uid: regulartest
+mail: regulartest@example.com
+sn: User
+userPassword: abcd1234
+objectClass: person
+objectClass: inetOrgPerson
+
+dn: uid=observer,ou=Users,dc=example,dc=com
+cn: Observer User
+uid: observer
+mail: observer@example.com
+sn: User
+userPassword: abcd1234
+objectClass: person
+objectClass: inetOrgPerson
+
+dn: uid=reader,ou=Users,dc=example,dc=com
+cn: Reader User
+uid: reader
+mail: reader@example.com
+sn: User
+userPassword: abcd1234
+objectClass: person
+objectClass: inetOrgPerson
+
+dn: uid=operator,ou=Users,dc=example,dc=com
+cn: Operator User
+uid: operator
+mail: operator@example.com
+sn: User
+userPassword: abcd1234
+objectClass: person
+objectClass: inetOrgPerson
+
+dn: uid=administrator,ou=Users,dc=example,dc=com
+cn: Administrator User
+uid: administrator
+mail: administrator@example.com
+sn: User
+userPassword: abcd1234
+objectClass: person
+objectClass: inetOrgPerson
+
+dn: uid=superuser,ou=Users,dc=example,dc=com
+cn: Superuser
+uid: superuser
+mail: superuser@example.com
+sn: Superuser
+userPassword: abcd1234
+objectClass: person
+objectClass: inetOrgPerson
+
+dn: cn=zosterops,ou=Groups,dc=example,dc=com
+cn: zosterops
+ou: zosterops
+objectClass: groupOfNames
+description: tagGroup
+member: uid=fake,ou=Users,dc=example,dc=com
+member: uid=regulartest,ou=Users,dc=example,dc=com
+member: uid=observer,ou=Users,dc=example,dc=com
+member: uid=reader,ou=Users,dc=example,dc=com
+member: uid=operator,ou=Users,dc=example,dc=com
+member: uid=administrator,ou=Users,dc=example,dc=com
+member: uid=superuser,ou=Users,dc=example,dc=com
+
+dn: cn=zosterops-disabled,ou=Groups,dc=example,dc=com
+cn: zosterops-disabled
+ou: zosterops-disabled
+objectClass: groupOfNames
+description: tagGroup
+member: uid=fake,ou=Users,dc=example,dc=com
+
+dn: cn=zosterops-staff,ou=Groups,dc=example,dc=com
+cn: zosterops-staff
+ou: zosterops-staff
+objectClass: groupOfNames
+description: tagGroup
+member: uid=fake,ou=Users,dc=example,dc=com
+member: uid=superuser,ou=Users,dc=example,dc=com
+
+dn: cn=zosterops-superuser,ou=Groups,dc=example,dc=com
+cn: zosterops-superuser
+ou: zosterops-superuser
+objectClass: groupOfNames
+description: tagGroup
+member: uid=fake,ou=Users,dc=example,dc=com
+member: uid=superuser,ou=Users,dc=example,dc=com
+
+dn: cn=Observers,ou=Groups,dc=example,dc=com
+cn: Observers
+ou: Administrators
+objectClass: groupOfNames
+description: tagGroup
+member: uid=fake,ou=Users,dc=example,dc=com
+member: uid=observer,ou=Users,dc=example,dc=com
+
+dn: cn=Readers,ou=Groups,dc=example,dc=com
+cn: Readers
+ou: Readers
+objectClass: groupOfNames
+description: tagGroup
+member: uid=fake,ou=Users,dc=example,dc=com
+member: uid=reader,ou=Users,dc=example,dc=com
+
+dn: cn=Operators,ou=Groups,dc=example,dc=com
+cn: Operators
+ou: Operators
+objectClass: groupOfNames
+description: tagGroup
+member: uid=fake,ou=Users,dc=example,dc=com
+member: uid=operator,ou=Users,dc=example,dc=com
+
+dn: cn=Administrators,ou=Groups,dc=example,dc=com
+cn: Administrators
+ou: Administrators
+objectClass: groupOfNames
+description: tagGroup
+member: uid=fake,ou=Users,dc=example,dc=com
+member: uid=administrator,ou=Users,dc=example,dc=com
