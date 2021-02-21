@@ -80,7 +80,7 @@ def populate_auth_groups(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('ztp', '0003_auto_20210217_1632'),
+        ('ztp', '0003_auto_20210221_1418'),
     ]
 
     operations = [
