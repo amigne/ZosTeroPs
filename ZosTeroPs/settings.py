@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import environ
+import os
 
 from django.utils.translation import gettext_lazy as _
 from pathlib import Path
@@ -129,6 +130,7 @@ if LDAP_AUTHENTICATION:
 
 # Static files
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Databases
 DATABASES = {

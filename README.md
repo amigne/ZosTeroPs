@@ -15,4 +15,5 @@ And now, give back to Caesar what belongs to Caesar: The idea of developing ZosT
 * v0.0.0a (February 14th, 2021) - Fixing a regression with an obsolete CDN Javascript library. This library is now embedded into this package.
 * v0.0.1 (February 17th, 2021) - Refactoring, use of a lighter Javascript table editor.
 * v0.0.2 (February 21st, 2021) - Addition of authentication and permission mechanisms, addition of LDAP support, addition of .env support.
-* v0.0.2a (February 21st, 2021) - Fixing data migration issue
+* v0.0.2a (February 21st, 2021) - Fixing data migration issue.
+* v0.0.2b (February 22nd, 2021) - Fixing settings.py missing STATIC_ROOT and removal of comments at end of lines on .env.prod
