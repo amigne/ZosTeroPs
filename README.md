@@ -20,4 +20,5 @@ And now, give back to Caesar what belongs to Caesar: The idea of developing ZosT
 * v0.0.3 (under development)
   * Addition of Edit and Delete buttons on the Detail views
   * Add of URL on ZTP script, configuration, and firmware Detail views
+  * Change default extra and min_num values for ZTP script, and configuration formsets
     
