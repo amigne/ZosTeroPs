@@ -17,4 +17,6 @@ And now, give back to Caesar what belongs to Caesar: The idea of developing ZosT
 * v0.0.2 (February 21st, 2021) - Addition of authentication and permission mechanisms, addition of LDAP support, addition of .env support.
 * v0.0.2a (February 21st, 2021) - Fixing data migration issue.
 * v0.0.2b (February 22nd, 2021) - Fixing settings.py missing STATIC_ROOT and removal of comments at end of lines on .env.prod
-* v0.0.3 (under development) - 
+* v0.0.3 (under development)
+  * Addition of Edit and Delete buttons on the Detail views
+    
