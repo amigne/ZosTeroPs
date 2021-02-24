@@ -388,12 +388,15 @@
                 let data_value = data_element.val();
 
                 let options = {
-                    minDimensions: [2, 2],
+                    minDimensions: [2, 1],
                     defaultColWidth: 120,
                 };
                 if (data_value !== '') {
                     try {
-                        options = Object.assign({}, options, JSON.parse(data_value));
+                        let data_hash = JSON.parse(data_value);
+                        let data_lines = data_hash['data'].length
+                        options['minDimensions'] = [2, data_lines + 1];
+                        options = Object.assign({}, options, data_hash);
                     } catch (e) {}
                 }
 
@@ -445,6 +448,22 @@
                     let table_data = jstable_instance.getData();
                     let table_columns = jstable_instance.getColumnsProperties();
                     let isSet = (! areInitialColumnsTitles(table_columns)) || (! isEmptyData(table_data));
+
+                    // Remove empty data line
+                    let new_table_data = []
+                    for (let i = 0; i < table_data.length; ++i) {
+                        let empty = true;
+                        for (let j = 0; j < table_data[i].length; ++j) {
+                            if (table_data[i][j]) {
+                                empty = false;
+                                break
+                            }
+                        }
+                        if (! empty) {
+                            new_table_data.push(table_data[i]);
+                        }
+                    }
+                    table_data = new_table_data
 
                     if (isSet) {
                         name_element.val(getFirstColumnTitle(table_columns));
