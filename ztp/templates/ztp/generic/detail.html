@@ -2,7 +2,11 @@
 {% load i18n %}
 {% load static %}
 
-{% block content_title %}{{ object_description|capfirst }} #{{ object.id }} - {% trans "Details" %}{% endblock content_title %}
+{% block content_title %}
+    {{ object_description|capfirst }} #{{ object.id }} - {% trans "Details" %}
+    {% if can_change %}<a href="{{ object.url_update }}"><div class="button-edit">{% trans 'Edit' %}</div></a>{% endif %}&nbsp;&nbsp;
+    {% if can_delete %}<a href="{{ object.url_delete }}"><div class="button-delete">{% trans 'Delete' %}</div></a></a>{% endif %}
+{% endblock content_title %}
 
 {% block content %}
     <table class="detail {{ menu_item }}">

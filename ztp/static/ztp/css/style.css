@@ -387,3 +387,25 @@ p a {
     color: #000;
     text-decoration: none;
 }
+
+.button-edit {
+    display: inline-block;
+    border: 1px solid green;
+    color: white;
+    background-color: forestgreen;
+    padding: 3px;
+    font-size: smaller;
+    font-variant: all-petite-caps;
+    border-radius: 3px;
+}
+
+.button-delete {
+    display: inline-block;
+    border: 1px solid red;
+    color: white;
+    background-color: tomato;
+    padding: 3px;
+    font-size: smaller;
+    font-variant: all-petite-caps;
+    border-radius: 3px;
+}
