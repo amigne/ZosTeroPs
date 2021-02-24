@@ -29,6 +29,12 @@
                     <td class="filename">{{ object.file.name }}</td>
                 </tr>
             {% endif %}
+            {% if object.url %}
+                <tr>
+                    <th class="url">{% trans "URL" %}</th>
+                    <td class="url"><a href="{{ object.url }}" target="_blank">{{ object.url }}</a></td>
+                </tr>
+            {% endif %}
             {% if object.description %}
                 <tr>
                     <th class="description">{% trans "Description" %}</th>
@@ -52,12 +58,6 @@
                 <th class="sha512hash">{% trans "SHA512 hash" %}</th>
                 <td class="sha512hash">{{ firmware.sha512_hash }}</td>
             </tr>
-            {% endif %}
-            {% if object.description %}
-                <tr>
-                    <th class="url_firmware">{% trans "Download URL" %}</th>
-                    <td class="url_firmware"><a href="/{{ object.file.url }}" target="_blank">{{ object.file.url }}</a></td>
-                </tr>
             {% endif %}
             {% if menu_item == "ztpScript" %}
                 <tr>

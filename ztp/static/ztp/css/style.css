@@ -130,7 +130,6 @@ form .has-error {
     font-family: 'Courier New', monospace;
 }
 
-
 /* Form firmware */
 .firmware_description textarea {
     height: 100px;
@@ -262,6 +261,12 @@ table.detail table.parameters tbody th,
 table.detail table.parameters tbody td {
     font-weight: normal;
     font-family: 'Courier New', monospace;
+}
+
+/* URL */
+table.detail .url a {
+    color: black;
+    text-decoration: none;
 }
 
 /* Template */

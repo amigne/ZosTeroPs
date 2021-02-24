@@ -14,7 +14,8 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .forms import ConfigForm, ZtpScriptForm
 from .formset import ConfigParameterFormSet, ZtpParameterFormSet
 from .models import Config, Firmware, Platform, Vendor, ZtpScript
-
+from .utils import (get_config_base_url, get_firwmare_base_url,
+                    get_ztp_script_base_url)
 
 class ContextMixin(BaseContextMixin):
     """ Mixin that sets some context data common to the different view classes. """
@@ -139,6 +140,13 @@ class ZtpDetailView(ZtpContextMixin, DetailView):
     template_name = 'ztp/generic/detail.html'
     permission_required = 'ztp.view_ztpscript'
 
+    def get_object(self, queryset=None):
+        object = super(ZtpDetailView, self).get_object(queryset)
+
+        base_url = get_ztp_script_base_url(self.request)
+        object.url = f'{base_url}{object.name}'
+        return object
+
 
 class ZtpListView(ZtpContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
@@ -262,6 +270,13 @@ class ConfigDetailView(ConfigContextMixin, DetailView):
     template_name = 'ztp/generic/detail.html'
     permission_required = 'ztp.view_config'
 
+    def get_object(self, queryset=None):
+        object = super(ConfigDetailView, self).get_object(queryset)
+
+        base_url = get_config_base_url(self.request)
+        object.url = f'{base_url}{object.name}'
+        return object
+
 
 class ConfigListView(ConfigContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
@@ -371,6 +386,13 @@ class FirmwareDeleteView(FirmwareContextMixin, DeleteView):
 class FirmwareDetailView(FirmwareContextMixin, DetailView):
     template_name = 'ztp/generic/detail.html'
     permission_required = 'ztp.view_firmware'
+
+    def get_object(self, queryset=None):
+        object = super(FirmwareDetailView, self).get_object(queryset)
+
+        base_url = get_firwmare_base_url(self.request)
+        object.url = f'{base_url}{object.file.name}'
+        return object
 
 
 class FirmwareListView(FirmwareContextMixin, ListView):
