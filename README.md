@@ -16,6 +16,7 @@ And now, give back to Caesar what belongs to Caesar: The idea of developing ZosT
   * Add of URL on ZTP script, configuration, and firmware Detail views
   * Change default extra and min_num values for ZTP script, and configuration formsets
   * Improve jsTable behavior (removal of empty lines when form is submitted, add a single empty line when editing the configurations)
+  * Addition of a "preprocessor" to add CONFIG, FIRMWARE, and ZTP data
 * v0.0.2b (February 22nd, 2021)
   * Fixing settings.py missing STATIC_ROOT 
   * Removal of comments at end of lines on .env.prod

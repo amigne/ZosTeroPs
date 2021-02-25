@@ -14,8 +14,11 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from .forms import ConfigForm, ZtpScriptForm
 from .formset import ConfigParameterFormSet, ZtpParameterFormSet
 from .models import Config, Firmware, Platform, Vendor, ZtpScript
+from .preprocessor import Preprocessor
 from .utils import (get_config_base_url, get_firwmare_base_url,
                     get_ztp_script_base_url)
+from .utils import (parameter_table_to_dict, preprocess_params)
+
 
 class ContextMixin(BaseContextMixin):
     """ Mixin that sets some context data common to the different view classes. """
@@ -41,25 +44,25 @@ class ContextMixin(BaseContextMixin):
 
         return context_data
 
-###
-### Home
-###
+#
+# Home
+#
 class HomeView(ContextMixin, TemplateView):
     menu_item = 'home'
     template_name = 'ztp/home.html'
 
 
-###
-### About
-###
+#
+# About
+#
 class AboutView(ContextMixin, TemplateView):
     menu_item = 'about'
     template_name = 'ztp/about.html'
 
 
-###
-### ZTP Script
-###
+#
+# ZTP Script
+#
 class ZtpContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = ZtpScript
     menu_item = 'ztpScript'
@@ -186,9 +189,10 @@ class ZtpUpdateView(ZtpContextMixin, UpdateView):
         else:
             return reverse_lazy('home')
 
-###
-### Configuration
-###
+
+#
+# Configuration
+#
 class ConfigContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Config
     menu_item = 'config'
@@ -317,9 +321,9 @@ class ConfigUpdateView(ConfigContextMixin, UpdateView):
             return reverse_lazy('home')
 
 
-###
-### Firmware
-###
+#
+# Firmware
+#
 class FirmwareContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Firmware
     menu_item = 'firmware'
@@ -419,9 +423,9 @@ class FirmwareUpdateView(FirmwareContextMixin, SuccessMessageMixin, UpdateView):
             return reverse_lazy('home')
 
 
-###
-### Platform
-###
+#
+# Platform
+#
 class PlatformContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Platform
     menu_item = 'platform'
@@ -490,9 +494,9 @@ class PlatformUpdateView(PlatformContextMixin, UpdateView):
         else:
             return reverse_lazy('home')
 
-###
-### Vendor
-###
+#
+# Vendor
+#
 class VendorContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Vendor
     menu_item = 'vendor'
@@ -561,9 +565,10 @@ class VendorUpdateView(VendorContextMixin, UpdateView):
         else:
             return reverse_lazy('home')
 
-###
-### Content delivery
-###
+
+#
+# Content delivery
+#
 def ztp_download(request, name):
     try:
         ztp_script = ZtpScript.objects.get(name=name)
@@ -589,31 +594,50 @@ def ztp_download(request, name):
     else:
         context_dict = { **query_string_context_dict, **parameters_context_dict }
 
-    template = Template(ztp_script.template)
+    preprocessor = Preprocessor(request)
+    context_dict = preprocess_params(context_dict)
+
+    preprocessed_template = preprocessor.process(ztp_script.template)
+    template = Template(preprocessed_template)
     return HttpResponse(template.render(Context(context_dict)), content_type='text/plain')
 
 
 def config_download(request, name):
     try:
-        configuration = Config.objects.get(name=name)
+        config = Config.objects.get(name=name)
     except Config.DoesNotExist:
-        raise Http404('Configuration does not exist!')
-
-    context_dict = dict()
+        raise Http404(_('Configuration does not exist!'))
 
     arguments = request.GET.dict()
-    if len(arguments):
-        # We have arguments so let's process them and the stored parameters' data
-        parameters = configuration.data_to_dict()
 
-        for key in arguments.keys():
-            if key in parameters:
-                value = arguments[key]
-                if value in parameters[key]:
-                    context_dict.update(parameters[key][value])
+    parameters_dict = dict()
+    for parameter in config.parameters.all():
+        # Retrieve dict from the parameter table
+        parameter_dict = parameter_table_to_dict(parameter)
 
-    template = Template(configuration.template)
-    return HttpResponse(template.render(Context(context_dict)), content_type='text/plain')
+        # Retrieve the value from the URL line, if given
+        url_value = arguments[parameter.name] if parameter.name in arguments else None
+
+        if parameter.is_mandatory and url_value is None:
+            raise Http404(_('Missing mandatory parameter "%(name)s".') % { 'name': parameter.name })
+
+        # Select the dict entry for the matching value only
+        match = parameter_dict[url_value] if url_value in parameter_dict else None
+
+        if parameter.is_mandatory and match is None:
+            raise Http404(_('No matching value for parameter "%(name)s".') % { 'name': parameter.name })
+
+        # Merge the values all together (redundant values are overwritten)
+        parameters_dict = { **parameters_dict, **match }
+
+    # We create a preprocessor instance now, so the request is passed to the class
+    preprocessor = Preprocessor(request)
+
+    parameters_dict = preprocess_params(parameters_dict)
+    preprocessed_template = preprocessor.process(config.template)
+
+    template = Template(preprocessed_template)
+    return HttpResponse(template.render(Context(parameters_dict)), content_type='text/plain')
 
 
 def firmware_download(request, filename):

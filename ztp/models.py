@@ -194,7 +194,9 @@ class ConfigParameter(models.Model):
                             blank=False,
                             validators=[configParameterNameValidator])
     data = models.TextField(_('data'), blank=True)
-
+    is_mandatory = models.BooleanField(_('mandatory parameter'),
+                                       blank=False,
+                                       default=True)
 
     # TODO: Function to move out of the class
     def index_to_column_name(self, index):
