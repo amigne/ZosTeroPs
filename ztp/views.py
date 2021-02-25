@@ -44,6 +44,7 @@ class ContextMixin(BaseContextMixin):
 
         return context_data
 
+
 #
 # Home
 #
@@ -452,7 +453,7 @@ class PlatformContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredM
 
     @property
     def can_view(self):
-        return False # self.request.user.has_perm('ztp.view_platform')
+        return False  # self.request.user.has_perm('ztp.view_platform')
 
 
 class PlatformCreateView(PlatformContextMixin, CreateView):
@@ -494,6 +495,7 @@ class PlatformUpdateView(PlatformContextMixin, UpdateView):
         else:
             return reverse_lazy('home')
 
+
 #
 # Vendor
 #
@@ -523,7 +525,7 @@ class VendorContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMix
 
     @property
     def can_view(self):
-        return False # self.request.user.has_perm('ztp.view_vendor')
+        return False  # self.request.user.has_perm('ztp.view_vendor')
 
 
 class VendorCreateView(VendorContextMixin, CreateView):
@@ -590,9 +592,9 @@ def ztp_download(request, name):
             parameters_context_dict[param['name']] = param['value']
 
     if ztp_script.priority_query_string_over_arguments:
-        context_dict = { **parameters_context_dict, **query_string_context_dict }
+        context_dict = {**parameters_context_dict, **query_string_context_dict}
     else:
-        context_dict = { **query_string_context_dict, **parameters_context_dict }
+        context_dict = {**query_string_context_dict, **parameters_context_dict}
 
     preprocessor = Preprocessor(request)
     context_dict = preprocess_params(context_dict)
@@ -619,16 +621,16 @@ def config_download(request, name):
         url_value = arguments[parameter.name] if parameter.name in arguments else None
 
         if parameter.is_mandatory and url_value is None:
-            raise Http404(_('Missing mandatory parameter "%(name)s".') % { 'name': parameter.name })
+            raise Http404(_('Missing mandatory parameter "%(name)s".') % {'name': parameter.name})
 
         # Select the dict entry for the matching value only
         match = parameter_dict[url_value] if url_value in parameter_dict else None
 
         if parameter.is_mandatory and match is None:
-            raise Http404(_('No matching value for parameter "%(name)s".') % { 'name': parameter.name })
+            raise Http404(_('No matching value for parameter "%(name)s".') % {'name': parameter.name})
 
         # Merge the values all together (redundant values are overwritten)
-        parameters_dict = { **parameters_dict, **match }
+        parameters_dict = {**parameters_dict, **match}
 
     # We create a preprocessor instance now, so the request is passed to the class
     preprocessor = Preprocessor(request)
@@ -646,4 +648,3 @@ def firmware_download(request, filename):
     except Firmware.DoesNotExist:
         raise Http404('Firmware does not exist!')
     return HttpResponse(p.file.open('rb'), content_type='application/octet-stream')
-

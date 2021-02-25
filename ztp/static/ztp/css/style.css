@@ -268,7 +268,10 @@ table.detail .url a {
     color: black;
     text-decoration: none;
 }
-
+table.detail .url .notice {
+    font-style: italic;
+    font-size: small;
+}
 /* Template */
 table.detail td.template pre {
     background-color: black;

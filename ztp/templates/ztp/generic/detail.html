@@ -32,7 +32,12 @@
             {% if object.url %}
                 <tr>
                     <th class="url">{% trans "URL" %}</th>
-                    <td class="url"><a href="{{ object.url }}" target="_blank">{{ object.url }}</a></td>
+                    <td class="url">
+                        <a href="{{ object.url }}" target="_blank">{{ object.url }}</a>
+                        {% if menu_item == 'config' %}
+                            <br /><div class="notice">The configuration may require mandatory parameters or return a 4xx error.</div>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endif %}
             {% if object.description %}
