@@ -32,7 +32,6 @@ class Preprocessor:
             expression = token[len(Preprocessor.START_TAG):-len(Preprocessor.END_TAG)].strip()
             match = re.match(r"^([A-Za-z0-9_]+)([\s.\[\]].*)?", expression)
             if not match:
-                print("No match")
                 # Invalid preprocessor expression. We silently copy the token
                 result += token
                 continue
@@ -173,7 +172,6 @@ class Preprocessor:
         return None
 
     def _process_HTTP_SERVER(self, expression):
-        print(f"expression = '{expression}'")
         if expression != 'HTTP_SERVER':
             # HTTP_SERVER expects no index and no keys
             return None
@@ -193,7 +191,6 @@ class Preprocessor:
             return None
 
         return f'{settings.ZTP_FIRMWARES_URL}'
-
 
     def _process_ZTP_PATH(self, expression):
         if expression != 'ZTP_PATH':
