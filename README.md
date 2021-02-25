@@ -44,7 +44,9 @@ Supported preprocessing elements are:
 **Note**: Unknown or syntactically incorrect preprocessing elements are ignored and left as is (understand they are not substituted).
 
 ## Releases
-* v0.0.3 (February 25thm 2021)
+* v0.0.4 (under development)
+  
+* v0.0.3 (February 25th, 2021)
   * Addition of Edit and Delete buttons on the Detail views
   * Add of URL on ZTP script, configuration, and firmware Detail views
   * Change default extra and min_num values for ZTP script, and configuration formsets
