@@ -1,7 +1,9 @@
 import re
 
+from django.conf import settings
+
 from .models import Config, Firmware, ZtpScript
-from .utils import (get_config_base_url, get_firwmare_base_url,
+from .utils import (get_config_base_url, get_firwmare_base_url, get_root_url,
                     get_ztp_script_base_url)
 
 
@@ -11,14 +13,14 @@ class Preprocessor:
     SPLITTING_RE = '(?s)(' + START_TAG + '.*?' + END_TAG + ')'
     request = None
 
-    def __init__(self, request = None):
+    def __init__(self, request=None):
         """ Constructor permits to pass a request to the class. """
         if request is not None:
             Preprocessor.request = request
 
-    def process(self, input):
+    def process(self, input_text):
         # Split the input text into a list of tokens
-        tokens = re.split(Preprocessor.SPLITTING_RE, input)
+        tokens = re.split(Preprocessor.SPLITTING_RE, input_text)
 
         result = ''
         for token in tokens:
@@ -28,8 +30,9 @@ class Preprocessor:
                 continue
 
             expression = token[len(Preprocessor.START_TAG):-len(Preprocessor.END_TAG)].strip()
-            match = re.match('^([A-Za-z0-9]+)[\s.\[\]]', expression)
+            match = re.match(r"^([A-Za-z0-9_]+)([\s.\[\]].*)?", expression)
             if not match:
+                print("No match")
                 # Invalid preprocessor expression. We silently copy the token
                 result += token
                 continue
@@ -55,6 +58,7 @@ class Preprocessor:
         return None
 
     def _process_FIRMWARE(self, expression):
+        # noinspection PyPep8Naming
         ALLOWED_KEYS = [None, 'MD5', 'SHA512', 'SIZE', 'URL']
 
         subexpression = expression[len('FIRMWARE'):].strip()
@@ -66,20 +70,20 @@ class Preprocessor:
         # FIRMWARE[1].SIZE returns the file size
         # FIRMWARE[1].SHA512 returns the SHA512 hash value
         # FIRMWARE[1].MD5 returns the MD5 hash value
-        match = re.match('^\[([0-9]+)\]\s*(\.\s*([A-Za-z0-9]+))?$', subexpression)
+        match = re.match(r'^\[([0-9]+)\]\s*(\.\s*([A-Za-z0-9]+))?$', subexpression)
         if match is None:
             # No index, invalid expression
             return None
 
-        id = int(match.group(1))
+        firmware_id = int(match.group(1))
 
         key = match.group(3)
-        if not key in ALLOWED_KEYS:
+        if key not in ALLOWED_KEYS:
             return None
 
         try:
-            firmware = Firmware.objects.get(id=id)
-        except:
+            firmware = Firmware.objects.get(id=firmware_id)
+        except Firmware.DoesNotExist:
             return None
 
         if key is None:
@@ -98,6 +102,7 @@ class Preprocessor:
         return None
 
     def _process_CONFIG(self, expression):
+        # noinspection PyPep8Naming
         ALLOWED_KEYS = [None, 'URL']
 
         subexpression = expression[len('CONFIG'):].strip()
@@ -106,20 +111,20 @@ class Preprocessor:
 
         # CONFIG[1] returns the name of the config with id=1
         # CONFIG[1].URL returns the URL to download that config
-        match = re.match('^\[([0-9]+)\]\s*(\.\s*([A-Za-z0-9]+))?$', subexpression)
+        match = re.match(r'^\[([0-9]+)\]\s*(\.\s*([A-Za-z0-9]+))?$', subexpression)
         if match is None:
             # No index, invalid expression
             return None
 
-        id = int(match.group(1))
+        config_id = int(match.group(1))
 
         key = match.group(3)
-        if not key in ALLOWED_KEYS:
+        if key not in ALLOWED_KEYS:
             return None
 
         try:
-            config = Config.objects.get(id=id)
-        except:
+            config = Config.objects.get(id=config_id)
+        except Config.DoesNotExist:
             return None
 
         if key is None:
@@ -132,6 +137,7 @@ class Preprocessor:
         return None
 
     def _process_ZTP(self, expression):
+        # noinspection PyPep8Naming
         ALLOWED_KEYS = [None, 'URL']
 
         subexpression = expression[len('ZTP'):].strip()
@@ -140,28 +146,58 @@ class Preprocessor:
 
         # ZTP[1] returns the name of the ZTP script with id=1
         # ZTP[1].URL returns the URL to download that ZTP script
-        match = re.match('^\[([0-9]+)\]\s*(\.\s*([A-Za-z0-9]+))?$', subexpression)
+        # noinspection RegExpRedundantEscape
+        match = re.match(r'^\[([0-9]+)\]\s*(\.\s*([A-Za-z0-9]+))?$', subexpression)
         if match is None:
             # No index, invalid expression
             return None
 
-        id = int(match.group(1))
+        ztp_script_id = int(match.group(1))
 
         key = match.group(3)
-        if not key in ALLOWED_KEYS:
+        if key not in ALLOWED_KEYS:
             return None
 
         try:
-            ztpScript = ZtpScript.objects.get(id=id)
-        except:
+            ztp_script = ZtpScript.objects.get(id=ztp_script_id)
+        except ZtpScript.DoesNotExist:
             return None
 
         if key is None:
-            return ztpScript.name
+            return ztp_script.name
         if key == 'URL':
             ztp_script_base_url = get_ztp_script_base_url(self.request)
-            return f'{ztp_script_base_url}{ztpScript.name}'
+            return f'{ztp_script_base_url}{ztp_script.name}'
 
         # Should NEVER occur
         return None
 
+    def _process_HTTP_SERVER(self, expression):
+        print(f"expression = '{expression}'")
+        if expression != 'HTTP_SERVER':
+            # HTTP_SERVER expects no index and no keys
+            return None
+
+        return get_root_url(self.request)
+
+    def _process_CONFIG_PATH(self, expression):
+        if expression != 'CONFIG_PATH':
+            # CONFIG_PATH expects no index and no keys
+            return None
+
+        return f'{settings.ZTP_CONFIG_URL}'
+
+    def _process_FIRMWARE_PATH(self, expression):
+        if expression != 'FIRMWARE_PATH':
+            # FIRMWARE_PATH expects no index and no keys
+            return None
+
+        return f'{settings.ZTP_FIRMWARES_URL}'
+
+
+    def _process_ZTP_PATH(self, expression):
+        if expression != 'ZTP_PATH':
+            # ZTP_PATH expects no index and no keys
+            return None
+
+        return f'{settings.ZTP_BOOTSTRAP_URL}'
