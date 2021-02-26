@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-19 16:44+0100\n"
-"PO-Revision-Date: 2021-02-18 18:45+0000\n"
-"Last-Translator: b'  <yann@gauteron.me>'\n"
+"POT-Creation-Date: 2021-02-26 13:32+0100\n"
+"PO-Revision-Date: 2021-02-26 13:33+0000\n"
+"Last-Translator: b'  <>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -24,16 +24,16 @@ msgid "There must not be multiple parameters with the same name."
 msgstr "Il ne peut pas y avoir plusieurs paramètres avec le même nom."
 
 #: .\ztp\models.py:15 .\ztp\models.py:46 .\ztp\models.py:153
-#: .\ztp\models.py:193 .\ztp\models.py:271 .\ztp\models.py:314
+#: .\ztp\models.py:187 .\ztp\models.py:207 .\ztp\models.py:250
 msgid "name"
 msgstr "nom"
 
-#: .\ztp\models.py:17 .\ztp\models.py:47 .\ztp\models.py:79 .\ztp\models.py:157
-#: .\ztp\models.py:284
+#: .\ztp\models.py:17 .\ztp\models.py:47 .\ztp\models.py:79
+#: .\ztp\models.py:157 .\ztp\models.py:220
 msgid "description"
 msgstr "description"
 
-#: .\ztp\models.py:36 .\ztp\views.py:477
+#: .\ztp\models.py:36 .\ztp\views.py:505
 msgid "vendor"
 msgstr "fabricant"
 
@@ -53,11 +53,11 @@ msgstr "fichier"
 msgid "filesize"
 msgstr "taille du fichier"
 
-#: .\ztp\models.py:81 .\ztp\templates\ztp\generic\detail.html:42
+#: .\ztp\models.py:81 .\ztp\templates\ztp\generic\detail.html:57
 msgid "MD5 hash"
 msgstr "somme de contrôle MD5"
 
-#: .\ztp\models.py:82 .\ztp\templates\ztp\generic\detail.html:48
+#: .\ztp\models.py:82 .\ztp\templates\ztp\generic\detail.html:63
 msgid "SHA512 hash"
 msgstr "somme de contrôle SHA512"
 
@@ -65,39 +65,44 @@ msgstr "somme de contrôle SHA512"
 msgid "Can list firmware"
 msgstr "Peut lister les logiciels"
 
-#: .\ztp\models.py:156 .\ztp\models.py:283
+#: .\ztp\models.py:156 .\ztp\models.py:219
 msgid "template"
 msgstr "modèle"
 
-#: .\ztp\models.py:182
+#: .\ztp\models.py:176
 msgid "Can list config"
 msgstr "Peut lister les configurations"
 
-#: .\ztp\models.py:196
+#: .\ztp\models.py:190
 msgid "data"
 msgstr "données"
 
-#: .\ztp\models.py:274
+#: .\ztp\models.py:191
+#| msgid "Remove Parameter"
+msgid "mandatory parameter"
+msgstr "Paramètre obligatoire"
+
+#: .\ztp\models.py:210
 msgid "render template"
 msgstr "interprétation du modèle"
 
-#: .\ztp\models.py:276
+#: .\ztp\models.py:212
 msgid "use parameters"
 msgstr "substitution des paramètres"
 
-#: .\ztp\models.py:278
+#: .\ztp\models.py:214
 msgid "accept_query_string"
 msgstr "accepte la chaîne de caractères de requête"
 
-#: .\ztp\models.py:280
+#: .\ztp\models.py:216
 msgid "priority query string over arguments"
 msgstr "chaîne de caractères de requête prioritaire sur les arguments"
 
-#: .\ztp\models.py:303
+#: .\ztp\models.py:239
 msgid "Can list ztp script"
 msgstr "Peut lister les scripts ZTP"
 
-#: .\ztp\models.py:317
+#: .\ztp\models.py:253
 msgid "value"
 msgstr "valeur"
 
@@ -155,8 +160,9 @@ msgid "Version:"
 msgstr "Version :"
 
 #: .\ztp\templates\ztp\about.html:9
-msgid "development"
-msgstr "développement"
+#| msgid "development"
+msgid "(development)"
+msgstr "(en développement)"
 
 #: .\ztp\templates\ztp\about.html:10
 msgid "Author:"
@@ -175,6 +181,7 @@ msgid "MIT License"
 msgstr "MIT License"
 
 #: .\ztp\templates\ztp\generic\confirm_delete.html:4
+#: .\ztp\templates\ztp\generic\detail.html:8
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -182,13 +189,11 @@ msgstr "Supprimer"
 #, python-format
 msgid ""
 "\n"
-"                You're about to delete the %(object_description)s <strong>"
-"%(object)s</strong>.\n"
+"                You're about to delete the %(object_description)s <strong>%(object)s</strong>.\n"
 "            "
 msgstr ""
 "\n"
-"Vous êtes sur le point de supprimer l'élément suivant : "
-"%(object_description)s <strong>%(object)s</strong>."
+"Vous êtes sur le point de supprimer l'élément suivant : %(object_description)s <strong>%(object)s</strong>."
 
 #: .\ztp\templates\ztp\generic\confirm_delete.html:12
 msgid "Are you sure you want to delete it?"
@@ -198,82 +203,83 @@ msgstr "Êtes-vous certain de vouloir supprimer cet élément ?"
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: .\ztp\templates\ztp\generic\detail.html:5
+#: .\ztp\templates\ztp\generic\detail.html:6
 msgid "Details"
 msgstr "Détails"
 
-#: .\ztp\templates\ztp\generic\detail.html:12
+#: .\ztp\templates\ztp\generic\detail.html:7
+#: .\ztp\templates\ztp\generic\form.html:5
+msgid "Edit"
+msgstr "Édition"
+
+#: .\ztp\templates\ztp\generic\detail.html:16
 #: .\ztp\templates\ztp\generic\list.html:23
 msgid "Platform"
 msgstr "Plateforme"
 
-#: .\ztp\templates\ztp\generic\detail.html:18
-#: .\ztp\templates\ztp\generic\detail.html:104
+#: .\ztp\templates\ztp\generic\detail.html:22
+#: .\ztp\templates\ztp\generic\detail.html:112
 #: .\ztp\templates\ztp\generic\form.html:182
 #: .\ztp\templates\ztp\generic\list.html:15
 msgid "Name"
 msgstr "Nom"
 
-#: .\ztp\templates\ztp\generic\detail.html:24
+#: .\ztp\templates\ztp\generic\detail.html:28
 msgid "Filename"
 msgstr "Nom de fichier"
 
-#: .\ztp\templates\ztp\generic\detail.html:30
+#: .\ztp\templates\ztp\generic\detail.html:34
+msgid "URL"
+msgstr "URL"
+
+#: .\ztp\templates\ztp\generic\detail.html:45
 #: .\ztp\templates\ztp\generic\list.html:19
 msgid "Description"
 msgstr "Description"
 
-#: .\ztp\templates\ztp\generic\detail.html:36
+#: .\ztp\templates\ztp\generic\detail.html:51
 msgid "File size"
 msgstr "Taille du fichier"
 
-#: .\ztp\templates\ztp\generic\detail.html:37
+#: .\ztp\templates\ztp\generic\detail.html:52
 #: .\ztp\templates\ztp\generic\list.html:38
 msgid "bytes"
 msgstr "octets"
 
-#: .\ztp\templates\ztp\generic\detail.html:54
-msgid "Download URL"
-msgstr "URL de téléchargement"
-
-#: .\ztp\templates\ztp\generic\detail.html:60
+#: .\ztp\templates\ztp\generic\detail.html:69
 #: .\ztp\templates\ztp\generic\form.html:120
 msgid "Options"
 msgstr "Options"
 
-#: .\ztp\templates\ztp\generic\detail.html:65
+#: .\ztp\templates\ztp\generic\detail.html:74
 msgid "Render template"
 msgstr "Interprétation du modèle"
 
-#: .\ztp\templates\ztp\generic\detail.html:70
+#: .\ztp\templates\ztp\generic\detail.html:79
 msgid "Use parameters"
 msgstr "Substitution des paramètres"
 
-#: .\ztp\templates\ztp\generic\detail.html:75
+#: .\ztp\templates\ztp\generic\detail.html:84
 msgid "Accept query string"
 msgstr "Accepte la chaîne de caractères de requête"
 
-#: .\ztp\templates\ztp\generic\detail.html:80
+#: .\ztp\templates\ztp\generic\detail.html:89
 msgid "Priority query string over arguments"
 msgstr "Chaîne de caractères de requête prioritaire sur les arguments"
 
-#: .\ztp\templates\ztp\generic\detail.html:86
+#: .\ztp\templates\ztp\generic\detail.html:95
 #: .\ztp\templates\ztp\generic\form.html:175
 msgid "Parameters"
 msgstr "Paramètres"
 
-#: .\ztp\templates\ztp\generic\detail.html:105
+#: .\ztp\templates\ztp\generic\detail.html:113
 #: .\ztp\templates\ztp\generic\form.html:183
 msgid "Value"
 msgstr "Valeur"
 
-#: .\ztp\templates\ztp\generic\detail.html:122
+#: .\ztp\templates\ztp\generic\detail.html:130
 msgid "Template"
 msgstr "Modèle"
-
-#: .\ztp\templates\ztp\generic\form.html:5
-msgid "Edit"
-msgstr "Édition"
 
 #: .\ztp\templates\ztp\generic\form.html:5
 msgid "New"
@@ -295,11 +301,21 @@ msgstr "Mise à jour"
 msgid "Create"
 msgstr "Créer"
 
-#: .\ztp\templates\ztp\generic\form.html:317
+#: .\ztp\templates\ztp\generic\form.html:318
+#| msgid "Add Parameter"
+msgid "Add Parameter Table"
+msgstr "Ajouter une table de paramètres"
+
+#: .\ztp\templates\ztp\generic\form.html:319
+#| msgid "Remove Parameter"
+msgid "Remove Parameter Table"
+msgstr "Retirer la table de paramètres"
+
+#: .\ztp\templates\ztp\generic\form.html:321
 msgid "Add Parameter"
 msgstr "Ajouter un paramètre"
 
-#: .\ztp\templates\ztp\generic\form.html:318
+#: .\ztp\templates\ztp\generic\form.html:322
 msgid "Remove Parameter"
 msgstr "Retirer un paramètre"
 
@@ -319,13 +335,12 @@ msgstr "Fabricant"
 msgid ""
 "ZosTeroPs manages the ZTP (Zero Touch Provisioning) of your network devices."
 msgstr ""
-"ZosTeroPs gère le mécanisme ZTP (Zero Touch Provisioning) de vos équipements "
-"réseau."
+"ZosTeroPs gère le mécanisme ZTP (Zero Touch Provisioning) de vos équipements"
+" réseau."
 
 #: .\ztp\templates\ztp\home.html:9
 msgid ""
-"The system contains different parts that permit to customize the process "
-"depending\n"
+"The system contains different parts that permit to customize the process depending\n"
 "            on the vendor and the platform of your network devices."
 msgstr ""
 "Le système possède différentes parties qui permettent de personnaliser le "
@@ -335,12 +350,9 @@ msgstr ""
 #: .\ztp\templates\ztp\home.html:18
 msgid ""
 "collects your ZTP bootstrap scripts that are\n"
-"                    first downloaded by the network devices. Multiple "
-"scripts can be defined\n"
-"                    to support multiple platforms with different bootstrap "
-"conditions. All\n"
-"                    scripts are text-based (not binary) that can define "
-"variable substitution.\n"
+"                    first downloaded by the network devices. Multiple scripts can be defined\n"
+"                    to support multiple platforms with different bootstrap conditions. All\n"
+"                    scripts are text-based (not binary) that can define variable substitution.\n"
 "                "
 msgstr ""
 "collecte vos scripts de démarrage ZTP qui sont téléchargés en premier par "
@@ -353,21 +365,14 @@ msgstr ""
 msgid ""
 "\n"
 "                    defines your configuration templates that\n"
-"                    can be copied by the ZTP script to your device, if it "
-"supports this\n"
-"                    possibility. Splitting the bootstrap and the "
-"configuration permits to have\n"
-"                    a more generic bootstrap script and custom "
-"configurations for specific\n"
+"                    can be copied by the ZTP script to your device, if it supports this\n"
+"                    possibility. Splitting the bootstrap and the configuration permits to have\n"
+"                    a more generic bootstrap script and custom configurations for specific\n"
 "                    platforms or for specific devices.\n"
 "                "
 msgstr ""
 "\n"
-"déclare les modèles de configuration qui peuvent être récupérés par le "
-"script ZTP si l'équipement supporte cette fonctionnalité. Séparer le script "
-"de démarrage et la configuration permet de déclarer un script de démarrage "
-"plus générique avec des configurations personnalisées spécifiques en "
-"fonction de la plateforme ou d'un équipement particulier."
+"déclare les modèles de configuration qui peuvent être récupérés par le script ZTP si l'équipement supporte cette fonctionnalité. Séparer le script de démarrage et la configuration permet de déclarer un script de démarrage plus générique avec des configurations personnalisées spécifiques en fonction de la plateforme ou d'un équipement particulier."
 
 #: .\ztp\templates\ztp\home.html:44
 msgid ""
@@ -377,8 +382,7 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"collecte tous les logiciels qui peuvent être téléchargés par l'équipement "
-"géré."
+"collecte tous les logiciels qui peuvent être téléchargés par l'équipement géré."
 
 #: .\ztp\templates\ztp\home.html:55
 msgid ""
@@ -413,38 +417,55 @@ msgstr ""
 "\n"
 "affiche les journaux de ZosTeroPs."
 
-#: .\ztp\views.py:65
+#: .\ztp\views.py:70
 msgid "ZTP script"
 msgstr "Script ZTP"
 
-#: .\ztp\views.py:66
+#: .\ztp\views.py:71
 msgid "ZTP scripts"
 msgstr "Scripts ZTP"
 
-#: .\ztp\views.py:187
+#: .\ztp\views.py:200
 msgid "configuration"
 msgstr "configuration"
 
-#: .\ztp\views.py:188
+#: .\ztp\views.py:201
 msgid "configurations"
 msgstr "configurations"
 
-#: .\ztp\views.py:311
+#: .\ztp\views.py:331
 msgid "firmware"
 msgstr "logiciel"
 
-#: .\ztp\views.py:312
+#: .\ztp\views.py:332
 msgid "firmwares"
 msgstr "logiciels"
 
-#: .\ztp\views.py:406
+#: .\ztp\views.py:433
 msgid "platform"
 msgstr "plateforme"
 
-#: .\ztp\views.py:407
+#: .\ztp\views.py:434
 msgid "platforms"
 msgstr "plateformes"
 
-#: .\ztp\views.py:478
+#: .\ztp\views.py:506
 msgid "vendors"
 msgstr "fabricants"
+
+#: .\ztp\views.py:611
+msgid "Configuration does not exist!"
+msgstr "La configuration n'existe pas!"
+
+#: .\ztp\views.py:624
+#, python-format
+msgid "Missing mandatory parameter \"%(name)s\"."
+msgstr "Paramètre obligatoire \"%(name)s\" manquant."
+
+#: .\ztp\views.py:630
+#, python-format
+msgid "No matching value for parameter \"%(name)s\"."
+msgstr "Pas de valeur correspondant pour le paramètre \"%(name)s\"."
+
+#~ msgid "Download URL"
+#~ msgstr "URL de téléchargement"

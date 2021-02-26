@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-19 16:44+0100\n"
+"POT-Creation-Date: 2021-02-26 13:32+0100\n"
 "PO-Revision-Date: 2021-02-19 16:52+0000\n"
 "Last-Translator: b'Yann Gauteron <yann@gauteron.me>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,6 @@ msgid "Lost password?"
 msgstr "Mot-de-passe perdu ?"
 
 #: .\user\templates\registration\password_change_form.html:4
-#| msgid "Password reset"
 msgid "Password change"
 msgstr "Modification du mot-de-passe"
 
@@ -42,9 +41,6 @@ msgid "Password reset"
 msgstr "Réinitialiser le mot-de-passe"
 
 #: .\user\templates\registration\password_change_form.html:19
-#| msgid ""
-#| "Please, set your new password twice so it can be checked it is correctly "
-#| "input."
 msgid ""
 "Please, enter your old (current) password and set your new password twice\n"
 "                            so it can be checked it is correctly input."
@@ -54,7 +50,6 @@ msgstr ""
 "d'erreur."
 
 #: .\user\templates\registration\password_change_form.html:72
-#| msgid "Set the password"
 msgid "Update password"
 msgstr "Mettre à jour le mot-de-passe"
 
@@ -82,8 +77,8 @@ msgstr "Réinitialiser votre mot-de-passe"
 #: .\user\templates\registration\password_reset_done.html:7
 msgid "We've emailed you instructions for setting your password."
 msgstr ""
-"Nous vous avons envoyé par e-mail les instructions pour définir votre mot-"
-"de-passe."
+"Nous vous avons envoyé par e-mail les instructions pour définir votre mot-de-"
+"passe."
 
 #: .\user\templates\registration\password_reset_done.html:8
 msgid ""
@@ -127,7 +122,6 @@ msgid "Create"
 msgstr "Créer"
 
 #: .\user\templates\user\profile_form.html:72
-#| msgid "Set a new password"
 msgid "Change password?"
 msgstr "Modifier le mot-de-passer ?"
 
@@ -148,9 +142,6 @@ msgid "Your password has successfully been updated."
 msgstr "Votre mot-de-passe a été modifié avec succès."
 
 #: .\user\views.py:60
-#| msgid ""
-#| "Your new password has been set. You can now <a "
-#| "href=\"%(login_url)s\">login</a>."
 msgid "Your new password has been set. You can now login."
 msgstr ""
 "Votre nouveau mot-de-passe a été enregistré. Vous pouvez maintenant vous "

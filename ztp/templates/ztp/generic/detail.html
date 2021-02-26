@@ -98,7 +98,6 @@
                         <fieldset>
                             {% for param in object.parameters.all %}
                                 <div class="link-formset">
-                                    <div class="name">{{ param.name }}</div>
                                     <div class="data">
                                         <input type="hidden" id="data-{{ param.name }}" value="{{ param.data }}" />
                                         <div id="data-{{ param.name }}-jexcel" class="jexcel_instance"></div>

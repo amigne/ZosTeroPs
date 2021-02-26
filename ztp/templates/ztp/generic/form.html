@@ -314,8 +314,13 @@
             $.fn.formset.defaults['prefix'] = 'parameters';
             $(function() {
                 $('.link-formset').formset({
-                    addText: '{% trans "Add Parameter" %}',
-                    deleteText: '{% trans "Remove Parameter" %}'
+                    {% if menu_item == "config" %}
+                        addText: '{% trans "Add Parameter Table" %}',
+                        deleteText: '{% trans "Remove Parameter Table" %}'
+                    {% else %}
+                        addText: '{% trans "Add Parameter" %}',
+                        deleteText: '{% trans "Remove Parameter" %}'
+                    {% endif %}
                 });
             });
         </script>
