@@ -213,6 +213,8 @@ table.table_update .vendor_action { text-align: center; }
 
 fieldset {
     border: none;
+    margin: 0;
+    padding: 0;
 }
 fieldset a {
     text-decoration: none;
@@ -221,7 +223,8 @@ fieldset a {
 }
 
 .link-formset {
-    margin: 5px;
+    margin-bottom: 2px;
+    margin-top: 2px;
     border: 2px solid #999999;
     padding: 5px;
 }
@@ -237,7 +240,12 @@ fieldset a {
 
 /*********************************** Form ***********************************/
 
-
+.update .header {
+    margin-top: 12px;
+    margin-bottom: 3px;
+    font-size: small;
+    font-weight: bold;
+}
 
 /********************************** Detail **********************************/
 table.detail {

@@ -45,7 +45,8 @@ Supported preprocessing elements are:
 
 ## Releases
 * v0.0.4 (under development)
-  
+  * Getting rid of table for forms
+  * Configuration parameter table does not overflow the screen anymore
 * v0.0.3 (February 25th, 2021)
   * Addition of Edit and Delete buttons on the Detail views
   * Add of URL on ZTP script, configuration, and firmware Detail views
