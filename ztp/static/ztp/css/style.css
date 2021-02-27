@@ -165,11 +165,16 @@ table.update tfoot td {
 /* Table parameters */
 table.parameters {
     width: 100%;
+    table-layout: fixed;
 }
 
-table.parameters th {
+table.parameters tbody th,
+table.parameters tbody td {
     width: 50%;
     text-align: left;
+    vertical-align: top;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 /* Table update */
@@ -224,12 +229,14 @@ fieldset a {
 }
 
 /*********************************** Form ***********************************/
-
 .update .header {
     margin-top: 12px;
     margin-bottom: 3px;
     font-size: small;
     font-weight: bold;
+}
+.update .action {
+    text-align: center;
 }
 
 /********************************** Detail **********************************/
