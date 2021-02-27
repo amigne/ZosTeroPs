@@ -100,10 +100,6 @@ input[type=text], input[type=file], input[type=password], select, option,
 textarea {
     width: 100%;
 }
-textarea {
-    white-space: nowrap;
-    resize: vertical;
-}
 form .field-error {
     color: #ff0000;
     font-size: smaller;
@@ -122,27 +118,16 @@ form .has-error {
 /* Form ZTP Scripts */
 .description textarea {
     height: 100px;
+    white-space: nowrap;
+    resize: vertical;
 }
 .template textarea {
     height: 550px;
     background-color: black;
     color: white;
     font-family: 'Courier New', monospace;
-}
-
-/* Form firmware */
-.firmware_description textarea {
-    height: 100px;
-}
-
-/* Form platform */
-.platform_description textarea {
-    height: 100px;
-}
-
-/* Form vendor */
-.vendor_description textarea {
-    height: 100px;
+    white-space: nowrap;
+    resize: vertical;
 }
 
 /* Table update (legacy) */
