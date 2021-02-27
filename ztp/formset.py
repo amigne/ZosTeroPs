@@ -27,8 +27,8 @@ ConfigParameterFormSet = inlineformset_factory(
     ConfigParameter,
     formset=BaseParameterFormSet,
     fields=['name', 'data', 'is_mandatory'],
-    extra=0,
-    min_num=1,
+    extra=1,
+    min_num=0,
     can_delete=True
 )
 
@@ -38,7 +38,7 @@ ZtpParameterFormSet = inlineformset_factory(
     ZtpParameter,
     formset=BaseParameterFormSet,
     fields=['name', 'value'],
-    extra=0,
-    min_num=1,
+    extra=1,
+    min_num=0,
     can_delete=True
     )
