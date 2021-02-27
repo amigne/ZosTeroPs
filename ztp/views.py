@@ -630,7 +630,8 @@ def config_download(request, name):
             raise Http404(_('No matching value for parameter "%(name)s".') % {'name': parameter.name})
 
         # Merge the values all together (redundant values are overwritten)
-        parameters_dict = {**parameters_dict, **match}
+        if match:
+            parameters_dict = {**parameters_dict, **match}
 
     # We create a preprocessor instance now, so the request is passed to the class
     preprocessor = Preprocessor(request)
