@@ -229,11 +229,22 @@
                                         {% endfor %}
                                     {% endwith %}
                                     {% with field=parameter.data %}
-                                        <label for="{{ field.id_for_label }}" class="config_parameter_label">{{ field.label }}</label>
+                                        <label for="{{ field.id_for_label }}" class="config_parameter_label" style="display: none;">{{ field.label }}</label>
                                         <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
                                                {% if field.value %}value="{{ field.value }}"{% endif %}
                                                id="{{ field.id_for_label }}">
-                                        <div id="{{ field.id_for_label }}-jstable" class="jstable_instance"></div>
+                                        <div id="{{ field.id_for_label }}-jstable" class="jstable_instance"></div><br />
+                                        {% for error in field.errors %}
+                                            <p class="field-error">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endwith %}
+                                    {% with field=parameter.is_mandatory %}
+                                        <input type="checkbox" name="{{ parameter.prefix }}-{{ field.name }}"
+                                               id="{{ field.id_for_label }}"
+                                               {% if field.errors %}class="has-error"{% endif %}
+                                               {% if field.value %}checked{% endif %}
+                                               {% if field.field.required %}required{% endif %}>
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label><br />
                                         {% for error in field.errors %}
                                             <p class="field-error">{{ error }}</p>
                                         {% endfor %}

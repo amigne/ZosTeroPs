@@ -26,7 +26,7 @@ ConfigParameterFormSet = inlineformset_factory(
     Config,
     ConfigParameter,
     formset=BaseParameterFormSet,
-    fields=['name', 'data'],
+    fields=['name', 'data', 'is_mandatory'],
     extra=0,
     min_num=1,
     can_delete=True

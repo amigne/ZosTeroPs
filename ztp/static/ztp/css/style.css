@@ -87,7 +87,7 @@ ul.messages li.success { color: forestgreen; }
     justify-content: center;
 }
 .about .copyright {
-    border: 0px solid black;
+    border: 0 solid black;
     background-color: #dddddd;
     padding: 10px;
     max-width: 600px;
@@ -229,7 +229,8 @@ fieldset a {
 }
 
 /*********************************** Form ***********************************/
-.update .header {
+.update .header,
+.detail .header {
     margin-top: 12px;
     margin-bottom: 3px;
     font-size: small;
@@ -240,40 +241,34 @@ fieldset a {
 }
 
 /********************************** Detail **********************************/
-table.detail {
-    border-collapse: collapse;
-    width: 100%
-}
-table.detail th, table.detail td {
-    border: 0;
-    padding: 8px;
-}
-table.detail th {
-    vertical-align: top;
-    text-align: right;
-}
 
 /* Parameters */
-table.detail table.parameters th.key {
+.detail table.parameters th.key {
     text-align: right;
 }
-table.detail table.parameters tbody th,
-table.detail table.parameters tbody td {
+.detail table.parameters tbody th,
+.detail table.parameters tbody td {
     font-weight: normal;
     font-family: 'Courier New', monospace;
 }
 
 /* URL */
-table.detail .url a {
+.detail .url a {
     color: black;
     text-decoration: none;
 }
-table.detail .url .notice {
+.detail .url .notice {
     font-style: italic;
     font-size: small;
 }
+.detail .md5hash.data,
+.detail .sha512hash.data {
+    overflow-wrap: break-word;
+    font-family: 'Courier New', monospace;
+}
+
 /* Template */
-table.detail td.template pre {
+.detail .template pre {
     background-color: black;
     color: white;
     width: 100%;
