@@ -15,6 +15,7 @@
         var options = $.extend({}, $.fn.formset.defaults, opts),
             flatExtraClasses = options.extraClasses.join(' '),
             totalForms = $('#id_' + options.prefix + '-TOTAL_FORMS'),
+            initialForms = $('#id_' +options.prefix + '-INITIAL_FORMS'),
             maxForms = $('#id_' + options.prefix + '-MAX_NUM_FORMS'),
             minForms = $('#id_' + options.prefix + '-MIN_NUM_FORMS'),
             childElementSelector = 'input,select,textarea,label,div',
@@ -81,6 +82,31 @@
                 }
 
                 row.find('a.' + delCssSelector).click(function() {
+                    if (options.onbeforedelete
+                        && typeof options.onbeforedelete === 'function') {
+                        const re = new RegExp('^id_' + options.prefix + '\-([0-9])+\-');
+
+                        // Let's determine the ID of the current item, if none is found, it'll be -1
+                        let id = -1;
+
+                        // Get an element with an ID that matches the RegExp
+                        let el = $(this).parent().children().filter(function() {
+                            return this.id.match(re);
+                        }).first();
+
+                        if (el) {
+                            el = el[0];
+                            let match = el.id.match(re);
+                            if (match) {
+                                id = parseInt(match[1]);
+                            }
+                        }
+
+                        if (! options.onbeforedelete(id, parseInt(initialForms.val()))) {
+                            return false;
+                        }
+                    }
+
                     var row = $(this).parents('.' + options.formCssClass),
                         del = row.find('input:hidden[id $= "-DELETE"]'),
                         buttonRow = row.siblings("a." + addCssSelector + ', .' + options.formCssClass + '-add'),
@@ -245,6 +271,7 @@
         keepFieldValues: '',             // jQuery selector for fields whose values should be kept when the form is cloned
         added: null,                     // Function called each time a new form is added
         removed: null,                   // Function called each time a form is deleted
-        hideLastAddForm: false           // When set to true, hide last empty add form (becomes visible when clicking on add button)
+        hideLastAddForm: false,          // When set to true, hide last empty add form (becomes visible when clicking on add button)
+        onbeforedelete: null
     };
 })(jQuery);

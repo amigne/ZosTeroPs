@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-26 13:32+0100\n"
-"PO-Revision-Date: 2021-02-26 13:33+0000\n"
+"POT-Creation-Date: 2021-02-27 15:47+0100\n"
+"PO-Revision-Date: 2021-02-27 15:48+0000\n"
 "Last-Translator: b'  <>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -78,7 +78,6 @@ msgid "data"
 msgstr "données"
 
 #: .\ztp\models.py:191
-#| msgid "Remove Parameter"
 msgid "mandatory parameter"
 msgstr "Paramètre obligatoire"
 
@@ -160,7 +159,6 @@ msgid "Version:"
 msgstr "Version :"
 
 #: .\ztp\templates\ztp\about.html:9
-#| msgid "development"
 msgid "(development)"
 msgstr "(en développement)"
 
@@ -219,7 +217,7 @@ msgstr "Plateforme"
 
 #: .\ztp\templates\ztp\generic\detail.html:22
 #: .\ztp\templates\ztp\generic\detail.html:112
-#: .\ztp\templates\ztp\generic\form.html:182
+#: .\ztp\templates\ztp\generic\form.html:166
 #: .\ztp\templates\ztp\generic\list.html:15
 msgid "Name"
 msgstr "Nom"
@@ -247,7 +245,7 @@ msgid "bytes"
 msgstr "octets"
 
 #: .\ztp\templates\ztp\generic\detail.html:69
-#: .\ztp\templates\ztp\generic\form.html:120
+#: .\ztp\templates\ztp\generic\form.html:108
 msgid "Options"
 msgstr "Options"
 
@@ -268,12 +266,12 @@ msgid "Priority query string over arguments"
 msgstr "Chaîne de caractères de requête prioritaire sur les arguments"
 
 #: .\ztp\templates\ztp\generic\detail.html:95
-#: .\ztp\templates\ztp\generic\form.html:175
+#: .\ztp\templates\ztp\generic\form.html:159
 msgid "Parameters"
 msgstr "Paramètres"
 
 #: .\ztp\templates\ztp\generic\detail.html:113
-#: .\ztp\templates\ztp\generic\form.html:183
+#: .\ztp\templates\ztp\generic\form.html:167
 msgid "Value"
 msgstr "Valeur"
 
@@ -285,37 +283,43 @@ msgstr "Modèle"
 msgid "New"
 msgstr "Nouveau"
 
-#: .\ztp\templates\ztp\generic\form.html:84
+#: .\ztp\templates\ztp\generic\form.html:76
 msgid "Currently:"
 msgstr "Actuellement :"
 
-#: .\ztp\templates\ztp\generic\form.html:84
+#: .\ztp\templates\ztp\generic\form.html:76
 msgid "Change:"
 msgstr "Changer :"
 
-#: .\ztp\templates\ztp\generic\form.html:296
+#: .\ztp\templates\ztp\generic\form.html:271
 msgid "Update"
 msgstr "Mise à jour"
 
-#: .\ztp\templates\ztp\generic\form.html:296
+#: .\ztp\templates\ztp\generic\form.html:271
 msgid "Create"
 msgstr "Créer"
 
-#: .\ztp\templates\ztp\generic\form.html:318
-#| msgid "Add Parameter"
+#: .\ztp\templates\ztp\generic\form.html:290
+msgid ""
+"You are about to delete the complete table with its pre-existing data. Are "
+"you sure you want to continue?"
+msgstr ""
+"Vous êtes sur le point de supprimer toute la table avec ses valeurs "
+"préexistantes. Êtes-vous certain de vouloir continuer ?"
+
+#: .\ztp\templates\ztp\generic\form.html:299
 msgid "Add Parameter Table"
 msgstr "Ajouter une table de paramètres"
 
-#: .\ztp\templates\ztp\generic\form.html:319
-#| msgid "Remove Parameter"
+#: .\ztp\templates\ztp\generic\form.html:300
 msgid "Remove Parameter Table"
 msgstr "Retirer la table de paramètres"
 
-#: .\ztp\templates\ztp\generic\form.html:321
+#: .\ztp\templates\ztp\generic\form.html:303
 msgid "Add Parameter"
 msgstr "Ajouter un paramètre"
 
-#: .\ztp\templates\ztp\generic\form.html:322
+#: .\ztp\templates\ztp\generic\form.html:304
 msgid "Remove Parameter"
 msgstr "Retirer un paramètre"
 

@@ -285,12 +285,20 @@
     {% if menu_item == "ztpScript" or menu_item == "config" %}
         <script src="{% static "ztp/js/jquery.formset.js" %}"></script>
         <script>
-            $.fn.formset.defaults['prefix'] = 'parameters';
+            function table_delete_confirmation(id, initial_count) {
+                if (id < initial_count) {
+                    return confirm('{% trans "You are about to delete the complete table with its pre-existing data. Are you sure you want to continue?" %}');
+                }
+                return true;
+            }
+
             $(function() {
                 $('.link-formset').formset({
+                    prefix: 'parameters',
                     {% if menu_item == "config" %}
                         addText: '{% trans "Add Parameter Table" %}',
-                        deleteText: '{% trans "Remove Parameter Table" %}'
+                        deleteText: '{% trans "Remove Parameter Table" %}',
+                        onbeforedelete: table_delete_confirmation,
                     {% else %}
                         addText: '{% trans "Add Parameter" %}',
                         deleteText: '{% trans "Remove Parameter" %}'
@@ -366,7 +374,6 @@
 
                 let data_value = data_element.val();
                 let width = document.getElementById('parameters').clientWidth;
-                console.log('width: ' + width + 'px');
                 let options = {
                     minDimensions: [2, 1],
                     defaultColWidth: 120,
