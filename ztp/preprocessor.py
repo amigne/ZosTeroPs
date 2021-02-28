@@ -3,7 +3,8 @@ import re
 from django.conf import settings
 
 from .models import Config, Firmware, ZtpScript
-from .utils import (get_config_base_url, get_firwmare_base_url, get_root_url,
+from .utils import (get_config_base_url, get_domain, get_firwmare_base_url,
+                    get_port, get_protocol, get_root_url,
                     get_ztp_script_base_url)
 
 
@@ -56,6 +57,48 @@ class Preprocessor:
         # Unknown keyword, return None
         return None
 
+    def _process_CONFIG(self, expression):
+        # noinspection PyPep8Naming
+        ALLOWED_KEYS = [None, 'URL']
+
+        subexpression = expression[len('CONFIG'):].strip()
+        # CONFIG require an index between square brackets and an optional
+        # key after a dot.
+
+        # CONFIG[1] returns the name of the config with id=1
+        # CONFIG[1].URL returns the URL to download that config
+        match = re.match(r'^\[([0-9]+)\]\s*(\.\s*([A-Za-z0-9]+))?$', subexpression)
+        if match is None:
+            # No index, invalid expression
+            return None
+
+        config_id = int(match.group(1))
+
+        key = match.group(3)
+        if key not in ALLOWED_KEYS:
+            return None
+
+        try:
+            config = Config.objects.get(id=config_id)
+        except Config.DoesNotExist:
+            return None
+
+        if key is None:
+            return config.name
+        if key == 'URL':
+            config_base_url = get_config_base_url(self.request)
+            return f'{config_base_url}{config.name}'
+
+        # Should NEVER occur
+        return None
+
+    def _process_CONFIG_PATH(self, expression):
+        if expression != 'CONFIG_PATH':
+            # CONFIG_PATH expects no index and no keys
+            return None
+
+        return f'{settings.ZTP_CONFIG_URL}'
+
     def _process_FIRMWARE(self, expression):
         # noinspection PyPep8Naming
         ALLOWED_KEYS = [None, 'MD5', 'SHA512', 'SIZE', 'URL']
@@ -100,40 +143,40 @@ class Preprocessor:
         # Should NEVER occur
         return None
 
-    def _process_CONFIG(self, expression):
-        # noinspection PyPep8Naming
-        ALLOWED_KEYS = [None, 'URL']
-
-        subexpression = expression[len('CONFIG'):].strip()
-        # CONFIG require an index between square brackets and an optional
-        # key after a dot.
-
-        # CONFIG[1] returns the name of the config with id=1
-        # CONFIG[1].URL returns the URL to download that config
-        match = re.match(r'^\[([0-9]+)\]\s*(\.\s*([A-Za-z0-9]+))?$', subexpression)
-        if match is None:
-            # No index, invalid expression
+    def _process_FIRMWARE_PATH(self, expression):
+        if expression != 'FIRMWARE_PATH':
+            # FIRMWARE_PATH expects no index and no keys
             return None
 
-        config_id = int(match.group(1))
+        return f'{settings.ZTP_FIRMWARES_URL}'
 
-        key = match.group(3)
-        if key not in ALLOWED_KEYS:
+    def _process_HTTP_SERVER(self, expression):
+        if expression != 'HTTP_SERVER':
+            # HTTP_SERVER expects no index and no keys
             return None
 
-        try:
-            config = Config.objects.get(id=config_id)
-        except Config.DoesNotExist:
+        return get_root_url(self.request)
+
+    def _process_PORT(self, expression):
+        if expression != 'PORT':
+            # PORT expects no index and no keys
             return None
 
-        if key is None:
-            return config.name
-        if key == 'URL':
-            config_base_url = get_config_base_url(self.request)
-            return f'{config_base_url}{config.name}'
+        return get_port(self.request)
 
-        # Should NEVER occur
-        return None
+    def _process_PROTOCOL(self, expression):
+        if expression != 'PROTOCOL':
+            # HTTP_SERVER expects no index and no keys
+            return None
+
+        return get_protocol(self.request)
+
+    def _process_SERVER_NAME(self, expression):
+        if expression != 'SERVER_NAME':
+            # SERVER_NAME expects no index and no keys
+            return None
+
+        return get_domain(self.request)
 
     def _process_ZTP(self, expression):
         # noinspection PyPep8Naming
@@ -170,27 +213,6 @@ class Preprocessor:
 
         # Should NEVER occur
         return None
-
-    def _process_HTTP_SERVER(self, expression):
-        if expression != 'HTTP_SERVER':
-            # HTTP_SERVER expects no index and no keys
-            return None
-
-        return get_root_url(self.request)
-
-    def _process_CONFIG_PATH(self, expression):
-        if expression != 'CONFIG_PATH':
-            # CONFIG_PATH expects no index and no keys
-            return None
-
-        return f'{settings.ZTP_CONFIG_URL}'
-
-    def _process_FIRMWARE_PATH(self, expression):
-        if expression != 'FIRMWARE_PATH':
-            # FIRMWARE_PATH expects no index and no keys
-            return None
-
-        return f'{settings.ZTP_FIRMWARES_URL}'
 
     def _process_ZTP_PATH(self, expression):
         if expression != 'ZTP_PATH':

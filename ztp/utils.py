@@ -1,7 +1,55 @@
 import json
+import re
 
 from django.contrib.sites.requests import RequestSite
 from django.conf import settings
+
+
+def get_domain(request = None):
+    """Return the domain of the current request. """
+    if request is None:
+        # We have no request, we return an empty string
+        return ''
+
+    domain_port = get_domain_port(request)
+    match = re.match('^([^:]*):?')
+    if (match):
+        return match.group(1)
+
+    # Should NEVER occur
+    return ''
+
+
+def get_domain_port(request = None):
+    """ Return the domain (and port if not the default one) of the current request. """
+    if request is None:
+        # We have no request, we return an empty string
+        return ''
+
+    return RequestSite(request).domain
+
+
+def get_port(request = None):
+    """ Return the TCP port of the current request. """
+    if request is None:
+        # We have no request, we return an empty string
+        return ''
+
+    match = re.match(':([0-9]+)$', get_domain_port(request))
+    if match:
+        return match.group(1)
+    elif get_protocol(request) == 'http':
+        return '80'
+    return '443'
+
+
+def get_protocol(request = None):
+    """ Return the protocol of the current request. """
+    if request is None:
+        # We have no request, we return an empty string
+        return ''
+
+    return 'https' if request.is_secure() else 'http'
 
 
 def get_root_url(request = None):

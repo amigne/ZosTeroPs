@@ -84,19 +84,22 @@ Edition of one ZTP script
 The preprocessor substitutes the preprocessing elements with some values determined by the system. Preprocessing elements are surrounded with double at-signs, like `@@ HTTP_SERVER @@`. The substitution can be performed on any parameter or any template of the ZTP script or Configuration sections.
 
 Supported preprocessing elements are:
-* `HTTP_SERVER` which returns the root URL in the form `protocol://domain/` of the current request.
+* `CONFIG[id]` returns the name of the configuration with index `id`
+* `CONFIG[id].URL` returns the URL of the configuration with index `id`
 * `CONFIG_PATH` which returns the path after the root URL used to access the Configurations. This is equals to the `ZTP_CONFIG_URL` setting.
-* `FIRMWARE_PATH` which returns the path after the root URL used to access the firmwares. This is equals to the `ZTP_FIRMWARES_URL` setting.
-* `ZTP_PATH` which returns the path after the root URL used to access the ZTP scripts. This is equals to the `ZTP_BOOTSTRAP_URL` setting.
 * `FIRMWARE[id]` returns the file name for the firmware with index `id`
 * `FIRMWARE[id].URL` returns the URL for the firmware with index `id`
 * `FIRMWARE[id].SIZE` returns the file size of the firmware with index `id`
 * `FIRMWARE[id].SHA512` returns the SHA512 checksum of the firmware with index `id`
 * `FIRMWARE[id].MD5` returns the MD5 checksum of the firmware with index `id`
-* `CONFIG[id]` returns the name of the configuration with index `id`
-* `CONFIG[id].URL` returns the URL of the configuration with index `id`
+* `FIRMWARE_PATH` which returns the path after the root URL used to access the firmwares. This is equals to the `ZTP_FIRMWARES_URL` setting.
+* `HTTP_SERVER` which returns the root URL in the form `protocol://server_name/` of the current request.
+* `PORT` which returns the TCP port of the ZosTeroPs server
+* `PROTOCOL` which returns 'http' or 'https' depending of the protocol used for the current request
+* `SERVER_NAME` which returns the server name (or IP address) of the ZosTeroPs server (when the server responds to multiple addresses, the name returned is the one answering the query).
 * `ZTP[id]` returns the name of the ZTP script with index `id`
 * `ZTP[id].URL` returns the URL of the ZTP script with index `id`
+* `ZTP_PATH` which returns the path after the root URL used to access the ZTP scripts. This is equals to the `ZTP_BOOTSTRAP_URL` setting.
 
 **Note**: Unknown or syntactically incorrect preprocessing elements are ignored and left as is (understand they are not substituted).
 
