@@ -69,7 +69,11 @@
                 {% endblocktrans %}
             </li>
             <li>
-                {% trans 'Logs' %} {% trans '(not implemented)' %}
+                {% if perms.ztp.list_log %}
+                    <a href="#">{% trans 'Logs' %}</a>
+                {% else %}
+                    {% trans 'Logs' %}
+                {% endif %}
                 {% blocktrans %}
                     displays the logs of ZosTeroPs.
                 {% endblocktrans %}
