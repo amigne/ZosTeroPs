@@ -47,6 +47,7 @@ class Log(DateUserBaseModel):
                                                 choices=LOCATION,
                                                 default=0)
     description = models.TextField(_('description'), blank=True)
+    metadata = models.JSONField(_('meta-data'), blank=True)
 
     def __str__(self):
         return f'[{self.severity}] {self.description}'

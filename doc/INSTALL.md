@@ -11,7 +11,15 @@ It is trivial to install and deploy the tool for some system administrators that
 
 LDAP support requires `python-ldap` and `django-auth-ldap` Python packages.
 
-Database support other than SQLite requires appropriate Python packages:
+### Databases
+Database must support JSON fields. The following databases are supported:
+* MariaDB 10.2.7+
+* MySQL 5.7.8+
+* Oracle
+* PostgreSQL  
+* SQLite 3.9.0+ (with JSON1 extension)
+
+Database other than SQLite requires appropriate Python packages:
 * MySQL/MariaDB require the package `mysqlclient`
 
 **ZosTeroPs** has successfully been deployed using the uWSGI application server with a Nginx front-end HTTP server.
