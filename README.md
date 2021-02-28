@@ -8,10 +8,58 @@ It's a current WIP (*Work In Progress*) project, but it's expected to be fully o
 
 **ZosTeroPs** is a web system developed in Python using the Django framework.
 
-And now, give back to Caesar what belongs to Caesar: The idea of developing ZosTeroPs is consecutive to the discover of the [Tim Dorssers' ZTP project](https://github.com/tdorssers/ztp). This may explain some resemblance of the GUI or some code reuse. Tim's work as well as ZosTeroPs are both under MIT license.
+## Guided tour
+### Vendors and Platforms
+**ZosTeroPs** permits to create vendors and platforms that are used to classify firmwares.
 
-## ZTP Scripts
-ZTP scripts are usually the scripts that are loaded by the device during the initial configuration process.
+![Vendors' list][vendors_list]
+List of vendors page
+
+![Platforms' list][platforms_list]
+List of platforms page
+
+### Firmwares
+**ZosTeroPs** hosts firmwares and delivers them by HTTP upon device request. When files are downloaded, SHA512 and MD5 checksums are calculated. This permits to ensure the image is not alterated. This also serves as a local registry of checksums to ensure the image has correctly been transfered to the network device, if it permits to make such verifications.
+
+![Firmwares' list][firmwares_list]
+List of available firmwares
+
+![Firmware's detail][firmwares_detail]
+Details of a specific firmware
+
+![Firmware's edit][firmwares_edit]
+Edition of a firmware
+
+### Configurations
+Configurations are template-based text files that are rendered with device-specific content such hostnames, IP addresses, firmwares, ...
+
+Configurations is well suited for providing configuration files or data structures (for instance JSON or YAML content). Specific data are determined using one or multiple parameters added to the request URL. These parameters are compared with the key values of configuration tables.
+
+![Configurations' list][config_list]
+List of defined configurations
+
+![Config's detail][config_config_detail]
+Example of one templated-Cisco configuration. The specific values are determined upon the MAC (the first column of the table is the key) address of the device that has to be passed (mandatory parameter) at the end of the URL (using the `?MAC=0011.2233.4455` syntax).
+
+![Config's edit][config_config_edit]
+Creation/edition of a configuration is easy.
+
+![Config's download][config_config_download]
+When correctly requested, the configuration is rendered using the substitution data (here for the MAC 0011.2233.4455)
+
+
+Configuration is also suitable to deliver configuration data, for instance, a JSON file:
+![Data's detail][config_data_detail]
+Example of one templated-JSON data file. Note that this configuration uses [preprocessor](#Preprocessor) elements, such as `@@FIRMWARE[2].URL@@`. This is typically well suited to pass values such as an firmware URL download link, or a checksum value.
+
+![Data's detail][config_data_edit]
+Creation/edition of a data template is easy.
+
+![Data's download][config_data_download]
+Example of a downloaded JSON data file for the MAC 0011.2233.4455
+
+### ZTP Scripts
+ZTP scripts are usually the scripts that are loaded by the device during the initial configuration process. They are generally more general than configuration as the URL to retrieve them is most of the time specified in DHCP responses. 
 
 ZosTeroPs permits to define a script template in any textual form that is supported by the network device. ZosTeroPs permits to substitute some parameters with different custom values. These are simple substitutions that make it easy to set/change values. These parameters can be referenced in the template using double curly braces. If the parameter `DEBUG` is set to `True`, the syntax `{{ DEBUG }}` in the template would be replaced with `True`.
 
@@ -22,6 +70,15 @@ Substitution values may also be given using the URL query string (the part that 
 When both "Use parameters" and "Accept query string" are checked, parameters can overwrite query string values if both define the same name. Checking "Priority query string over arguments" makes query string values overwrite parameters when both have the same name.
 
 In addition to parameter substitution, ZTP scripts also allows preprocessing. Preprocessing occurs in any case (independently of the checkbox values) and before parameter substitution. Both parameters and template can have preprocessor values.
+
+![ZTP scripts' list][ztp_list]
+List of defined ZTP scripts
+
+![ZTP scripts' list][ztp_detail]
+Details of one ZTP script
+
+![ZTP scripts' list][ztp_edit]
+Edition of one ZTP script
 
 ## Preprocessor
 The preprocessor substitutes the preprocessing elements with some values determined by the system. Preprocessing elements are surrounded with double at-signs, like `@@ HTTP_SERVER @@`. The substitution can be performed on any parameter or any template of the ZTP script or Configuration sections.
@@ -42,6 +99,9 @@ Supported preprocessing elements are:
 * `ZTP[id].URL` returns the URL of the ZTP script with index `id`
 
 **Note**: Unknown or syntactically incorrect preprocessing elements are ignored and left as is (understand they are not substituted).
+
+## Credits
+And now, give back to Caesar what belongs to Caesar: The idea of developing ZosTeroPs is consecutive to the discover of the [Tim Dorssers' ZTP project](https://github.com/tdorssers/ztp). This may explain some resemblance of the GUI or some code reuse. Tim's work as well as ZosTeroPs are both under MIT license.
 
 ## Releases
 * v0.0.4 (under development)
@@ -71,3 +131,19 @@ Supported preprocessing elements are:
   * Fixing a regression with an obsolete CDN Javascript library. This library is now embedded into this package.
 * v0.0.0 (February 11th, 2021)
   * Functional mockup. Tool should not be used for production, or only if you know what you're doing. Please note that the software design is not finalized and some features may evolve without consideration for backward compatibility. This includes data migrations! This warning will be persist until v1.0.0 is released. At that time, the development will have reached a certain level of maturity and backward compatibility will be ensured for any further v1.x.y versions.
+
+[vendors_list]: doc/img/vendors_list.png "Vendors' list"
+[platforms_list]: doc/img/platforms_list.png "Platforms' list"
+[firmwares_list]: doc/img/firmwares_list.png "Firmwares' list"
+[firmwares_detail]: doc/img/firmwares_detail.png "Firmware's detail"
+[firmwares_edit]: doc/img/firmwares_edit.png "Firmware's edit"
+[config_list]: doc/img/config_list.png "Configurations' list"
+[config_config_detail]: doc/img/config_config_details.png "Configuration's detail"
+[config_config_edit]: doc/img/config_config_edit.png "Configuration's edit"
+[config_config_download]: doc/img/config_config_download.png "Configuration's download"
+[config_data_detail]: doc/img/config_data_details.png "Data's detail"
+[config_data_edit]: doc/img/config_data_edit.png "Data's edit"
+[config_data_download]: doc/img/config_data_download.png "Data's download"
+[ztp_list]: doc/img/ztp_list.png "ZTP scripts' list"
+[ztp_detail]: doc/img/ztp_details.png "ZTP script's detail"
+[ztp_edit]: doc/img/ztp_edit.png "ZTP script's edit"
