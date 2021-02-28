@@ -3,7 +3,7 @@ import locale
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.http import Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.template import Context, Template
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -648,4 +648,4 @@ def firmware_download(request, filename):
         p = Firmware.objects.get(file=filename)
     except Firmware.DoesNotExist:
         raise Http404('Firmware does not exist!')
-    return HttpResponse(p.file.open('rb'), content_type='application/octet-stream')
+    return FileResponse(p.file.open('rb'), content_type='application/octet-stream')
