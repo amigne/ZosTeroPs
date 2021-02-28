@@ -1,17 +1,64 @@
 from django.core.files.storage import FileSystemStorage
 from django.core.validators import RegexValidator
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
 import hashlib
-import json
 import os
 
 
-class Vendor(models.Model):
+User = get_user_model()
+
+
+class DateUserBaseModel(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User,
+                             null=True,
+                             on_delete=models.SET_NULL)
+
+    class Meta:
+        abstract = True
+
+
+class Log(DateUserBaseModel):
+    SEVERITY = (
+        (0, _('EMERGENCY')),
+        (1, _('ALERT')),
+        (2, _('CRITICAL')),
+        (3, _('ERROR')),
+        (4, _('WARNING')),
+        (5, _('NOTICE')),
+        (6, _('INFO')),
+        (7, _('DEBUG')),
+    )
+    LOCATION = (
+        (0, _('local')),
+        (1, _('remote')),
+    )
+    severity = models.PositiveSmallIntegerField(_('severity'),
+                                                choices=SEVERITY,
+                                                default=6)
+    location = models.PositiveSmallIntegerField(_('location'),
+                                                choices=LOCATION,
+                                                default=0)
+    description = models.TextField(_('description'), blank=True)
+
+    def __str__(self):
+        return f'[{self.severity}] {self.description}'
+
+    class Meta:
+        verbose_name = _('log')
+        permissions = (
+            ('list_log', _('Can list logs')),
+        )
+
+
+class Vendor(DateUserBaseModel):
     name = models.CharField(_('name'), max_length=50,
                             unique=True)
     description = models.TextField(_('description'), blank=True)
@@ -39,7 +86,7 @@ class Vendor(models.Model):
         )
 
 
-class Platform(models.Model):
+class Platform(DateUserBaseModel):
     vendor = models.ForeignKey(Vendor,
                                related_name='platforms',
                                on_delete=models.PROTECT)
@@ -69,7 +116,7 @@ class Platform(models.Model):
         )
 
 
-class Firmware(models.Model):
+class Firmware(DateUserBaseModel):
     platform = models.ForeignKey(Platform,
                                  related_name='firmwares',
                                  on_delete=models.CASCADE)
@@ -145,7 +192,7 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             os.remove(old_file.path)
 
 
-class Config(models.Model):
+class Config(DateUserBaseModel):
     configNameValidator = RegexValidator(
         r'^[0-9a-zA-Z._-]+$',
         'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
@@ -177,7 +224,7 @@ class Config(models.Model):
         )
 
 
-class ConfigParameter(models.Model):
+class ConfigParameter(DateUserBaseModel):
     configParameterNameValidator = RegexValidator(r'^[a-zA-Z_][0-9a-zA-Z._-]*$',
                                                   'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
 
@@ -199,7 +246,7 @@ class ConfigParameter(models.Model):
         unique_together = ('config', 'name',)
 
 
-class ZtpScript(models.Model):
+class ZtpScript(DateUserBaseModel):
     ztpNameValidator = RegexValidator(
         r'^[0-9a-zA-Z._-]+$',
         'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
@@ -240,7 +287,7 @@ class ZtpScript(models.Model):
         )
 
 
-class ZtpParameter(models.Model):
+class ZtpParameter(DateUserBaseModel):
     ztpParameterNameValidator = RegexValidator(r'^[a-zA-Z_][0-9a-zA-Z._-]*$',
                                                'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
 

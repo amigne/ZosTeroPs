@@ -30,7 +30,9 @@
         {% if perms.ztp.list_vendor %}
             <a href="{% url 'vendorList' %}"{% if menu_item == 'vendor' %} class="active"{% endif %}>{% trans 'Vendors' %}</a>
         {% endif %}
-        {% comment "Future development" %} <a href="#"{% if menuitem == 'log' %} class="active"{% endif %}>{% trans 'Logs' %}</a>{% endcomment %}
+        {% if perms.ztp.list_log %}
+            <a href="#"{% if menu_item == 'log' %} class="active"{% endif %}>{% trans 'Logs' %}</a>
+        {% endif %}
         <a href="{% url 'about' %}"{% if menu_item == 'about' %} class="active"{% endif %}>{% trans 'About' %}</a>
         {% if not user.is_authenticated %}
             <a href="{% url 'user:login' %}"{% if menu_item == 'login' %} class="active"{% endif %}>{% trans 'Login' %}</a>
