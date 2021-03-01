@@ -3,17 +3,18 @@ import locale
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.http import FileResponse, Http404, HttpResponse
+from django.http import FileResponse, Http404, HttpResponse, HttpResponseRedirect
 from django.template import Context, Template
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.base import ContextMixin as BaseContextMixin
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import (CreateView, DeleteView, UpdateView)
 
 from .forms import ConfigForm, ZtpScriptForm
 from .formset import ConfigParameterFormSet, ZtpParameterFormSet
-from .models import Config, Firmware, Platform, Vendor, ZtpScript
+from .models import (Config, Firmware, Log, log_factory, Platform, Vendor,
+                     ZtpScript)
 from .preprocessor import Preprocessor
 from .utils import (get_config_base_url, get_firwmare_base_url,
                     get_ztp_script_base_url)
@@ -44,6 +45,39 @@ class ContextMixin(BaseContextMixin):
 
         return context_data
 
+    def _serialize(self, obj = None):
+        if obj is None:
+            obj = self.object
+
+        serialized_object = dict()
+        if hasattr(self, 'serialize_on_delete'):
+            for value_name in self.serialize_on_delete:
+                serialized_object[value_name] = obj.serializable_value(value_name)
+        return serialized_object
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+
+        metadata = {
+            'object_description': str(self.object_description).capitalize(),
+            'object_name': self.object.name,
+            'deleted_object': self._serialize(),
+            'client': self.request.META['REMOTE_ADDR'],
+        }
+        log_factory('%(object_description)s "%(object_name)s" deleted by %(user)s.', extra_meta=metadata,
+                    severity=Log.SEVERITY.WARNING,
+                    location=Log.LOCATION.LOCAL,
+                    task_type=Log.TASK_TYPE.ADMIN,
+                    user=self.request.user).save()
+
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
 
 #
 # Home
@@ -73,6 +107,10 @@ class ZtpContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin)
     formset_class = ZtpParameterFormSet
     list_fields = ['id', 'name', 'description']
     url_create = reverse_lazy('ztpCreate')
+    serialize_on_delete = ('id', 'name', 'render_template', 'use_parameters',
+                           'accept_query_string',
+                           'priority_query_string_over_arguments',
+                           'description', 'template')
 
     @property
     def can_add(self):
@@ -203,6 +241,7 @@ class ConfigContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMix
     formset_class = ConfigParameterFormSet
     list_fields = ['id', 'name', 'description']
     url_create = reverse_lazy('configCreate')
+    serialize_on_delete = ('id', 'name', 'description', 'template')
 
     @property
     def can_add(self):
@@ -332,6 +371,8 @@ class FirmwareContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredM
     object_description_plural = _('firmwares')
     list_fields = ['id', 'platform', 'file', 'description']
     url_create = reverse_lazy('firmwareCreate')
+    serialize_on_delete = ('id', 'platform', 'name', 'description', 'filesize',
+                           'md5_hash', 'sha512_hash')
 
     @property
     def can_add(self):
@@ -434,6 +475,7 @@ class PlatformContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredM
     object_description_plural = _('platforms')
     list_fields = ['id', 'vendor', 'name', 'description']
     url_create = reverse_lazy('platformCreate')
+    serialize_on_delete = ('id', 'vendor', 'name', 'description',)
 
     @property
     def can_add(self):
@@ -506,6 +548,7 @@ class VendorContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMix
     object_description_plural = _('vendors')
     list_fields = ['id', 'name', 'description']
     url_create = reverse_lazy('vendorCreate')
+    serialize_on_delete = ('id', 'name', 'description',)
 
     @property
     def can_add(self):
@@ -569,15 +612,43 @@ class VendorUpdateView(VendorContextMixin, UpdateView):
 
 
 #
+# Log
+#
+class LogListView(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = Log
+    menu_item = 'log'
+    template_name = 'ztp/log_view.html'
+    permission_required = 'ztp.list_log'
+    object_description = _('log')
+    object_description_plural = _('logs')
+    list_fields = ['id', 'created', 'severity', 'location-type', 'description', 'metadata', 'user']
+    paginate_by = 15
+
+    @property
+    def can_list(self):
+        return self.request.user.has_perm('ztp.list_log')
+
+
+#
 # Content delivery
 #
 def ztp_download(request, name):
+    metadata = {
+        'ztp_script': name,
+        'client': request.META['REMOTE_ADDR'],
+    }
+    log_factory('%(client)s requests ZTP script "%(ztp_script)s".', metadata).save()
+
     try:
         ztp_script = ZtpScript.objects.get(name=name)
     except ZtpScript.DoesNotExist:
+        log_factory('ZTP script "%(ztp_script)s" requested by %(client)s does not exist.', metadata, severity=4).save()
         raise Http404('ZTP Script does not exist!')
 
     if not ztp_script.render_template:
+        log_factory('ZTP script "%(ztp_script)s" requested by %(client)s sent.',
+                    metadata, severity=5).save()
+        metadata['response'] = ztp_script.template
         return HttpResponse(ztp_script.template, content_type='text/plain')
 
     query_string_context_dict = {}
@@ -601,13 +672,24 @@ def ztp_download(request, name):
 
     preprocessed_template = preprocessor.process(ztp_script.template)
     template = Template(preprocessed_template)
-    return HttpResponse(template.render(Context(context_dict)), content_type='text/plain')
+    response = template.render(Context(context_dict))
+    metadata['response'] = response
+    log_factory('ZTP script "%(ztp_script)s" requested by %(client)s sent.',
+                metadata, severity=5).save()
+    return HttpResponse(response, content_type='text/plain')
 
 
 def config_download(request, name):
+    metadata = {
+        'config': name,
+        'client': request.META['REMOTE_ADDR'],
+    }
+    log_factory('%(client)s requests configuration "%(config)s".', metadata).save()
+
     try:
         config = Config.objects.get(name=name)
     except Config.DoesNotExist:
+        log_factory('Configuration "%(config)s" requested by %(client)s does not exist.', metadata, severity=4).save()
         raise Http404(_('Configuration does not exist!'))
 
     arguments = request.GET.dict()
@@ -621,12 +703,18 @@ def config_download(request, name):
         url_value = arguments[parameter.name] if parameter.name in arguments else None
 
         if parameter.is_mandatory and url_value is None:
+            metadata['invalid_parameter'] = parameter.name
+            log_factory('Configuration "%(config)s" requested by %(client)s miss mandatory parameter '
+                        '"%(invalid_parameter)s".', metadata, severity=4).save()
             raise Http404(_('Missing mandatory parameter "%(name)s".') % {'name': parameter.name})
 
         # Select the dict entry for the matching value only
         match = parameter_dict[url_value] if url_value in parameter_dict else None
 
         if parameter.is_mandatory and match is None:
+            metadata['invalid_parameter'] = parameter.name
+            log_factory('Configuration "%(config)s" requested by %(client)s has no matching value for parameter '
+                        '"%(invalid_parameter)s".', metadata, severity=4).save()
             raise Http404(_('No matching value for parameter "%(name)s".') % {'name': parameter.name})
 
         # Merge the values all together (redundant values are overwritten)
@@ -640,12 +728,27 @@ def config_download(request, name):
     preprocessed_template = preprocessor.process(config.template)
 
     template = Template(preprocessed_template)
-    return HttpResponse(template.render(Context(parameters_dict)), content_type='text/plain')
+    response = template.render(Context(parameters_dict))
+    metadata['response'] = response
+    log_factory('Config "%(config)s" requested by %(client)s sent.',
+                metadata, severity=5).save()
+    return HttpResponse(response, content_type='text/plain')
 
 
 def firmware_download(request, filename):
+    metadata = {
+        'firmware': filename,
+        'client': request.META['REMOTE_ADDR'],
+    }
+    log_factory('%(client)s requests firmware "%(firmware)s".', metadata).save()
+
     try:
         p = Firmware.objects.get(file=filename)
     except Firmware.DoesNotExist:
+        log_factory('Firmware "%(firmware)s" requested by %(client)s does not exist.',
+                    metadata, severity=4).save()
         raise Http404('Firmware does not exist!')
+
+    log_factory('Firmware "%(firmware)s" requested by %(client)s sent.',
+                metadata, severity=5).save()
     return FileResponse(p.file.open('rb'), content_type='application/octet-stream')

@@ -70,7 +70,7 @@
             </li>
             <li>
                 {% if perms.ztp.list_log %}
-                    <a href="#">{% trans 'Logs' %}</a>
+                    <a href="{% url 'logs' %}">{% trans 'Logs' %}</a>
                 {% else %}
                     {% trans 'Logs' %}
                 {% endif %}

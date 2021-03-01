@@ -46,5 +46,8 @@ urlpatterns = [
     # path('vendor/<pk>/', views.VendorDetailView.as_view(), name='vendorDetail'),
     path('vendor/<pk>/edit/', views.VendorUpdateView.as_view(), name='vendorUpdate'),
     path('vendor/<pk>/delete/', views.VendorDeleteView.as_view(), name='vendorDelete'),
+
+    # Logs
+    path('logs/', views.LogListView.as_view(), name='logs'),
 ]
 

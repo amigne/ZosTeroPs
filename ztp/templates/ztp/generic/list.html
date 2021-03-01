@@ -5,7 +5,7 @@
 {% block content_title %}{{ object_description_plural|capfirst }}{% endblock content_title %}
 
 {% block content %}
-    <table class="list {{ menu_item }}">
+    <table class="list generic {{ menu_item }}">
         <thead>
             <tr>
                 {% for field in list_fields %}
@@ -45,7 +45,7 @@
                         {% endif %}
                     {% endfor %}
                     <td class="action">
-                        {% if can_delete %}<a href="{{ object.url_delete }}"><i class="fas fa-trash"></i></a>{% endif %}&nbsp;&nbsp;
+                        {% if can_delete and object.url_delete %}<a href="{{ object.url_delete }}"><i class="fas fa-trash"></i></a>{% endif %}&nbsp;&nbsp;
                         {% if can_change %}<a href="{{ object.url_update }}"><i class="fas fa-edit"></i></a>{% endif %}
                     </td>
                 </tr>

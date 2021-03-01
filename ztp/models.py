@@ -1,3 +1,6 @@
+import hashlib
+import os
+
 from django.core.files.storage import FileSystemStorage
 from django.core.validators import RegexValidator
 from django.conf import settings
@@ -5,10 +8,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
-import hashlib
-import os
 
 
 User = get_user_model()
@@ -26,31 +27,59 @@ class DateUserBaseModel(models.Model):
 
 
 class Log(DateUserBaseModel):
-    SEVERITY = (
-        (0, _('EMERGENCY')),
-        (1, _('ALERT')),
-        (2, _('CRITICAL')),
-        (3, _('ERROR')),
-        (4, _('WARNING')),
-        (5, _('NOTICE')),
-        (6, _('INFO')),
-        (7, _('DEBUG')),
+    class SEVERITY:
+        EMERGENCY = 0
+        ALERT = 1
+        CRITICAL = 2
+        ERROR = 3
+        WARNING = 4
+        NOTICE = 5
+        INFO = 6
+        DEBUG = 7
+
+    class LOCATION:
+        LOCAL = 0
+        REMOTE = 1
+
+    class TASK_TYPE:
+        ADMIN = 0
+        OPERATION = 1
+        DEBUGGING = 2
+
+    SEVERITY_CHOICES = (
+        (SEVERITY.EMERGENCY, _('EMERGENCY')),
+        (SEVERITY.ALERT, _('ALERT')),
+        (SEVERITY.CRITICAL, _('CRITICAL')),
+        (SEVERITY.ERROR, _('ERROR')),
+        (SEVERITY.WARNING, _('WARNING')),
+        (SEVERITY.NOTICE, _('NOTICE')),
+        (SEVERITY.INFO, _('INFO')),
+        (SEVERITY.DEBUG, _('DEBUG')),
     )
-    LOCATION = (
-        (0, _('local')),
-        (1, _('remote')),
+    LOCATION_CHOICES = (
+        (LOCATION.LOCAL, _('local')),
+        (LOCATION.REMOTE, _('remote')),
     )
+    TASK_TYPE_CHOICES = (
+        (TASK_TYPE.ADMIN, _('admin')),
+        (TASK_TYPE.OPERATION, _('operation')),
+        (TASK_TYPE.DEBUGGING, _('debugging')),
+    )
+
     severity = models.PositiveSmallIntegerField(_('severity'),
-                                                choices=SEVERITY,
+                                                choices=SEVERITY_CHOICES,
                                                 default=6)
     location = models.PositiveSmallIntegerField(_('location'),
-                                                choices=LOCATION,
+                                                choices=LOCATION_CHOICES,
                                                 default=0)
+    task_type = models.PositiveSmallIntegerField(_('task type'),
+                                                 choices=TASK_TYPE_CHOICES,
+                                                 default=1)
     description = models.TextField(_('description'), blank=True)
     metadata = models.JSONField(_('meta-data'), blank=True)
 
     def __str__(self):
-        return f'[{self.severity}] {self.description}'
+        return _(self.description) % self.metadata
 
     class Meta:
         verbose_name = _('log')
@@ -69,7 +98,7 @@ class Vendor(DateUserBaseModel):
 
     @property
     def url_delete(self):
-        return reverse_lazy('vendorDelete', kwargs={'pk': self.id})
+        return reverse_lazy('vendorDelete', kwargs={'pk': self.id}) if self.platforms.count() == 0 else None
 
     @property
     def url_detail(self):
@@ -99,7 +128,7 @@ class Platform(DateUserBaseModel):
 
     @property
     def url_delete(self):
-        return reverse_lazy('platformDelete', kwargs={'pk': self.id})
+        return reverse_lazy('platformDelete', kwargs={'pk': self.id}) if self.firmwares.count() == 0 else None
 
     @property
     def url_detail(self):
@@ -142,6 +171,10 @@ class Firmware(DateUserBaseModel):
         self.md5_hash = md5.hexdigest()
         self.sha512_hash = sha512.hexdigest()
         super().save(**kwargs)
+
+    @property
+    def name(self):
+        return self.file.name
 
     @property
     def url_delete(self):
@@ -306,3 +339,21 @@ class ZtpParameter(DateUserBaseModel):
 
     class Meta:
         unique_together = ('ztpScript', 'name',)
+
+
+def log_factory(description, extra_meta=None, severity=6, location=0,
+                user=None, task_type=1, context=None):
+    if extra_meta is None:
+        extra_meta = {}
+
+    metadata = dict()
+    metadata['datetime'] = timezone.now().isoformat()
+    metadata['user'] = user.username if user else ''
+    metadata = {**metadata, **extra_meta}
+
+    return Log(description=description,
+               metadata=metadata,
+               severity=severity,
+               location=location,
+               task_type=task_type,
+               user=user)

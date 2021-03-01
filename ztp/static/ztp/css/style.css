@@ -283,13 +283,14 @@ table.list {
     border-collapse: collapse;
     width: 100%;
 }
-table.list tr:nth-child(even) {
+table.list.generic tr:nth-child(even) {
     background-color: #f2f2f2;
 }
-table.list tr:hover {
+table.list.generic tr:hover {
     background-color: #ddd;
 }
-table.list th, table.list td {
+table.list th,
+table.list td {
     border: 1px solid #ddd;
     padding: 8px;
 }
@@ -342,6 +343,48 @@ table.list td.action { text-align: right; }
 table.list td.action a {
     color: #000;
     text-decoration: none;
+}
+
+table.log .created {
+    width: 150px;
+}
+
+table.log .severity {
+    width: 100px;
+}
+
+table.log .lt {
+    width: 40px;
+    text-align: center;
+}
+
+table.log .log-0 {
+    background-color: #990000;
+    color: #ffffff;
+}
+table.log .log-1 {
+    background-color: #cc0000;
+    color: #ffffff;
+}
+table.log .log-2 {
+    background-color: #ff6600;
+    color: #ffffff;
+}
+table.log .log-3 {
+    background-color: #ffcc00;
+}
+table.log .log-4 {
+    background-color: #ffff99;
+}
+table.log .log-5 {
+    background-color: #00ff99;
+}
+table.log .log-6 {
+    background-color: #0099ff;
+}
+table.log .log-7 {
+    background-color: #808080;
+    color: #ffffff;
 }
 
 /****************************** Delete forms *******************************/
@@ -411,4 +454,81 @@ p a {
     font-size: smaller;
     font-variant: all-petite-caps;
     border-radius: 3px;
+}
+
+.justify-content-center {
+  -ms-flex-pack: center !important;
+  justify-content: center !important;
+}
+
+nav.paginator {
+    text-align: center;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.pagination {
+  display: -ms-flexbox;
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+  border-radius: 0.25rem;
+}
+.pagination .page-link {
+/*  padding: 0.75rem 1.5rem;
+  font-size: 1.25rem;
+  line-height: 1.5;*/
+}
+.pagination .page-item:first-child .page-link {
+  border-top-left-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
+}
+.pagination .page-item:last-child .page-link {
+  border-top-right-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+}
+.page-item:first-child .page-link {
+  margin-left: 0;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+.page-item:last-child .page-link {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+.page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.page-item.disabled .page-link {
+  color: #6c757d;
+  pointer-events: none;
+  cursor: auto;
+  background-color: #fff;
+  border-color: #dee2e6;
+}
+.page-link {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: #007bff;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  text-decoration: none;
+}
+.page-link:hover {
+  z-index: 2;
+  color: #0056b3;
+  text-decoration: none;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+.page-link:focus {
+  z-index: 3;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
