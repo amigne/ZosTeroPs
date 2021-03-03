@@ -69,8 +69,8 @@
                 {% endblocktrans %}
             </li>
             <li>
-                {% if perms.ztp.list_log %}
-                    <a href="{% url 'logs' %}">{% trans 'Logs' %}</a>
+                {% if perms.list.list_logs %}
+                    <a href="{% url 'logs:list' %}">{% trans 'Logs' %}</a>
                 {% else %}
                     {% trans 'Logs' %}
                 {% endif %}

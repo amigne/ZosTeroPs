@@ -1,0 +1,141 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-03 22:51+0100\n"
+"PO-Revision-Date: 2021-03-03 22:52+0000\n"
+"Last-Translator: b'  <>'\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Translated-Using: django-rosetta 0.9.5\n"
+
+#: .\logs\models.py:38
+#, python-format
+#| msgid "%(model_verbose)s \"%(object_repr)s\" updated by %(user)s."
+msgid "%(model_verbose)s \"%(object_repr)s\" created by %(user)s."
+msgstr "%(model_verbose)s \"%(object_repr)s\" créé par %(user)s."
+
+#: .\logs\models.py:41
+#, python-format
+msgid "%(model_verbose)s \"%(object_repr)s\" updated by %(user)s."
+msgstr "%(model_verbose)s \"%(object_repr)s\" modifié par %(user)s."
+
+#: .\logs\models.py:44
+#, python-format
+msgid "%(model_verbose)s \"%(object_repr)s\" deleted by %(user)s."
+msgstr "%(model_verbose)s \"%(object_repr)s\" supprimé par %(user)s."
+
+#: .\logs\models.py:160
+msgid "EMERGENCY"
+msgstr "URGENCE"
+
+#: .\logs\models.py:161
+msgid "ALERT"
+msgstr "ALERTE"
+
+#: .\logs\models.py:162
+msgid "CRITICAL"
+msgstr "CRITIQUE"
+
+#: .\logs\models.py:163
+msgid "ERROR"
+msgstr "ERREUR"
+
+#: .\logs\models.py:164
+msgid "WARNING"
+msgstr "AVERTISSEMENT"
+
+#: .\logs\models.py:165
+msgid "NOTICE"
+msgstr "NOTIFICATION"
+
+#: .\logs\models.py:166
+msgid "INFO"
+msgstr "INFO"
+
+#: .\logs\models.py:167
+msgid "DEBUG"
+msgstr "DEBUG"
+
+#: .\logs\models.py:175
+msgid "local"
+msgstr "local"
+
+#: .\logs\models.py:176
+msgid "remote"
+msgstr "distant"
+
+#: .\logs\models.py:185
+msgid "admin"
+msgstr "admin"
+
+#: .\logs\models.py:186
+msgid "operation"
+msgstr "opérationnel"
+
+#: .\logs\models.py:187
+msgid "debugging"
+msgstr "debugging"
+
+#: .\logs\models.py:190
+msgid "severity"
+msgstr "gravité"
+
+#: .\logs\models.py:193
+msgid "location"
+msgstr "emplacement"
+
+#: .\logs\models.py:196
+msgid "task type"
+msgstr "type de tâche"
+
+#: .\logs\models.py:199
+msgid "description"
+msgstr "description"
+
+#: .\logs\models.py:200
+msgid "meta-data"
+msgstr "meta-donnée"
+
+#: .\logs\models.py:211
+msgid "log"
+msgstr "log"
+
+#: .\logs\models.py:213
+msgid "Can list logs"
+msgstr "Peut afficher les logs"
+
+#: .\logs\templates\logs\logs_view.html:13
+msgid "ID"
+msgstr "ID"
+
+#: .\logs\templates\logs\logs_view.html:15
+msgid "Date/time"
+msgstr "Date / heure"
+
+#: .\logs\templates\logs\logs_view.html:21
+msgid "Description"
+msgstr "Description"
+
+#: .\logs\templates\logs\logs_view.html:23
+msgid "User"
+msgstr "Utilisateur"
+
+#: .\logs\templates\logs\logs_view.html:71
+#: .\logs\templates\logs\logs_view.html:75
+msgid "Previous"
+msgstr "Précédent"
+
+#: .\logs\views.py:18 .\logs\views.py:19
+msgid "logs"
+msgstr "logs"

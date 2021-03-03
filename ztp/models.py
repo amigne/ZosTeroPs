@@ -4,90 +4,17 @@ import os
 from django.core.files.storage import FileSystemStorage
 from django.core.validators import RegexValidator
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse_lazy
-from django.utils import timezone
+
 from django.utils.translation import gettext_lazy as _
 
-
-User = get_user_model()
-
-
-class DateUserBaseModel(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(User,
-                             null=True,
-                             on_delete=models.SET_NULL)
-
-    class Meta:
-        abstract = True
+from logs.registry import model_change_logger
+from utils.models import DateUserBaseModel
 
 
-class Log(DateUserBaseModel):
-    class SEVERITY:
-        EMERGENCY = 0
-        ALERT = 1
-        CRITICAL = 2
-        ERROR = 3
-        WARNING = 4
-        NOTICE = 5
-        INFO = 6
-        DEBUG = 7
-
-    class LOCATION:
-        LOCAL = 0
-        REMOTE = 1
-
-    class TASK_TYPE:
-        ADMIN = 0
-        OPERATION = 1
-        DEBUGGING = 2
-
-    SEVERITY_CHOICES = (
-        (SEVERITY.EMERGENCY, _('EMERGENCY')),
-        (SEVERITY.ALERT, _('ALERT')),
-        (SEVERITY.CRITICAL, _('CRITICAL')),
-        (SEVERITY.ERROR, _('ERROR')),
-        (SEVERITY.WARNING, _('WARNING')),
-        (SEVERITY.NOTICE, _('NOTICE')),
-        (SEVERITY.INFO, _('INFO')),
-        (SEVERITY.DEBUG, _('DEBUG')),
-    )
-    LOCATION_CHOICES = (
-        (LOCATION.LOCAL, _('local')),
-        (LOCATION.REMOTE, _('remote')),
-    )
-    TASK_TYPE_CHOICES = (
-        (TASK_TYPE.ADMIN, _('admin')),
-        (TASK_TYPE.OPERATION, _('operation')),
-        (TASK_TYPE.DEBUGGING, _('debugging')),
-    )
-
-    severity = models.PositiveSmallIntegerField(_('severity'),
-                                                choices=SEVERITY_CHOICES,
-                                                default=6)
-    location = models.PositiveSmallIntegerField(_('location'),
-                                                choices=LOCATION_CHOICES,
-                                                default=0)
-    task_type = models.PositiveSmallIntegerField(_('task type'),
-                                                 choices=TASK_TYPE_CHOICES,
-                                                 default=1)
-    description = models.TextField(_('description'), blank=True)
-    metadata = models.JSONField(_('meta-data'), blank=True)
-
-    def __str__(self):
-        return _(self.description) % self.metadata
-
-    class Meta:
-        verbose_name = _('log')
-        permissions = (
-            ('list_log', _('Can list logs')),
-        )
-
-
+@model_change_logger.register(include_fields=['name', 'description'])
 class Vendor(DateUserBaseModel):
     name = models.CharField(_('name'), max_length=50,
                             unique=True)
@@ -110,12 +37,14 @@ class Vendor(DateUserBaseModel):
         return reverse_lazy('vendorUpdate', kwargs={'pk': self.id})
 
     class Meta:
-        verbose_name = _('vendor')
         permissions = (
             ('list_vendor', _('Can list vendor')),
         )
+        verbose_name = _('Vendor')
+        verbose_name_plural = _('Vendors')
 
 
+@model_change_logger.register(include_fields=['vendor', 'name', 'description'])
 class Platform(DateUserBaseModel):
     vendor = models.ForeignKey(Vendor,
                                related_name='platforms',
@@ -144,8 +73,11 @@ class Platform(DateUserBaseModel):
         permissions = (
             ('list_platform', _('Can list platform')),
         )
+        verbose_name = _('Platform')
+        verbose_name_plural = _('Platforms')
 
 
+@model_change_logger.register(include_fields=['platform', 'file', 'description', 'filesize', 'md5_hash', 'sha512_hash'])
 class Firmware(DateUserBaseModel):
     platform = models.ForeignKey(Platform,
                                  related_name='firmwares',
@@ -192,6 +124,8 @@ class Firmware(DateUserBaseModel):
         permissions = (
             ('list_firmware', _('Can list firmware')),
         )
+        verbose_name = _('Firmware')
+        verbose_name_plural = _('Firmwares')
 
 
 @receiver(models.signals.post_delete, sender=Firmware)
@@ -226,6 +160,7 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             os.remove(old_file.path)
 
 
+@model_change_logger.register(include_fields=['name', 'description', 'template'])
 class Config(DateUserBaseModel):
     configNameValidator = RegexValidator(
         r'^[0-9a-zA-Z._-]+$',
@@ -256,11 +191,15 @@ class Config(DateUserBaseModel):
         permissions = (
             ('list_config', _('Can list config')),
         )
+        verbose_name = _('Configuration')
+        verbose_name_plural = _('Configurations')
 
 
+@model_change_logger.register(include_fields=['config', 'name', 'data', 'description', 'is_mandatory'])
 class ConfigParameter(DateUserBaseModel):
     configParameterNameValidator = RegexValidator(r'^[a-zA-Z_][0-9a-zA-Z._-]*$',
-                                                  'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
+                                                  'Only alphanumeric characters, dot ".", underscore "_", and hyphen '
+                                                  '"-" symbols are allowed.')
 
     config = models.ForeignKey(Config,
                                related_name='parameters',
@@ -278,8 +217,14 @@ class ConfigParameter(DateUserBaseModel):
 
     class Meta:
         unique_together = ('config', 'name',)
+        verbose_name = _("Configuration's parameter")
+        verbose_name_plural = _("Configuration's parameters")
 
 
+@model_change_logger.register(include_fields=['name', 'description', 'template',
+                                              'render_template', 'use_parameters',
+                                              'accept_query_string',
+                                              'priority_query_string_over_arguments'])
 class ZtpScript(DateUserBaseModel):
     ztpNameValidator = RegexValidator(
         r'^[0-9a-zA-Z._-]+$',
@@ -319,11 +264,15 @@ class ZtpScript(DateUserBaseModel):
         permissions = (
             ('list_ztpscript', _('Can list ztp script')),
         )
+        verbose_name = _('ZTP script')
+        verbose_name_plural = _('ZTP scripts')
 
 
+@model_change_logger.register(include_fields=['ztpScript', 'name', 'value'])
 class ZtpParameter(DateUserBaseModel):
     ztpParameterNameValidator = RegexValidator(r'^[a-zA-Z_][0-9a-zA-Z._-]*$',
-                                               'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" symbols are allowed.')
+                                               'Only alphanumeric characters, dot ".", underscore "_", and hyphen "-" '
+                                               'symbols are allowed.')
 
     ztpScript = models.ForeignKey(ZtpScript,
                                   related_name='parameters',
@@ -335,25 +284,9 @@ class ZtpParameter(DateUserBaseModel):
                              blank=True)
 
     def __str__(self):
-        return self.value
+        return self.name
 
     class Meta:
         unique_together = ('ztpScript', 'name',)
-
-
-def log_factory(description, extra_meta=None, severity=6, location=0,
-                user=None, task_type=1, context=None):
-    if extra_meta is None:
-        extra_meta = {}
-
-    metadata = dict()
-    metadata['datetime'] = timezone.now().isoformat()
-    metadata['user'] = user.username if user else ''
-    metadata = {**metadata, **extra_meta}
-
-    return Log(description=description,
-               metadata=metadata,
-               severity=severity,
-               location=location,
-               task_type=task_type,
-               user=user)
+        verbose_name = _("ZTP script's parameter")
+        verbose_name_plural = _("ZTP script's parameters")
