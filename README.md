@@ -103,8 +103,6 @@ Supported preprocessing elements are:
 
 **Note**: Unknown or syntactically incorrect preprocessing elements are ignored and left as is (understand they are not substituted).
 
-## Credits
-And now, give back to Caesar what belongs to Caesar: The idea of developing ZosTeroPs is consecutive to the discover of the [Tim Dorssers' ZTP project](https://github.com/tdorssers/ztp). This may explain some resemblance of the GUI or some code reuse. Tim's work as well as ZosTeroPs are both under MIT license.
 
 ## Releases
 * v0.0.4 (under development)
@@ -150,3 +148,13 @@ And now, give back to Caesar what belongs to Caesar: The idea of developing ZosT
 [ztp_list]: doc/img/ztp_list.png "ZTP scripts' list"
 [ztp_detail]: doc/img/ztp_details.png "ZTP script's detail"
 [ztp_edit]: doc/img/ztp_edit.png "ZTP script's edit"
+
+## Credits
+And now, give back to Caesar what belongs to Caesar: The idea of developing ZosTeroPs is consecutive to the discover of the [Tim Dorssers' ZTP project](https://github.com/tdorssers/ztp). This may explain some resemblance of the GUI or some code reuse. Tim's work as well as ZosTeroPs are both under MIT license.
+
+ZosTeroPs includes all or some part of code from the following projects:
+* Tim Dorssers' ZTP: Copyright (c) 2019 Tim Dorssers
+* django-auditlog: Copyright (c) 2013-2020 Jan-Jelle Kester
+* jQuery: Copyright OpenJS Foundation and other contributors, https://openjsf.org/
+* jsTable: Which is a fork of Jexcel, removing unused code in order to make it lighter and without confusing features (such as formulas, ...)
+* jQuery Formset: Copyright (c) 2009, Stanislaus Madueke
