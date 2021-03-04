@@ -51,10 +51,6 @@ class ZtpContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin)
     formset_class = ZtpParameterFormSet
     list_fields = ['id', 'name', 'description']
     url_create = reverse_lazy('ztpCreate')
-    serialize_on_delete = ('id', 'name', 'render_template', 'use_parameters',
-                           'accept_query_string',
-                           'priority_query_string_over_arguments',
-                           'description', 'template')
 
     @property
     def can_add(self):
@@ -185,7 +181,6 @@ class ConfigContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMix
     formset_class = ConfigParameterFormSet
     list_fields = ['id', 'name', 'description']
     url_create = reverse_lazy('configCreate')
-    serialize_on_delete = ('id', 'name', 'description', 'template')
 
     @property
     def can_add(self):
@@ -315,8 +310,6 @@ class FirmwareContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredM
     object_description_plural = _('firmwares')
     list_fields = ['id', 'platform', 'file', 'description']
     url_create = reverse_lazy('firmwareCreate')
-    serialize_on_delete = ('id', 'platform', 'name', 'description', 'filesize',
-                           'md5_hash', 'sha512_hash')
 
     @property
     def can_add(self):
@@ -419,7 +412,6 @@ class PlatformContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredM
     object_description_plural = _('platforms')
     list_fields = ['id', 'vendor', 'name', 'description']
     url_create = reverse_lazy('platformCreate')
-    serialize_on_delete = ('id', 'vendor', 'name', 'description',)
 
     @property
     def can_add(self):
@@ -492,7 +484,6 @@ class VendorContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMix
     object_description_plural = _('vendors')
     list_fields = ['id', 'name', 'description']
     url_create = reverse_lazy('vendorCreate')
-    serialize_on_delete = ('id', 'name', 'description',)
 
     @property
     def can_add(self):
