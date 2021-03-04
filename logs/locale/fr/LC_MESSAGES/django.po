@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-04 21:10+0100\n"
+"POT-Creation-Date: 2021-03-04 21:42+0100\n"
 "PO-Revision-Date: 2021-03-04 21:11+0000\n"
 "Last-Translator: b'  <>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,102 +19,102 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Translated-Using: django-rosetta 0.9.5\n"
 
-#: .\logs\models.py:38
+#: .\logs\models.py:39
 #, python-format
 msgid "%(model_verbose)s \"%(object_repr)s\" created by %(user)s."
 msgstr "%(model_verbose)s \"%(object_repr)s\" créé par %(user)s."
 
-#: .\logs\models.py:41
+#: .\logs\models.py:42
 #, python-format
 msgid "%(model_verbose)s \"%(object_repr)s\" updated by %(user)s."
 msgstr "%(model_verbose)s \"%(object_repr)s\" modifié par %(user)s."
 
-#: .\logs\models.py:44
+#: .\logs\models.py:45
 #, python-format
 msgid "%(model_verbose)s \"%(object_repr)s\" deleted by %(user)s."
 msgstr "%(model_verbose)s \"%(object_repr)s\" supprimé par %(user)s."
 
-#: .\logs\models.py:86
+#: .\logs\models.py:87
 msgid "EMERGENCY"
 msgstr "URGENCE"
 
-#: .\logs\models.py:87
+#: .\logs\models.py:88
 msgid "ALERT"
 msgstr "ALERTE"
 
-#: .\logs\models.py:88
+#: .\logs\models.py:89
 msgid "CRITICAL"
 msgstr "CRITIQUE"
 
-#: .\logs\models.py:89
+#: .\logs\models.py:90
 msgid "ERROR"
 msgstr "ERREUR"
 
-#: .\logs\models.py:90
+#: .\logs\models.py:91
 msgid "WARNING"
 msgstr "AVERTISSEMENT"
 
-#: .\logs\models.py:91
+#: .\logs\models.py:92
 msgid "NOTICE"
 msgstr "NOTIFICATION"
 
-#: .\logs\models.py:92
+#: .\logs\models.py:93
 msgid "INFO"
 msgstr "INFO"
 
-#: .\logs\models.py:93
+#: .\logs\models.py:94
 msgid "DEBUG"
 msgstr "DEBUG"
 
-#: .\logs\models.py:101
+#: .\logs\models.py:102
 msgid "local"
 msgstr "local"
 
-#: .\logs\models.py:102
+#: .\logs\models.py:103
 msgid "remote"
 msgstr "distant"
 
-#: .\logs\models.py:111
+#: .\logs\models.py:112
 msgid "admin"
 msgstr "admin"
 
-#: .\logs\models.py:112
+#: .\logs\models.py:113
 msgid "operation"
 msgstr "opérationnel"
 
-#: .\logs\models.py:113
+#: .\logs\models.py:114
 msgid "debugging"
 msgstr "debugging"
 
-#: .\logs\models.py:116
+#: .\logs\models.py:117
 msgid "severity"
 msgstr "gravité"
 
-#: .\logs\models.py:119
+#: .\logs\models.py:120
 msgid "location"
 msgstr "emplacement"
 
-#: .\logs\models.py:122
+#: .\logs\models.py:123
 msgid "task type"
 msgstr "type de tâche"
 
-#: .\logs\models.py:125
+#: .\logs\models.py:126
 msgid "description"
 msgstr "description"
 
-#: .\logs\models.py:126
+#: .\logs\models.py:127
 msgid "meta-data"
 msgstr "meta-donnée"
 
-#: .\logs\models.py:137 .\logs\views.py:13
+#: .\logs\models.py:142 .\logs\views.py:14
 msgid "log"
 msgstr "journal"
 
-#: .\logs\models.py:139
+#: .\logs\models.py:144
 msgid "Can list logs"
 msgstr "Peut lister les logs"
 
-#: .\logs\models.py:140
+#: .\logs\models.py:145
 msgid "Can view logs"
 msgstr "Peut afficher les logs"
 
@@ -135,17 +135,14 @@ msgid "User"
 msgstr "Utilisateur"
 
 #: .\logs\templates\logs\detail.html:26
-#| msgid "severity"
 msgid "Severity"
 msgstr "Gravité"
 
 #: .\logs\templates\logs\detail.html:29
-#| msgid "location"
 msgid "Location"
 msgstr "Emplacement"
 
 #: .\logs\templates\logs\detail.html:32
-#| msgid "task type"
 msgid "Task type"
 msgstr "Type de tâche"
 
@@ -169,11 +166,11 @@ msgstr "Nouvelle valeur"
 msgid "ID"
 msgstr "ID"
 
-#: .\logs\templates\logs\list.html:71 .\logs\templates\logs\list.html:75
+#: .\logs\templates\logs\list.html:77 .\logs\templates\logs\list.html:81
 msgid "Previous"
 msgstr "Précédent"
 
-#: .\logs\views.py:14
+#: .\logs\views.py:15
 msgid "logs"
 msgstr "journaux"
 

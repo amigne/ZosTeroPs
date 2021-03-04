@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-04 21:10+0100\n"
-"PO-Revision-Date: 2021-03-03 21:06+0000\n"
+"POT-Creation-Date: 2021-03-04 21:42+0100\n"
+"PO-Revision-Date: 2021-03-04 21:49+0000\n"
 "Last-Translator: b'  <>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -28,8 +28,8 @@ msgstr "Il ne peut pas y avoir plusieurs paramètres avec le même nom."
 msgid "name"
 msgstr "nom"
 
-#: .\ztp\models.py:21 .\ztp\models.py:53 .\ztp\models.py:88 .\ztp\models.py:173
-#: .\ztp\models.py:246
+#: .\ztp\models.py:21 .\ztp\models.py:53 .\ztp\models.py:88
+#: .\ztp\models.py:173 .\ztp\models.py:246
 msgid "description"
 msgstr "description"
 
@@ -225,13 +225,11 @@ msgstr "Supprimer"
 #, python-format
 msgid ""
 "\n"
-"                You're about to delete the %(object_description)s <strong>"
-"%(object)s</strong>.\n"
+"                You're about to delete the %(object_description)s <strong>%(object)s</strong>.\n"
 "            "
 msgstr ""
 "\n"
-"Vous êtes sur le point de supprimer l'élément suivant : "
-"%(object_description)s <strong>%(object)s</strong>."
+"Vous êtes sur le point de supprimer l'élément suivant : %(object_description)s <strong>%(object)s</strong>."
 
 #: .\ztp\templates\ztp\generic\confirm_delete.html:12
 msgid "Are you sure you want to delete it?"
@@ -374,13 +372,12 @@ msgstr "Fichier"
 msgid ""
 "ZosTeroPs manages the ZTP (Zero Touch Provisioning) of your network devices."
 msgstr ""
-"ZosTeroPs gère le mécanisme ZTP (Zero Touch Provisioning) de vos équipements "
-"réseau."
+"ZosTeroPs gère le mécanisme ZTP (Zero Touch Provisioning) de vos équipements"
+" réseau."
 
 #: .\ztp\templates\ztp\home.html:9
 msgid ""
-"The system contains different parts that permit to customize the process "
-"depending\n"
+"The system contains different parts that permit to customize the process depending\n"
 "            on the vendor and the platform of your network devices."
 msgstr ""
 "Le système possède différentes parties qui permettent de personnaliser le "
@@ -390,12 +387,9 @@ msgstr ""
 #: .\ztp\templates\ztp\home.html:18
 msgid ""
 "collects your ZTP bootstrap scripts that are\n"
-"                    first downloaded by the network devices. Multiple "
-"scripts can be defined\n"
-"                    to support multiple platforms with different bootstrap "
-"conditions. All\n"
-"                    scripts are text-based (not binary) that can define "
-"variable substitution.\n"
+"                    first downloaded by the network devices. Multiple scripts can be defined\n"
+"                    to support multiple platforms with different bootstrap conditions. All\n"
+"                    scripts are text-based (not binary) that can define variable substitution.\n"
 "                "
 msgstr ""
 "collecte vos scripts de démarrage ZTP qui sont téléchargés en premier par "
@@ -408,21 +402,14 @@ msgstr ""
 msgid ""
 "\n"
 "                    defines your configuration templates that\n"
-"                    can be copied by the ZTP script to your device, if it "
-"supports this\n"
-"                    possibility. Splitting the bootstrap and the "
-"configuration permits to have\n"
-"                    a more generic bootstrap script and custom "
-"configurations for specific\n"
+"                    can be copied by the ZTP script to your device, if it supports this\n"
+"                    possibility. Splitting the bootstrap and the configuration permits to have\n"
+"                    a more generic bootstrap script and custom configurations for specific\n"
 "                    platforms or for specific devices.\n"
 "                "
 msgstr ""
 "\n"
-"déclare les modèles de configuration qui peuvent être récupérés par le "
-"script ZTP si l'équipement supporte cette fonctionnalité. Séparer le script "
-"de démarrage et la configuration permet de déclarer un script de démarrage "
-"plus générique avec des configurations personnalisées spécifiques en "
-"fonction de la plateforme ou d'un équipement particulier."
+"déclare les modèles de configuration qui peuvent être récupérés par le script ZTP si l'équipement supporte cette fonctionnalité. Séparer le script de démarrage et la configuration permet de déclarer un script de démarrage plus générique avec des configurations personnalisées spécifiques en fonction de la plateforme ou d'un équipement particulier."
 
 #: .\ztp\templates\ztp\home.html:44
 msgid ""
@@ -432,8 +419,7 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"collecte tous les logiciels qui peuvent être téléchargés par l'équipement "
-"géré."
+"collecte tous les logiciels qui peuvent être téléchargés par l'équipement géré."
 
 #: .\ztp\templates\ztp\home.html:55
 msgid ""
@@ -496,19 +482,92 @@ msgstr "fabricant"
 msgid "vendors"
 msgstr "fabricants"
 
+#: .\ztp\views.py:566
+#, python-format
+msgid "%(client)s requests ZTP script \"%(ztp_script)s\"."
+msgstr "%(client)s demande le script ZTP \"%(ztp_script)s\"."
+
+#: .\ztp\views.py:571
+#, python-format
+msgid "ZTP script \"%(ztp_script)s\" requested by %(client)s does not exist."
+msgstr "Le script ZTP \"%(ztp_script)s\" demandé par %(client)s n'existe pas !"
+
+#: .\ztp\views.py:573
+#| msgid "Configuration does not exist!"
+msgid "ZTP Script does not exist!"
+msgstr "Le script ZTP n'existe pas !"
+
+#: .\ztp\views.py:577 .\ztp\views.py:604
+#, python-format
+msgid "ZTP script \"%(ztp_script)s\" requested by %(client)s sent."
+msgstr "Le script ZTP \"%(ztp_script)s\" demandé par %(client)s a été envoyé."
+
+#: .\ztp\views.py:614
+#, python-format
+msgid "%(client)s requests configuration \"%(config)s\"."
+msgstr "%(client)s demande la configuration \"%(config)s\"."
+
 #: .\ztp\views.py:619
+#, python-format
+msgid "Configuration \"%(config)s\" requested by %(client)s does not exist."
+msgstr "La configuration \"%(config)s\" demandée par %(client)s n'existe pas !"
+
+#: .\ztp\views.py:621
 msgid "Configuration does not exist!"
 msgstr "La configuration n'existe pas!"
 
 #: .\ztp\views.py:635
+#, python-format
+msgid ""
+"Configuration \"%(config)s\" requested by %(client)s miss mandatory "
+"parameter \"%(invalid_parameter)s\"."
+msgstr ""
+"La configuration \"%(config)s\" demandée par %(client)s manque le paramètre "
+"obligatoire \"%(invalid_parameter)s\"."
+
+#: .\ztp\views.py:637
 #, python-format
 msgid "Missing mandatory parameter \"%(name)s\"."
 msgstr "Paramètre obligatoire \"%(name)s\" manquant."
 
 #: .\ztp\views.py:644
 #, python-format
+msgid ""
+"Configuration \"%(config)s\" requested by %(client)s has no matching value "
+"for parameter \"%(invalid_parameter)s\"."
+msgstr ""
+"La configuration \"%(config)s\" demandée par %(client)s n'a pas de valeur "
+"correspondante pour le paramètre \"%(invalid_parameter)s\"."
+
+#: .\ztp\views.py:646
+#, python-format
 msgid "No matching value for parameter \"%(name)s\"."
 msgstr "Pas de valeur correspondant pour le paramètre \"%(name)s\"."
+
+#: .\ztp\views.py:661
+#, python-format
+msgid "Config \"%(config)s\" requested by %(client)s sent."
+msgstr "La configuration \"%(config)s\" demandée par %(client)s a été envoyée."
+
+#: .\ztp\views.py:671
+#, python-format
+msgid "%(client)s requests firmware \"%(firmware)s\"."
+msgstr "%(client)s demande le firmware \"%(firmware)s\"."
+
+#: .\ztp\views.py:676
+#, python-format
+msgid "Firmware \"%(firmware)s\" requested by %(client)s does not exist."
+msgstr "Le firmware \"%(firmware)s\" demandé par %(client)s n'existe pas."
+
+#: .\ztp\views.py:678
+#| msgid "Configuration does not exist!"
+msgid "Firmware does not exist!"
+msgstr "Le firmware n'existe pas !"
+
+#: .\ztp\views.py:680
+#, python-format
+msgid "Firmware \"%(firmware)s\" requested by %(client)s sent."
+msgstr "Le firmware \"%(firmware)s\" demandé par %(client)s a été envoyé."
 
 #~ msgid "(not implemented)"
 #~ msgstr "(pas implémenté)"

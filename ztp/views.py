@@ -6,7 +6,7 @@ from django.db import transaction
 from django.http import FileResponse, Http404, HttpResponse
 from django.template import Context, Template
 from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, gettext_noop
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import (CreateView, DeleteView, UpdateView)
 
@@ -563,18 +563,19 @@ def ztp_download(request, name):
         'ztp_script': name,
         'client': request.META['REMOTE_ADDR'],
     }
-    log_factory('%(client)s requests ZTP script "%(ztp_script)s".', metadata).save()
+    log_factory(gettext_noop('%(client)s requests ZTP script "%(ztp_script)s".'), metadata).save()
 
     try:
         ztp_script = ZtpScript.objects.get(name=name)
     except ZtpScript.DoesNotExist:
-        log_factory('ZTP script "%(ztp_script)s" requested by %(client)s does not exist.', metadata, severity=4).save()
-        raise Http404('ZTP Script does not exist!')
+        log_factory(gettext_noop('ZTP script "%(ztp_script)s" requested by %(client)s does not exist.'),
+                    metadata, severity=4).save()
+        raise Http404(_('ZTP Script does not exist!'))
 
     if not ztp_script.render_template:
-        log_factory('ZTP script "%(ztp_script)s" requested by %(client)s sent.',
-                    metadata, severity=5).save()
         metadata['response'] = ztp_script.template
+        log_factory(gettext_noop('ZTP script "%(ztp_script)s" requested by %(client)s sent.'),
+                    metadata, severity=5).save()
         return HttpResponse(ztp_script.template, content_type='text/plain')
 
     query_string_context_dict = {}
@@ -600,7 +601,7 @@ def ztp_download(request, name):
     template = Template(preprocessed_template)
     response = template.render(Context(context_dict))
     metadata['response'] = response
-    log_factory('ZTP script "%(ztp_script)s" requested by %(client)s sent.',
+    log_factory(gettext_noop('ZTP script "%(ztp_script)s" requested by %(client)s sent.'),
                 metadata, severity=5).save()
     return HttpResponse(response, content_type='text/plain')
 
@@ -610,12 +611,13 @@ def config_download(request, name):
         'config': name,
         'client': request.META['REMOTE_ADDR'],
     }
-    log_factory('%(client)s requests configuration "%(config)s".', metadata).save()
+    log_factory(gettext_noop('%(client)s requests configuration "%(config)s".'), metadata).save()
 
     try:
         config = Config.objects.get(name=name)
     except Config.DoesNotExist:
-        log_factory('Configuration "%(config)s" requested by %(client)s does not exist.', metadata, severity=4).save()
+        log_factory(gettext_noop('Configuration "%(config)s" requested by %(client)s does not exist.'),
+                    metadata, severity=4).save()
         raise Http404(_('Configuration does not exist!'))
 
     arguments = request.GET.dict()
@@ -630,8 +632,8 @@ def config_download(request, name):
 
         if parameter.is_mandatory and url_value is None:
             metadata['invalid_parameter'] = parameter.name
-            log_factory('Configuration "%(config)s" requested by %(client)s miss mandatory parameter '
-                        '"%(invalid_parameter)s".', metadata, severity=4).save()
+            log_factory(gettext_noop('Configuration "%(config)s" requested by %(client)s miss mandatory parameter '
+                        '"%(invalid_parameter)s".'), metadata, severity=4).save()
             raise Http404(_('Missing mandatory parameter "%(name)s".') % {'name': parameter.name})
 
         # Select the dict entry for the matching value only
@@ -639,8 +641,8 @@ def config_download(request, name):
 
         if parameter.is_mandatory and match is None:
             metadata['invalid_parameter'] = parameter.name
-            log_factory('Configuration "%(config)s" requested by %(client)s has no matching value for parameter '
-                        '"%(invalid_parameter)s".', metadata, severity=4).save()
+            log_factory(gettext_noop('Configuration "%(config)s" requested by %(client)s has no matching value for '
+                        'parameter "%(invalid_parameter)s".'), metadata, severity=4).save()
             raise Http404(_('No matching value for parameter "%(name)s".') % {'name': parameter.name})
 
         # Merge the values all together (redundant values are overwritten)
@@ -656,7 +658,7 @@ def config_download(request, name):
     template = Template(preprocessed_template)
     response = template.render(Context(parameters_dict))
     metadata['response'] = response
-    log_factory('Config "%(config)s" requested by %(client)s sent.',
+    log_factory(gettext_noop('Config "%(config)s" requested by %(client)s sent.'),
                 metadata, severity=5).save()
     return HttpResponse(response, content_type='text/plain')
 
@@ -666,15 +668,15 @@ def firmware_download(request, filename):
         'firmware': filename,
         'client': request.META['REMOTE_ADDR'],
     }
-    log_factory('%(client)s requests firmware "%(firmware)s".', metadata).save()
+    log_factory(gettext_noop('%(client)s requests firmware "%(firmware)s".'), metadata).save()
 
     try:
         p = Firmware.objects.get(file=filename)
     except Firmware.DoesNotExist:
-        log_factory('Firmware "%(firmware)s" requested by %(client)s does not exist.',
+        log_factory(gettext_noop('Firmware "%(firmware)s" requested by %(client)s does not exist.'),
                     metadata, severity=4).save()
-        raise Http404('Firmware does not exist!')
+        raise Http404(_('Firmware does not exist!'))
 
-    log_factory('Firmware "%(firmware)s" requested by %(client)s sent.',
+    log_factory(gettext_noop('Firmware "%(firmware)s" requested by %(client)s sent.'),
                 metadata, severity=5).save()
     return FileResponse(p.file.open('rb'), content_type='application/octet-stream')
