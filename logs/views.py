@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
@@ -34,6 +33,3 @@ class LogsDetailView(LogsContextMixin, DetailView):
     template_name = 'logs/detail.html'
     permission_required = 'logs.view_log'
 
-    #def get_object(self, queryset=None):
-    #    obj = super(LogsDetailView, self).get_object(queryset)
-    #    return obj
