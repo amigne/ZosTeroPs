@@ -53,7 +53,13 @@
                                 {% endif %}
                             </td>
                         {% elif field == 'description' %}
-                            <td class="description"><a href="{% url 'logs:detail' object.id %}">{{ object }}</a></td>
+                            <td class="description">
+                                {% if can_view and object.url_detail %}
+                                    <a href="{{ object.url_detail }}">{{ object }}</a>
+                                {% else %}
+                                    {{ object }}
+                                {% endif %}
+                            </td>
                         {% elif field == 'user' %}
                             <td class="user">{% if object.user %}{{ object.user }}{% endif %}</td>
                         {% endif %}

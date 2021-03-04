@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, ListView
 
@@ -15,10 +16,6 @@ class LogsContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin
     list_fields = ['id', 'created', 'severity', 'location-type', 'description', 'metadata', 'user']
 
     @property
-    def can_delete(self):
-        return self.request.user.has_perm('ztp.delete_config')
-
-    @property
     def can_list(self):
         return self.request.user.has_perm('logs.list_log')
 
@@ -32,15 +29,11 @@ class LogsListView(LogsContextMixin, ListView):
     permission_required = 'logs.list_log'
     paginate_by = 15
 
-    @property
-    def can_list(self):
-        return self.request.user.has_perm('logs.list_logs')
-
 
 class LogsDetailView(LogsContextMixin, DetailView):
     template_name = 'logs/detail.html'
     permission_required = 'logs.view_log'
 
-    def get_object(self, queryset=None):
-        obj = super(LogsDetailView, self).get_object(queryset)
-        return obj
+    #def get_object(self, queryset=None):
+    #    obj = super(LogsDetailView, self).get_object(queryset)
+    #    return obj

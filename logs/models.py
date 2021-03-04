@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _, gettext_noop
@@ -126,6 +127,10 @@ class Logs(DateUserBaseModel):
     metadata = models.JSONField(_('meta-data'), blank=True)
 
     objects = LogsManager()
+
+    @property
+    def url_detail(self):
+        return reverse_lazy('logs:detail', kwargs={'pk': self.id})
 
     def __str__(self):
         metadata = self.metadata

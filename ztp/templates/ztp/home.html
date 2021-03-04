@@ -69,7 +69,7 @@
                 {% endblocktrans %}
             </li>
             <li>
-                {% if perms.list.list_logs %}
+                {% if perms.logs.list_log %}
                     <a href="{% url 'logs:list' %}">{% trans 'Logs' %}</a>
                 {% else %}
                     {% trans 'Logs' %}

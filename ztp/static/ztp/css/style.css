@@ -387,6 +387,12 @@ table.log .lt {
     color: #ffffff;
 }
 
+.log a {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
 /****************************** Delete forms *******************************/
 form.delete p {
     color: #ff0000;

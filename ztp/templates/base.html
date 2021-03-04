@@ -30,7 +30,7 @@
         {% if perms.ztp.list_vendor %}
             <a href="{% url 'vendorList' %}"{% if menu_item == 'vendor' %} class="active"{% endif %}>{% trans 'Vendors' %}</a>
         {% endif %}
-        {% if perms.ztp.list_log %}
+        {% if perms.logs.list_log %}
             <a href="{% url 'logs:list' %}"{% if menu_item == 'logs' %} class="active"{% endif %}>{% trans 'Logs' %}</a>
         {% endif %}
         <a href="{% url 'about' %}"{% if menu_item == 'about' %} class="active"{% endif %}>{% trans 'About' %}</a>

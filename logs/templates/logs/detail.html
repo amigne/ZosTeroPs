@@ -53,7 +53,13 @@
                                     {{ change.0 }}
                                 {% endif %}
                             </td>
-                            <td class="new-value">{{ change.1 }}</td>
+                            <td class="new-value">
+                                {% if change.1 == 'None' %}
+                                    <span class="data-none">{{ change.1 }}</span>
+                                {% else %}
+                                    {{ change.1 }}
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
