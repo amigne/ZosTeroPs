@@ -73,32 +73,28 @@ AUTH_PASSWORD_VALIDATORS = [
 LDAP_AUTHENTICATION = env.bool('LDAP_AUTHENTICATION', False)
 if LDAP_AUTHENTICATION:
     import ldap
-    from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+    from django_auth_ldap.config import LDAPSearch, GroupOfNamesType, PosixGroupType
 
     AUTHENTICATION_BACKENDS = env.tuple('AUTHENTICATION_BACKENDS',
-                                        default=('django_auth_ldap.backend.LDAPBackend', 'django.contrib.auth.backends.ModelBackend',))
+                                        default=('django_auth_ldap.backend.LDAPBackend',))
     AUTH_LDAP_SERVER_URI = env('AUTH_LDAP_SERVER_URI', default='ldap://localhost')
-    AUTH_LDAP_BIND_DN = env('AUTH_LDAP_BIND_DN', default='cn=admin,dc=example,dc=com')
-    AUTH_LDAP_BIND_PASSWORD = env('AUTH_LDAP_BIND_PASSWORD', default='admin')
+    AUTH_LDAP_BIND_DN = env('AUTH_LDAP_BIND_DN', default='')
+    AUTH_LDAP_BIND_PASSWORD = env('AUTH_LDAP_BIND_PASSWORD', default='')
 
-    AUTH_LDAP_USER_DN_TEMPLATE = env('AUTH_LDAP_USER_DN_TEMPLATE', default='uid=%(user)s,ou=Users,dc=example,dc=com')
+    AUTH_LDAP_USER_DN_TEMPLATE = env('AUTH_LDAP_USER_DN_TEMPLATE', default=None)
 
-    AUTH_LDAP_USER_ATTR_MAP = env.dict('AUTH_LDAP_USER_ATTR_MAP', default={
-        'first_name': 'givenName',
-        'last_name': 'sn',
-        'email': 'mail',
-    })
+    AUTH_LDAP_USER_ATTR_MAP = env.dict('AUTH_LDAP_USER_ATTR_MAP', default={})
 
-    AUTH_LDAP_REQUIRE_GROUP = env('AUTH_LDAP_REQUIRE_GROUP', default='cn=zosterops,ou=Groups,dc=example,dc=com')
-    AUTH_LDAP_DENY_GROUP = env('AUTH_LDAP_DENY_GROUP', default='cn=zosterops-disabled,ou=Groups,dc=example,dc=com')
+    AUTH_LDAP_REQUIRE_GROUP = env('AUTH_LDAP_REQUIRE_GROUP', default=None)
+    AUTH_LDAP_DENY_GROUP = env('AUTH_LDAP_DENY_GROUP', default=None)
 
     AUTH_LDAP_USER_FLAGS_BY_GROUP = {}
     AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_ACTIVE = env('AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_ACTIVE',
-                                                  default='cn=zosterops,ou=Groups,dc=example,dc=com')
+                                                  default=None)
     AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_STAFF = env('AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_STAFF',
-                                                 default='cn=zosterops-staff,ou=Groups,dc=example,dc=com')
+                                                 default=None)
     AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_SUPERUSER = env('AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_SUPERUSER',
-                                                     default='cn=zosterops-superuser,ou=Groups,dc=example,dc=com')
+                                                     default=None)
     if AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_ACTIVE:
         AUTH_LDAP_USER_FLAGS_BY_GROUP['is_active'] = AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_ACTIVE
     if AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_STAFF:
@@ -106,12 +102,16 @@ if LDAP_AUTHENTICATION:
     if AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_SUPERUSER:
         AUTH_LDAP_USER_FLAGS_BY_GROUP['is_superuser'] = AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_SUPERUSER
 
-    AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_ACTIVE = 'cn=zosterops,ou=Groups,dc=example,dc=com'
-    AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_STAFF = 'cn=zosterops-staff,ou=Groups,dc=example,dc=com'
-    AUTH_LDAP_USER_FLAGS_BY_GROUP_IS_SUPERUSER = 'cn=zosterops-superuser,ou=Groups,dc=example,dc=com'
+    auth_ldap_group_type = env('AUTH_LDAP_GROUP_TYPE', default=None)
+    auth_ldap_group_type_name_attr = env('AUTH_LDAP_GROUP_TYPE_NAME_ATTR', default=None)
+    auth_ldap_group_type_params = {}
+    if auth_ldap_group_type_name_attr:
+        auth_ldap_group_type_params['name_attr'] = auth_ldap_group_type_name_attr
 
-    AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(
-        name_attr=env('AUTH_LDAP_GROUP_TYPE_NAME_ATTR', default='cn'))
+    if auth_ldap_group_type == 'GroupOfNamesType':
+        AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(**auth_ldap_group_type_params)
+    elif auth_ldap_group_type == 'PosixGroupType':
+        AUTH_LDAP_GROUP_TYPE = PosixGroupType(**auth_ldap_group_type_params)
 
     AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
         env('AUTH_LDAP_GROUP_SEARCH_BASE_DN', default='ou=Groups,dc=example,dc=com'),
@@ -119,14 +119,14 @@ if LDAP_AUTHENTICATION:
         env('AUTH_LDAP_GROUP_SEARCH_FILTER_STR', default='(objectClass=groupOfNames)'),
     )
 
-    AUTH_LDAP_MIRROR_GROUPS = env.tuple('AUTH_LDAP_MIRROR_GROUPS',
-                                        default=('Administrators', 'Operators', 'Readers', 'Observers',))
+    AUTH_LDAP_MIRROR_GROUPS = env.bool('AUTH_LDAP_MIRROR_GROUPS', None)
 
     AUTH_LDAP_ALWAYS_UPDATE_USER = env.bool('AUTH_LDAP_ALWAYS_UPDATE_USER', default=True)
 
     AUTH_LDAP_FIND_GROUP_PERMS = env.bool('AUTH_LDAP_FIND_GROUP_PERMS', default=True)
 
-    AUTH_LDAP_CACHE_TIMEOUT = env.int('AUTH_LDAP_CACHE_TIMEOUT', default=0)
+    AUTH_LDAP_CACHE_GROUPS = env.bool('AUTH_LDAP_CACHE_GROUPS', default=False)
+    AUTH_LDAP_GROUP_CACHE_TIMEOUT = env.int('AUTH_LDAP_GROUP_CACHE_TIMEOUT', default=0)
 
 # Static files
 STATIC_URL = '/static/'
