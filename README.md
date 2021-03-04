@@ -110,6 +110,7 @@ Supported preprocessing elements are:
   * Configuration parameter table does not overflow the screen anymore
   * Addition of a confirmation request before deleting a configuration parameter table
   * Minor fixes and corrections
+  * Logging and views for displaying logs
 * v0.0.3 (February 25th, 2021)
   * Addition of Edit and Delete buttons on the Detail views
   * Add of URL on ZTP script, configuration, and firmware Detail views
