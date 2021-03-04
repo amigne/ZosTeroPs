@@ -358,31 +358,31 @@ table.log .lt {
     text-align: center;
 }
 
-table.log .log-0 {
+.log .log-0 {
     background-color: #990000;
     color: #ffffff;
 }
-table.log .log-1 {
+.log .log-1 {
     background-color: #cc0000;
     color: #ffffff;
 }
-table.log .log-2 {
+.log .log-2 {
     background-color: #ff6600;
     color: #ffffff;
 }
-table.log .log-3 {
+.log .log-3 {
     background-color: #ffcc00;
 }
-table.log .log-4 {
+.log .log-4 {
     background-color: #ffff99;
 }
-table.log .log-5 {
+.log .log-5 {
     background-color: #00ff99;
 }
-table.log .log-6 {
+.log .log-6 {
     background-color: #0099ff;
 }
-table.log .log-7 {
+.log .log-7 {
     background-color: #808080;
     color: #ffffff;
 }
@@ -474,11 +474,11 @@ nav.paginator {
   list-style: none;
   border-radius: 0.25rem;
 }
-.pagination .page-link {
-/*  padding: 0.75rem 1.5rem;
+/*.pagination .page-link {
+  padding: 0.75rem 1.5rem;
   font-size: 1.25rem;
-  line-height: 1.5;*/
-}
+  line-height: 1.5;
+}*/
 .pagination .page-item:first-child .page-link {
   border-top-left-radius: 0.3rem;
   border-bottom-left-radius: 0.3rem;
@@ -531,4 +531,30 @@ nav.paginator {
   z-index: 3;
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+table.changes {
+    table-layout: fixed;
+    width: 100%
+}
+table.changes .field {
+    width: 150px;
+    text-align: right;
+}
+table.changes .old-value,
+table.changes .new-value {
+    text-align: center;
+}
+
+.data.severity {
+    width: 100%
+}
+
+.data-none {
+    color: #aaa;
+}
+
+.metadata {
+    font-size: smaller;
+    color: #888;
 }

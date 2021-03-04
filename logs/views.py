@@ -1,25 +1,46 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import ListView
+from django.views.generic import DetailView, ListView
 
 from utils.views import ContextMixin
 
 from .models import Logs
 
 
-#
-# Log
-#
-class LogsListView(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class LogsContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Logs
     menu_item = 'log'
-    template_name = 'logs/logs_view.html'
-    permission_required = 'logs.list_log'
-    object_description = _('logs')
+    object_description = _('log')
     object_description_plural = _('logs')
     list_fields = ['id', 'created', 'severity', 'location-type', 'description', 'metadata', 'user']
+
+    @property
+    def can_delete(self):
+        return self.request.user.has_perm('ztp.delete_config')
+
+    @property
+    def can_list(self):
+        return self.request.user.has_perm('logs.list_log')
+
+    @property
+    def can_view(self):
+        return self.request.user.has_perm('logs.view_log')
+
+
+class LogsListView(LogsContextMixin, ListView):
+    template_name = 'logs/list.html'
+    permission_required = 'logs.list_log'
     paginate_by = 15
 
     @property
     def can_list(self):
         return self.request.user.has_perm('logs.list_logs')
+
+
+class LogsDetailView(LogsContextMixin, DetailView):
+    template_name = 'logs/detail.html'
+    permission_required = 'logs.view_log'
+
+    def get_object(self, queryset=None):
+        obj = super(LogsDetailView, self).get_object(queryset)
+        return obj

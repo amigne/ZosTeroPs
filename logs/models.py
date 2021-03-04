@@ -137,6 +137,7 @@ class Logs(DateUserBaseModel):
         verbose_name = _('log')
         permissions = (
             ('list_log', _('Can list logs')),
+            ('view_log', _('Can view logs')),
         )
 
 

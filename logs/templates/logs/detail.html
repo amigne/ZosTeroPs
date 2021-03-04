@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content_title %}
+    {{ object_description|capfirst }} #{{ object.id }} - {% trans "Details" %}
+{% endblock content_title %}
+
+{% block content %}
+    <div class="detail {{ menu_item }}">
+        <div class="created header">{% trans "Date/time" %}</div>
+        <div class="created data">{{ object.created|date:"Y-m-d H:i:s" }}</div>
+
+        <div class="description header">{% trans "Description" %}</div>
+        <div class="description data">{{ object }}</div>
+
+        <div class="user header">{% trans "User" %}</div>
+        <div class="user data">
+            {% if object.user == None %}
+                <span class="data-none">{{ object.user }}</span>
+            {% else %}
+                {{ object.user }}
+            {% endif %}
+        </div>
+
+        <div class="severity header">{% trans "Severity" %}</div>
+        <div class="severity data log-{{ object.severity }}">{{ object.get_severity_display|capfirst }}</div>
+
+        <div class="location header">{% trans "Location" %}</div>
+        <div class="location data">{{ object.get_location_display|capfirst }}</div>
+
+        <div class="task_type header">{% trans "Task type" %}</div>
+        <div class="task_type data">{{ object.get_task_type_display|capfirst }}</div>
+
+        {% if object.metadata.changes %}
+            <div class="changes header">{% trans "Changes" %}</div>
+            <table class="changes data">
+                <thead>
+                    <tr>
+                        <th class="field">{% trans "Field" %}</th>
+                        <th class="old-value">{% trans "Old value" %}</th>
+                        <th class="new-value">{% trans "New value" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for field, change in object.metadata.changes.items %}
+                        <tr>
+                            <td class="field">{{ field }}</td>
+                            <td class="old-value">
+                                {% if change.0 == 'None' %}
+                                    <span class="data-none">{{ change.0 }}</span>
+                                {% else %}
+                                    {{ change.0 }}
+                                {% endif %}
+                            </td>
+                            <td class="new-value">{{ change.1 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        {% for field, data in object.metadata.items %}
+            {% if field != 'changes' %}
+                <div class="metadata header">{{ field }}</div>
+                <div class="metadata data">{{ data }}</div>
+            {% endif %}
+        {% endfor%}
+    </div>
+{% endblock content %}
+

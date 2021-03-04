@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-03 22:51+0100\n"
-"PO-Revision-Date: 2021-03-03 22:52+0000\n"
+"POT-Creation-Date: 2021-03-04 21:10+0100\n"
+"PO-Revision-Date: 2021-03-04 21:11+0000\n"
 "Last-Translator: b'  <>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -21,7 +21,6 @@ msgstr ""
 
 #: .\logs\models.py:38
 #, python-format
-#| msgid "%(model_verbose)s \"%(object_repr)s\" updated by %(user)s."
 msgid "%(model_verbose)s \"%(object_repr)s\" created by %(user)s."
 msgstr "%(model_verbose)s \"%(object_repr)s\" créé par %(user)s."
 
@@ -35,107 +34,149 @@ msgstr "%(model_verbose)s \"%(object_repr)s\" modifié par %(user)s."
 msgid "%(model_verbose)s \"%(object_repr)s\" deleted by %(user)s."
 msgstr "%(model_verbose)s \"%(object_repr)s\" supprimé par %(user)s."
 
-#: .\logs\models.py:160
+#: .\logs\models.py:86
 msgid "EMERGENCY"
 msgstr "URGENCE"
 
-#: .\logs\models.py:161
+#: .\logs\models.py:87
 msgid "ALERT"
 msgstr "ALERTE"
 
-#: .\logs\models.py:162
+#: .\logs\models.py:88
 msgid "CRITICAL"
 msgstr "CRITIQUE"
 
-#: .\logs\models.py:163
+#: .\logs\models.py:89
 msgid "ERROR"
 msgstr "ERREUR"
 
-#: .\logs\models.py:164
+#: .\logs\models.py:90
 msgid "WARNING"
 msgstr "AVERTISSEMENT"
 
-#: .\logs\models.py:165
+#: .\logs\models.py:91
 msgid "NOTICE"
 msgstr "NOTIFICATION"
 
-#: .\logs\models.py:166
+#: .\logs\models.py:92
 msgid "INFO"
 msgstr "INFO"
 
-#: .\logs\models.py:167
+#: .\logs\models.py:93
 msgid "DEBUG"
 msgstr "DEBUG"
 
-#: .\logs\models.py:175
+#: .\logs\models.py:101
 msgid "local"
 msgstr "local"
 
-#: .\logs\models.py:176
+#: .\logs\models.py:102
 msgid "remote"
 msgstr "distant"
 
-#: .\logs\models.py:185
+#: .\logs\models.py:111
 msgid "admin"
 msgstr "admin"
 
-#: .\logs\models.py:186
+#: .\logs\models.py:112
 msgid "operation"
 msgstr "opérationnel"
 
-#: .\logs\models.py:187
+#: .\logs\models.py:113
 msgid "debugging"
 msgstr "debugging"
 
-#: .\logs\models.py:190
+#: .\logs\models.py:116
 msgid "severity"
 msgstr "gravité"
 
-#: .\logs\models.py:193
+#: .\logs\models.py:119
 msgid "location"
 msgstr "emplacement"
 
-#: .\logs\models.py:196
+#: .\logs\models.py:122
 msgid "task type"
 msgstr "type de tâche"
 
-#: .\logs\models.py:199
+#: .\logs\models.py:125
 msgid "description"
 msgstr "description"
 
-#: .\logs\models.py:200
+#: .\logs\models.py:126
 msgid "meta-data"
 msgstr "meta-donnée"
 
-#: .\logs\models.py:211
+#: .\logs\models.py:137 .\logs\views.py:13
 msgid "log"
-msgstr "log"
+msgstr "journal"
 
-#: .\logs\models.py:213
+#: .\logs\models.py:139
 msgid "Can list logs"
+msgstr "Peut lister les logs"
+
+#: .\logs\models.py:140
+msgid "Can view logs"
 msgstr "Peut afficher les logs"
 
-#: .\logs\templates\logs\logs_view.html:13
-msgid "ID"
-msgstr "ID"
+#: .\logs\templates\logs\detail.html:6
+msgid "Details"
+msgstr "Détails"
 
-#: .\logs\templates\logs\logs_view.html:15
+#: .\logs\templates\logs\detail.html:11 .\logs\templates\logs\list.html:15
 msgid "Date/time"
 msgstr "Date / heure"
 
-#: .\logs\templates\logs\logs_view.html:21
+#: .\logs\templates\logs\detail.html:14 .\logs\templates\logs\list.html:21
 msgid "Description"
 msgstr "Description"
 
-#: .\logs\templates\logs\logs_view.html:23
+#: .\logs\templates\logs\detail.html:17 .\logs\templates\logs\list.html:23
 msgid "User"
 msgstr "Utilisateur"
 
-#: .\logs\templates\logs\logs_view.html:71
-#: .\logs\templates\logs\logs_view.html:75
+#: .\logs\templates\logs\detail.html:26
+#| msgid "severity"
+msgid "Severity"
+msgstr "Gravité"
+
+#: .\logs\templates\logs\detail.html:29
+#| msgid "location"
+msgid "Location"
+msgstr "Emplacement"
+
+#: .\logs\templates\logs\detail.html:32
+#| msgid "task type"
+msgid "Task type"
+msgstr "Type de tâche"
+
+#: .\logs\templates\logs\detail.html:36
+msgid "Changes"
+msgstr "Changements"
+
+#: .\logs\templates\logs\detail.html:40
+msgid "Field"
+msgstr "Champ"
+
+#: .\logs\templates\logs\detail.html:41
+msgid "Old value"
+msgstr "Ancienne valeur"
+
+#: .\logs\templates\logs\detail.html:42
+msgid "New value"
+msgstr "Nouvelle valeur"
+
+#: .\logs\templates\logs\list.html:13
+msgid "ID"
+msgstr "ID"
+
+#: .\logs\templates\logs\list.html:71 .\logs\templates\logs\list.html:75
 msgid "Previous"
 msgstr "Précédent"
 
-#: .\logs\views.py:18 .\logs\views.py:19
+#: .\logs\views.py:14
 msgid "logs"
-msgstr "logs"
+msgstr "journaux"
+
+#, fuzzy
+#~ msgid "Options"
+#~ msgstr "opérationnel"
