@@ -18,7 +18,7 @@ from .formset import ConfigParameterFormSet, ZtpParameterFormSet
 from .models import (Config, Firmware, Platform, Vendor,
                      ZtpScript)
 from .preprocessor import Preprocessor
-from .utils import (get_config_base_url, get_firwmare_base_url,
+from .utils import (get_config_base_url, get_firwmare_base_url, get_full_url,
                     get_ztp_script_base_url)
 from .utils import (parameter_table_to_dict, preprocess_params)
 
@@ -552,6 +552,7 @@ class VendorUpdateView(VendorContextMixin, UpdateView):
 def ztp_download(request, name):
     metadata = {
         'ztp_script': name,
+        'requested_url': get_full_url(request),
         'client': request.META['REMOTE_ADDR'],
     }
     log_factory(gettext_noop('%(client)s requests ZTP script "%(ztp_script)s".'), metadata).save()
@@ -600,10 +601,11 @@ def ztp_download(request, name):
 def config_download(request, name):
     metadata = {
         'config': name,
+        'requested_url': get_full_url(request),
         'client': request.META['REMOTE_ADDR'],
     }
     log_factory(gettext_noop('%(client)s requests configuration "%(config)s".'), metadata).save()
-
+    print(get_full_url(request))
     try:
         config = Config.objects.get(name=name)
     except Config.DoesNotExist:
@@ -657,6 +659,7 @@ def config_download(request, name):
 def firmware_download(request, filename):
     metadata = {
         'firmware': filename,
+        'requested_url': get_full_url(request),
         'client': request.META['REMOTE_ADDR'],
     }
     log_factory(gettext_noop('%(client)s requests firmware "%(firmware)s".'), metadata).save()

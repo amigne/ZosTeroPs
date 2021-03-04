@@ -5,6 +5,13 @@ from django.contrib.sites.requests import RequestSite
 from django.conf import settings
 
 
+def get_full_url(request = None):
+    root_url = get_root_url(request)
+    path = request.path_info[1:]
+    query_string = f"?{request.META['QUERY_STRING']}" if request.META['QUERY_STRING'] else ''
+
+    return f'{root_url}{path}{query_string}'
+
 def get_domain(request = None):
     """Return the domain of the current request. """
     if request is None:
