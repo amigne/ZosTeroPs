@@ -198,8 +198,48 @@ vars().update(EMAIL_CONFIG)
 
 # Logging
 LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "loggers": {"django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]}},
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': [],
+        },
+        'ztp': {
+            'handlers': [],
+        },
+    },
 }
+
+LOG_DJANGO_LEVEL=env('LOG_DJANGO_LEVEL', default='WARNING')
+if LOG_DJANGO_LEVEL:
+    LOGGING['loggers']['django']['level'] = LOG_DJANGO_LEVEL
+
+LOG_DJANGO_CONSOLE=env.bool('LOG_DJANGO_CONSOLE', default=False)
+if LOG_DJANGO_CONSOLE:
+    LOGGING['loggers']['django']['handlers'] += ['console']
+
+LOG_ZTP_LEVEL=env('LOG_ZTP_LEVEL', default='WARNING')
+if LOG_ZTP_LEVEL:
+    LOGGING['loggers']['ztp']['level'] = LOG_ZTP_LEVEL
+
+LOG_ZTP_CONSOLE=env.bool('LOG_ZTP_CONSOLE', default=False)
+if LOG_ZTP_CONSOLE:
+    LOGGING['loggers']['ztp']['handlers'] += ['console']
+
+LOG_FILE=env('LOG_FILE', default=None)
+LOG_DJANGO_FILE = env.bool('LOG_DJANGO_FILE', default=False)
+LOG_ZTP_FILE = env.bool('LOG_ZTP_FILE', default=False)
+if LOG_FILE:
+    LOGGING['handlers']['file'] = {
+        'class': 'logging.FileHandler',
+        'filename': LOG_FILE,
+    }
+    if LOG_DJANGO_FILE:
+        LOGGING['loggers']['django']['handlers'] += ['file']
+    if LOG_ZTP_FILE:
+        LOGGING['loggers']['ztp']['handlers'] += ['file']
