@@ -8,7 +8,7 @@
     <form method="post"{% if menu_item == "firmware" %} enctype="multipart/form-data"{% endif %}>
         {% csrf_token %}
         {{ formset.management_form }}
-            <p class="error"></p>
+        <p class="error"></p>
         {% for error in form.non_field_errors %}
             <p class="error">{{ error }}</p>
         {% endfor %}
@@ -101,6 +101,14 @@
                         {% for error in field.errors %}
                             <p class="field-error">{{ error }}</p>
                         {% endfor %}
+                    </div>
+                {% endwith %}
+            {% endif %}
+            {% if form.platforms %}
+                {% with field=form.platforms %}
+                    <div class="header {{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+                    <div class="{{ field.name }}">
+                        {{ form.platforms }}
                     </div>
                 {% endwith %}
             {% endif %}

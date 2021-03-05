@@ -10,15 +10,15 @@
 
 {% block content %}
     <div class="detail {{ menu_item }}">
-        {% if object.platform %}
+        {% if object.platform != None %}
             <div class="platform header">{% trans "Platform" %}</div>
             <div class="platform data">{{ object.platform.name }} - {{ object.platform.vendor.name }}</div>
         {% endif %}
-        {% if object.name %}
+        {% if not object.file and object.name != None %}
             <div class="name header">{% trans "Name" %}</div>
             <div class="name data">{{ object.name }}</div>
         {% endif %}
-        {% if object.file %}
+        {% if object.file != None %}
             <div class="filename header">{% trans "Filename" %}</div>
             <div class="filename data">{{ object.file.name }}</div>
         {% endif %}
@@ -31,21 +31,29 @@
                 {% endif %}
             </div>
         {% endif %}
-        {% if object.description %}
+        {% if object.description != None %}
             <div class="description header">{% trans "Description" %}</div>
             <div class="description data">{{ object.description }}</div>
         {% endif %}
-        {% if object.filesize %}
+        {% if object.filesize != None %}
             <div class="filesize header">{% trans "File size" %}</div>
             <div class="filesize data">{{ object.filesize }} {% trans "bytes" %}</div>
         {% endif %}
-        {% if object.md5_hash %}
+        {% if object.md5_hash != None %}
             <div class="md5hash header">{% trans "MD5 hash" %}</div>
             <div class="md5hash data">{{ object.md5_hash }}</div>
         {% endif %}
-        {% if object.sha512_hash %}
+        {% if object.sha512_hash != None %}
             <div class="sha512hash header">{% trans "SHA512 hash" %}</div>
-            <div class="sha512hash data">{{ firmware.sha512_hash }}</div>
+            <div class="sha512hash data">{{ object.sha512_hash }}</div>
+        {% endif %}
+        {% if object.platforms %}
+            <div class="platforms header">{% trans "Supported platforms" %}</div>
+            <ul class="platforms data tags">
+                {% for platform in object.platforms.all %}
+                    <li><a href="{% if platform.url_detail %}{{ platform.url_detail }}{% else %}#{% endif %}" class="tag">{{ platform }}</a></li>
+                {% endfor %}
+            </ul>
         {% endif %}
         {% if menu_item == "ztpScript" %}
             <div class="options header">{% trans "Options" %}</div>
@@ -113,6 +121,14 @@
         {% if object.template %}
             <div class="template header">{% trans "Template" %}</div>
             <div class="template"><pre>{{ object.template }}</pre></div>
+        {% endif %}
+        {% if object.firmwares %}
+            <div class="firmwares header">{% trans "Supported firmwares" %}</div>
+            <ul class="firmwares data tags">
+                {% for firmware in object.firmwares.all %}
+                    <li><a href="{% if firmware.url_detail %}{{ firmware.url_detail }}{% else %}#{% endif %}" class="tag">{{ firmware }}</a></li>
+                {% endfor %}
+            </ul>
         {% endif %}
     </div>
 {% endblock content %}

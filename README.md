@@ -111,6 +111,8 @@ Supported preprocessing elements are:
   * Addition of a confirmation request before deleting a configuration parameter table
   * Minor fixes and corrections
   * Logging and views for displaying logs
+  * Settings for e-mail better integrated in .env
+  * Many-to-many relationship between firmwares and platforms support added
 * v0.0.3 (February 25th, 2021)
   * Addition of Edit and Delete buttons on the Detail views
   * Add of URL on ZTP script, configuration, and firmware Detail views

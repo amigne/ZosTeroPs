@@ -36,7 +36,7 @@ urlpatterns = [
     # Platforms
     path('platform/', views.PlatformListView.as_view(), name='platformList'),
     path('platform/new/', views.PlatformCreateView.as_view(), name='platformCreate'),
-    # path('platform/<pk>/', views.PlatformDetailView.as_view(), name='platformDetail'),
+    path('platform/<pk>/', views.PlatformDetailView.as_view(), name='platformDetail'),
     path('platform/<pk>/edit/', views.PlatformUpdateView.as_view(), name='platformUpdate'),
     path('platform/<pk>/delete/', views.PlatformDeleteView.as_view(), name='platformDelete'),
 

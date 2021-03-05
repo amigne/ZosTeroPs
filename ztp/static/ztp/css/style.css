@@ -564,3 +564,31 @@ table.changes .new-value {
     font-size: smaller;
     color: #888;
 }
+
+.tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.tags li {
+  float: left;
+}
+.tag {
+    color: #666;
+    background: #eee;
+    font-size: small;
+  border-radius: 8px;
+  display: inline-block;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 23px 0 23px;
+  position: relative;
+  margin: 0 10px 10px 0;
+  text-decoration: none;
+  -webkit-transition: color 0.2s;
+}
+.tag:hover {
+  background-color: midnightblue;
+  color: white;
+}

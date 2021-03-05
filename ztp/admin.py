@@ -37,5 +37,5 @@ class PlatformAdmin(admin.ModelAdmin):
 
 @admin.register(Firmware)
 class FirmwareAdmin(admin.ModelAdmin):
-    list_display = ['id', 'platform', 'file', 'filesize']
+    list_display = ['id', 'file', 'filesize']
     list_display_links = ['id']

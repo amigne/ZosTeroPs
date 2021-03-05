@@ -308,7 +308,7 @@ class FirmwareContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredM
     menu_item = 'firmware'
     object_description = _('firmware')
     object_description_plural = _('firmwares')
-    list_fields = ['id', 'platform', 'file', 'description']
+    list_fields = ['id', 'file', 'description']
     url_create = reverse_lazy('firmwareCreate')
 
     @property
@@ -334,7 +334,7 @@ class FirmwareContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredM
 
 class FirmwareCreateView(FirmwareContextMixin, SuccessMessageMixin, CreateView):
     template_name = 'ztp/generic/form.html'
-    fields = ['platform', 'file', 'description']
+    fields = ['file', 'description', 'platforms']
     permission_required = 'ztp.add_firmware'
 
     def get_success_message(self, cleaned_data):
@@ -358,9 +358,7 @@ class FirmwareDeleteView(FirmwareContextMixin, DeleteView):
     permission_required = 'ztp.delete_firmware'
 
     def get_success_url(self):
-        if self.can_view:
-            return reverse_lazy('firmwareDetail', kwargs={'pk': self.object.pk})
-        elif self.can_list:
+        if self.can_list:
             return reverse_lazy('firmwareList')
         else:
             return reverse_lazy('home')
@@ -385,7 +383,7 @@ class FirmwareListView(FirmwareContextMixin, ListView):
 
 class FirmwareUpdateView(FirmwareContextMixin, SuccessMessageMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
-    fields = ['platform', 'file', 'description']
+    fields = ['file', 'description', 'platforms']
     permission_required = 'ztp.change_firmware'
 
     def get_success_message(self, cleaned_data):
@@ -431,7 +429,7 @@ class PlatformContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredM
 
     @property
     def can_view(self):
-        return False  # self.request.user.has_perm('ztp.view_platform')
+        return self.request.user.has_perm('ztp.view_platform')
 
 
 class PlatformCreateView(PlatformContextMixin, CreateView):
@@ -455,6 +453,15 @@ class PlatformDeleteView(PlatformContextMixin, DeleteView):
             return reverse_lazy('platformList')
         else:
             return reverse_lazy('home')
+
+
+class PlatformDetailView(PlatformContextMixin, DetailView):
+    template_name = 'ztp/generic/detail.html'
+    permission_required = 'ztp.view_platform'
+
+    def get_object(self, queryset=None):
+        obj = super(PlatformContextMixin, self).get_object(queryset)
+        return obj
 
 
 class PlatformListView(PlatformContextMixin, ListView):

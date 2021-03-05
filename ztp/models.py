@@ -52,6 +52,7 @@ class Platform(DateUserBaseModel):
     name = models.CharField(_('name'), max_length=50)
     description = models.TextField(_('description'), blank=True)
 
+
     def __str__(self):
         return self.name
 
@@ -61,8 +62,7 @@ class Platform(DateUserBaseModel):
 
     @property
     def url_detail(self):
-        return None
-        # return reverse_lazy('platformDetail', kwargs={'pk': self.id})
+        return reverse_lazy('platformDetail', kwargs={'pk': self.id})
 
     @property
     def url_update(self):
@@ -77,11 +77,8 @@ class Platform(DateUserBaseModel):
         verbose_name_plural = _('Platforms')
 
 
-@model_change_logger.register(include_fields=['platform', 'file', 'description', 'filesize', 'md5_hash', 'sha512_hash'])
+@model_change_logger.register(include_fields=['file', 'description', 'filesize', 'md5_hash', 'sha512_hash'])
 class Firmware(DateUserBaseModel):
-    platform = models.ForeignKey(Platform,
-                                 related_name='firmwares',
-                                 on_delete=models.CASCADE)
     file = models.FileField(_('file'), unique=True,
                             storage=FileSystemStorage(location=settings.ZTP_FIRMWARES_PATH,
                                                       base_url=settings.ZTP_FIRMWARES_URL))
@@ -89,6 +86,10 @@ class Firmware(DateUserBaseModel):
     filesize = models.IntegerField(_('filesize'))
     md5_hash = models.CharField(_('MD5 hash'), max_length=32)
     sha512_hash = models.CharField(_('SHA512 hash'), max_length=128)
+    platforms = models.ManyToManyField(Platform,
+                                       verbose_name=_('supported platforms'),
+                                       related_name='firmwares',
+                                       through='PlatformFirmwareSupport')
 
     def __str__(self):
         return self.file.name
@@ -126,6 +127,20 @@ class Firmware(DateUserBaseModel):
         )
         verbose_name = _('Firmware')
         verbose_name_plural = _('Firmwares')
+
+@model_change_logger.register(include_fields=['platform', 'firmware', 'is_default'])
+class PlatformFirmwareSupport(DateUserBaseModel):
+    platform = models.ForeignKey(Platform, on_delete=models.CASCADE)
+    firmware = models.ForeignKey(Firmware, on_delete=models.CASCADE)
+    is_default = models.BooleanField(null=True)
+
+    def __str__(self):
+        return f'{self.firmware.name}: {self.platform.name}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['platform', 'is_default'], name='unique default firmware')
+        ]
 
 
 @receiver(models.signals.post_delete, sender=Firmware)
