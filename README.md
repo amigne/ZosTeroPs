@@ -105,6 +105,7 @@ Supported preprocessing elements are:
 
 
 ## Releases
+* v0.0.5 (under development)
 * v0.0.4 (March 6th, 2021)
   * Getting rid of table for forms
   * Configuration parameter table does not overflow the screen anymore
