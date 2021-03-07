@@ -89,7 +89,8 @@ class Firmware(DateUserBaseModel):
     platforms = models.ManyToManyField(Platform,
                                        verbose_name=_('supported platforms'),
                                        related_name='firmwares',
-                                       through='PlatformFirmwareSupport')
+                                       through='PlatformFirmwareSupport',
+                                       blank=True)
 
     def __str__(self):
         return self.file.name
