@@ -148,6 +148,7 @@ INSTALLED_APPS = [
     'ztp',
     'logs',
     'user',
+    'adminlte3',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

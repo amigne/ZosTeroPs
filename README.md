@@ -103,9 +103,13 @@ Supported preprocessing elements are:
 
 **Note**: Unknown or syntactically incorrect preprocessing elements are ignored and left as is (understand they are not substituted).
 
+## TODO
+* Mode from .env configuration to customized settings files (.env has many limitations that makes its use very impracticable)
 
 ## Releases
 * v0.0.5 (under development)
+  * Minor fix: Plaform relationship in Firmware is no more mandatory
+  * UI: Use AdminLTE UI
 * v0.0.4 (March 6th, 2021)
   * Getting rid of table for forms
   * Configuration parameter table does not overflow the screen anymore
