@@ -4,12 +4,31 @@
 {% block content_title %}{{ object_description|capfirst }} #{{ object.id }} - {% trans "Delete" %}{% endblock content_title %}
 
 {% block content %}
-    <form method="post" class="delete {{ menu_item }}">
-        {% csrf_token %}
-        <p>{% blocktranslate %}
-                You're about to delete the {{ object_description }} <strong>{{ object }}</strong>.
-            {% endblocktranslate %}</p>
-        <p>{% trans "Are you sure you want to delete it?" %}</p>
-        <p><button type="submit">{% trans "Confirm" %}</button></p>
-    </form>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="card card-danger">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ object_description|capfirst }} #{{ object.id }} - {% trans "Delete" %}</h3>
+                    </div>
+                   <form method="post">
+                        {% csrf_token %}
+                        {{ formset.management_form }}
+
+                        <div class="card-body delete {{ menu_item }}">
+                            <p>{% blocktranslate %}
+                                You're about to delete the {{ object_description }} <strong>{{ object }}</strong>.
+                            {% endblocktranslate %}</p>
+                            <p>{% trans "Are you sure you want to delete it?" %}</p>
+                        </div>
+                   </form>
+                    <div class="card-footer justify-content-center">
+                        <button type="submit" class="btn btn-danger">{% trans "Confirm" %}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
 {% endblock content %}
