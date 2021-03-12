@@ -1,55 +1,127 @@
 {% extends "base.html" %}
-{% load humanize %}
-{% load i18n %}
+{% load humanize i18n static %}
 
 {% block content_title %}{{ object_description_plural|capfirst }}{% endblock content_title %}
 
 {% block content %}
-    <table class="list generic {{ menu_item }}">
-        <thead>
-            <tr>
-                {% for field in list_fields %}
-                    {% if field == 'id' %}
-                        <th class="id">{% trans "ID" %}</th>
-                    {% elif field == 'name' %}
-                        <th class="name">{% trans "Name" %}</th>
-                    {% elif field == 'file' %}
-                        <th class="file">{% trans "File" %}</th>
-                    {% elif field == 'description' %}
-                        <th class="description">{% trans "Description" %}</th>
-                    {% elif field == 'vendor' %}
-                        <th class="vendor">{% trans "Vendor" %}</th>
-                    {% elif field == 'platform' %}
-                        <th class="platform">{% trans "Platform" %}</th>
-                    {% endif %}
-                {% endfor %}
-                <th class="action">{% if can_add %}<a href="{{ url_create }}"><i class="far fa-plus-square"></i></a>{% endif %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for object in object_list %}
-                <tr>
-                    {% for field in list_fields %}
-                        {% if field == 'id' %}
-                            <td class="id">{{ object.id }}</td>
-                        {% elif field == 'name' %}
-                            <td class="name">{% if can_view and object.url_detail %}<a href="{{ object.url_detail }}">{{ object.name }}</a>{% else %}{{ object.name }}{% endif %}</td>
-                        {% elif field == 'file' %}
-                            <td class="file">{% if can_view %}<a href="{{ object.url_detail }}">{{ object.file.name }}</a>{% else %}{{ object.file.name }}{% endif %} <small>({{ object.file.size|intcomma }} {% trans "bytes" %})</small></td>
-                        {% elif field == 'description' %}
-                            <td class="description">{{ object.description }}</td>
-                        {% elif field == 'vendor' %}
-                            <td class="vendor">{{ object.vendor }}</td>
-                        {% elif field == 'platform' %}
-                            <td class="platform">{{ object.platform }}</td>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ object_description_plural|capfirst }}</h3>
+                        {% if can_add %}
+                            <div class="card-tools">
+                                <a href="{{ url_create }}" class="badge badge-button badge-primary">{% trans 'New' %}</a>
+                            </div>
                         {% endif %}
-                    {% endfor %}
-                    <td class="action">
-                        {% if can_delete and object.url_delete %}<a href="{{ object.url_delete }}"><i class="fas fa-trash"></i></a>{% endif %}&nbsp;&nbsp;
-                        {% if can_change %}<a href="{{ object.url_update }}"><i class="fas fa-edit"></i></a>{% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                    </div>
+                    <div class="card-body">
+                        <table id="list" class="table table-bordered table-hover {{ menu_item }}">
+                            <thead>
+                                <tr>
+                                    {% for field in list_fields %}
+                                        {% if field == 'id' %}
+                                            <th class="id">{% trans "ID" %}</th>
+                                        {% elif field == 'name' %}
+                                            <th class="name">{% trans "Name" %}</th>
+                                        {% elif field == 'file' %}
+                                            <th class="file">{% trans "File" %}</th>
+                                        {% elif field == 'description' %}
+                                            <th class="description">{% trans "Description" %}</th>
+                                        {% elif field == 'vendor' %}
+                                            <th class="vendor">{% trans "Vendor" %}</th>
+                                        {% elif field == 'platform' %}
+                                            <th class="platform">{% trans "Platform" %}</th>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for object in object_list %}
+                                    <tr>
+                                        {% for field in list_fields %}
+                                            {% if field == 'id' %}
+                                                <td class="id">{{ object.id }}</td>
+                                            {% elif field == 'name' %}
+                                                <td class="name">
+                                                    {% if can_view and object.url_detail %}
+                                                        <a href="{{ object.url_detail }}">{{ object.name }}</a>
+                                                    {% else %}
+                                                        {{ object.name }}
+                                                    {% endif %}
+                                                    {% if can_delete and object.url_delete %}
+                                                        <a href="{{ object.url_delete }}" class="badge badge-btn badge-danger"><i class="fas fa-trash"></i></a>
+                                                    {% endif %}&nbsp;&nbsp;
+                                                    {% if can_change %}
+                                                        <a href="{{ object.url_update }}" class="badge badge-btn badge-primary"><i class="fas fa-pen"></i></a>
+                                                    {% endif %}
+                                                </td>
+                                            {% elif field == 'file' %}
+                                                <td class="file">
+                                                    {% if can_view %}
+                                                        <a href="{{ object.url_detail }}">{{ object.file.name }}</a>
+                                                    {% else %}
+                                                        {{ object.file.name }}
+                                                    {% endif %}
+                                                    <div class="badge badge-warning">{{ object.file.size|intcomma }} {% trans "bytes" %}</div>
+                                                    {% if can_delete and object.url_delete %}
+                                                        <a href="{{ object.url_delete }}" class="badge badge-btn badge-danger"><i class="fas fa-trash"></i></a>
+                                                    {% endif %}&nbsp;&nbsp;
+                                                    {% if can_change %}
+                                                        <a href="{{ object.url_update }}" class="badge badge-btn badge-primary"><i class="fas fa-pen"></i></a>
+                                                    {% endif %}
+                                                </td>
+                                            {% elif field == 'description' %}
+                                                <td class="description">{{ object.description }}</td>
+                                            {% elif field == 'vendor' %}
+                                                <td class="vendor">{{ object.vendor }}</td>
+                                            {% elif field == 'platform' %}
+                                                <td class="platform">{{ object.platform }}</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
+
+{% block css_page %}
+    <link rel="stylesheet" href="{% static 'admin-lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'admin-lte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+{% endblock css_page %}
+
+{% block js_page %}
+    <script src="{% static 'admin-lte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/jszip/jszip.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/pdfmake/pdfmake.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/pdfmake/vfs_fonts.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'admin-lte/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
+    <script>
+        $(function () {
+            $('#list').DataTable({
+                'paging': true,
+                'lengthChange': false,
+                'searching': false,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false,
+                'responsive': true,
+            });
+        });
+    </script>
+{% endblock js_page %}
