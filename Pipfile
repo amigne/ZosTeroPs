@@ -9,6 +9,7 @@ django-environ = "0.4"
 python-ldap = "3.3"
 django-auth-ldap = "2.3"
 django-widget-tweaks = "*"
+django-adminlte3-amigne = "==0.2.0-dev"
 
 [dev-packages]
 django-rosetta = "0.9"

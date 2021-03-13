@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1512dd921012b2ee4e1d30209525e4bc7dfbb48ebe3cef851c517fcdb8637a19"
+            "sha256": "a9bb0e816626a0e210abf2c12e0974ab79a02c60fe59206ce9aa1bb7b32be6c4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -31,6 +31,13 @@
             ],
             "index": "pypi",
             "version": "==3.1.7"
+        },
+        "django-adminlte3-amigne": {
+            "hashes": [
+                "sha256:12dcfe1ffe2cf7a02798c36a607990b189703f162f7e1c25784720a3c6f91b62"
+            ],
+            "index": "pypi",
+            "version": "==0.2.0-dev"
         },
         "django-auth-ldap": {
             "hashes": [
