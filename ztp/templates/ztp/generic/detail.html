@@ -9,136 +9,256 @@
 {% endblock content_title %}
 
 {% block content %}
-    <div class="detail {{ menu_item }}">
-        {% if object.platform != None %}
-            <div class="platform header">{% trans "Platform" %}</div>
-            <div class="platform data">{{ object.platform.name }} - {{ object.platform.vendor.name }}</div>
-        {% endif %}
-        {% if not object.file and object.name != None %}
-            <div class="name header">{% trans "Name" %}</div>
-            <div class="name data">{{ object.name }}</div>
-        {% endif %}
-        {% if object.file != None %}
-            <div class="filename header">{% trans "Filename" %}</div>
-            <div class="filename data">{{ object.file.name }}</div>
-        {% endif %}
-        {% if object.url %}
-            <div class="url header">{% trans "URL" %}</div>
-            <div class="url data">
-                <a href="{{ object.url }}" target="_blank">{{ object.url }}</a>
-                {% if menu_item == 'config' %}
-                    <br /><div class="notice">The configuration may require mandatory parameters or return a 404 error.</div>
-                {% endif %}
-            </div>
-        {% endif %}
-        {% if object.description != None %}
-            <div class="description header">{% trans "Description" %}</div>
-            <div class="description data">{{ object.description }}</div>
-        {% endif %}
-        {% if object.filesize != None %}
-            <div class="filesize header">{% trans "File size" %}</div>
-            <div class="filesize data">{{ object.filesize }} {% trans "bytes" %}</div>
-        {% endif %}
-        {% if object.md5_hash != None %}
-            <div class="md5hash header">{% trans "MD5 hash" %}</div>
-            <div class="md5hash data">{{ object.md5_hash }}</div>
-        {% endif %}
-        {% if object.sha512_hash != None %}
-            <div class="sha512hash header">{% trans "SHA512 hash" %}</div>
-            <div class="sha512hash data">{{ object.sha512_hash }}</div>
-        {% endif %}
-        {% if object.platforms %}
-            <div class="platforms header">{% trans "Supported platforms" %}</div>
-            <ul class="platforms data tags">
-                {% for platform in object.platforms.all %}
-                    <li><a href="{% if platform.url_detail %}{{ platform.url_detail }}{% else %}#{% endif %}" class="tag">{{ platform }}</a></li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        {% if menu_item == "ztpScript" %}
-            <div class="options header">{% trans "Options" %}</div>
-            <div class="options data">
-                <input type="checkbox" id="id_render_template"
-                       {% if object.render_template %}checked{% endif %}
-                       disabled>
-                <label for="id_render_template">{% trans "Render template" %}</label><br/>
-
-                <input type="checkbox" id="id_use_parameters"
-                       {% if object.use_parameters %}checked{% endif %}
-                       disabled>
-                <label for="id_use_parameters">{% trans "Use parameters" %}</label><br/>
-
-                <input type="checkbox" id="id_accept_query_string"
-                       {% if object.accept_query_string %}checked{% endif %}
-                       disabled>
-                <label for="id_accept_query_string">{% trans "Accept query string" %}</label><br/>
-
-                <input type="checkbox" id="id_priority_query_string_over_arguments"
-                       {% if object.priority_query_string_over_arguments %}checked{% endif %}
-                       disabled>
-                <label for="id_priority_query_string_over_arguments">{% trans "Priority query string over arguments" %}</label>
-            </div>
-        {% endif %}
-        {% if object.parameters %}
-            <div class="parameters header">{% trans "Parameters" %}</div>
-            <div class="parameters data">
-                {% if menu_item == "config" %}
-                    <fieldset>
-                        {% for param in object.parameters.all %}
-                            <div class="link-formset">
-                                <div class="data">
-                                    <input type="hidden" id="data-{{ param.name }}" value="{{ param.data }}" />
-                                    <div id="data-{{ param.name }}-jexcel" class="jexcel_instance"></div><br />
-                                    <input type="checkbox" id="id_is_mandatory-{{ param.name }}"
-                                           {% if param.is_mandatory %}checked{% endif %}
-                                           disabled>
-                                    <label for="id_is_mandatory-{{ param.name }}">{% trans "Mandatory parameter" %}</label><br/>
-                                </div>
-
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-success">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ object_description|capfirst }} #{{ object.id }} - {% trans "Details" %}</h3>
+                        {% if can_change or can_delete %}
+                            <div class="card-tools">
+                                {% if can_change %}<a href="{{ object.url_update }}" class="badge badge-button badge-primary">{% trans 'Edit' %}</a>{% endif %}&nbsp;&nbsp;
+                                {% if can_delete %}<a href="{{ object.url_delete }}" class="badge badge-button badge-danger">{% trans 'Delete' %}</a>{% endif %}
                             </div>
-                        {% endfor %}
-                    </fieldset>
-                {% elif menu_item == "ztpScript" %}
-                    <table class="parameters">
-                        <thead>
-                        <tr>
-                            <th class="name">{% trans "Name" %}</th>
-                            <th class="value">{% trans "Value" %}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for param in object.parameters.all %}
-                            <tr>
-                                <th class="key"> &#x7b;&#x7b; {{ param.name }} &#x7d;&#x7d;</th>
-                                <td class="value">{{ param.value }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
+                        {% endif %}
+                    </div>
+                    <form action="#">
+                        <div class="card-body update {{ menu_item }}">
+                            {% if object.vendor != None %}
+                                <div class="form-group">
+                                    <label for="id_vendor">{% trans 'Vendor' %}</label>
+                                    <input type="text" id="id_vendor" disabled
+                                           class="form-control form-control-sm"
+                                           value="{{ object.vendor.name }}">
+                                </div>
+                            {% endif %}
+                            {% if object.platform != None %}
+                                <div class="form-group">
+                                    <label for="id_platform">{% trans 'Platform' %}</label>
+                                    <input type="text" id="id_platform" disabled
+                                           class="form-control form-control-sm"
+                                           value="{{ object.platform.name }} - {{ object.platform.vendor.name }}">
+                                </div>
+                            {% endif %}
+                            {% if not object.file and object.name != None %}
+                                <div class="form-group">
+                                    <label for="id_name">{% trans "Name" %}</label>
+                                    <input type="text" id="id_name" disabled
+                                           class="form-control form-control-sm"
+                                           value="{{ object.name }}">
+                                </div>
+                            {% endif %}
+                            {% if object.file != None %}
+                                <div class="form-group">
+                                    <label for="id_filename">{% trans "Filename" %}</label>
+                                    <input type="text" id="id_filename" disabled
+                                           class="form-control form-control-sm"
+                                           value="{{ object.file.name }}">
+                                </div>
+                            {% endif %}
+                            {% if object.url != None %}
+                                <div class="form-group">
+                                    <label for="id_url">{% trans "URL" %}</label>
+                                    <a href="{{ object.url }}" target="_blank">
+                                        {% if object.file %}
+                                            <i class="fas fa-file-download"></i>
+                                        {% else %}
+                                            <i class="fas fa-link"></i>
+                                        {% endif %}
+                                    </a>
+                                    <input type="text" id="id_url" disabled
+                                           class="form-control form-control-sm"
+                                           value="{{ object.url }}">
+                                    {% if menu_item == 'config' %}
+                                        <p>The configuration may require mandatory parameters or return a 404 error.</p>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            {% if object.description != None %}
+                                <div class="form-group">
+                                    <label for="id_description">{% trans "Description" %}</label>
+                                    <div class="detail-disabled-textarea-like" contenteditable="false" role="textbox">{{ object.description|safe }}</div>
+                                </div>
+                            {% endif %}
+                            {% if object.filesize != None %}
+                                <div class="form-group">
+                                    <label for="id_filesize">{% trans "File size" %}</label>
+                                    <input type="text" id="id_filesize" disabled
+                                           class="form-control form-control-sm"
+                                           value="{{ object.filesize }}">
+                                </div>
+                            {% endif %}
+                            {% if object.md5_hash != None %}
+                                <div class="form-group">
+                                    <label for="id_md5_hash">{% trans "MD5 hash" %}</label>
+                                    <input type="text" id="id_md5_hash" disabled
+                                           class="form-control form-control-sm"
+                                           value="{{ object.md5_hash }}">
+                                </div>
+                            {% endif %}
+                            {% if object.sha512_hash != None %}
+                                <div class="form-group">
+                                    <label for="id_sha512_hash">{% trans "SHA512 hash" %}</label>
+                                    <input type="text" id="id_sha512_hash" disabled
+                                           class="form-control form-control-sm"
+                                           value="{{ object.sha512_hash }}">
+                                </div>
+                            {% endif %}
+                            {% if object.platforms %}
+                                <div class="form-group">
+                                    <div class="label">{% trans "Supported platforms" %}</div>
+                                    <ul class="platforms data tags">
+                                        {% for platform in object.platforms.all %}
+                                            <li><a href="{% if platform.url_detail %}{{ platform.url_detail }}{% else %}#{% endif %}" class="tag">{{ platform }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                            {% if menu_item == "ztpScript" %}
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox"
+                                               id="id_render_template" disabled
+                                               class="custom-control-input"
+                                               {% if object.render_template %}checked{% endif %}>
+                                        <label for="id_render_template" class="custom-control-label">{% trans "Render template" %}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox"
+                                               id="id_use_parameters" disabled
+                                               class="custom-control-input"
+                                               {% if object.use_parameters %}checked{% endif %}>
+                                        <label for="id_use_parameters" class="custom-control-label">{% trans "Use parameters" %}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox"
+                                               id="id_accept_query_string" disabled
+                                               class="custom-control-input"
+                                               {% if object.accept_query_string %}checked{% endif %}>
+                                        <label for="id_accept_query_string" class="custom-control-label">{% trans "Accept query string" %}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox"
+                                               id="id_priority_query_string_over_arguments" disabled
+                                               class="custom-control-input"
+                                               {% if object.priority_query_string_over_arguments %}checked{% endif %}>
+                                        <label for="id_priority_query_string_over_arguments" class="custom-control-label">{% trans "Priority query string over arguments" %}</label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if object.parameters %}
+                                <div class="form-group">
+                                    <fieldset id="parameters" style="width:100%;">
+                                        {% if menu_item == 'ztpScript' %}
+                                            <table class="table table-bordered parameters">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:50%;">{% trans "Name" %}</th>
+                                                        <th style="width:50%;">{% trans "Value" %}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for param in object.parameters.all %}
+                                                        <tr>
+                                                            <td>
+                                                                <label for="id_parameters_name_{{ param.name }}" style="display: none;"></label>
+                                                                <input type="text" id="id_parameters_name_{{ param.name }}"
+                                                                       class="form-control form-control-sm" disabled
+                                                                       value="&#x7b;&#x7b; {{ param.name }} &#x7d;&#x7d;">
+                                                            </td>
+                                                            <td>
+                                                                <label for="id_parameters_value_{{ param.name }}" style="display: none;"></label>
+                                                                <input type="text" id="id_parameters_value_{{ param.name }}"
+                                                                       class="form-control form-control-sm" disabled
+                                                                       value="{{ param.value }}">
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% elif menu_item == 'config' %}
+                                            {% for param in object.parameters.all %}
+                                                <div class="form-group-sm">
+                                                    <input type="hidden" id="data-{{ param.name }}" value="{{ param.data }}" />
+                                                    <div id="data-{{ param.name }}-jexcel" class="jexcel_instance"></div>
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox"
+                                                                   id="id_is_mandatory-{{ param.name }}" disabled
+                                                                   class="custom-control-input"
+                                                                   {% if object.is_mandatory %}checked{% endif %}>
+                                                            <label for="id_is_mandatory-{{ param.name }}" class="custom-control-label">{% trans "Mandatory parameter" %}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </fieldset>
+                                </div>
+                            {% endif %}
+                            {% if object.template %}
+                                <label for="id_template">{% trans "Template" %}</label>
+                                <textarea id="id_template" disabled>{{ object.template }}</textarea>
+                            {% endif %}
+                            {% if object.firmwares %}
+                                <div class="form-group">
+                                    <div class="label">{% trans "Supported firmwares" %}</div>
+                                    <ul class="firmwares data tags">
+                                        {% for firmware in object.firmwares.all %}
+                                            <li><a href="{% if firmware.url_detail %}{{ firmware.url_detail }}{% else %}#{% endif %}" class="tag">{{ firmware }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
             </div>
-        {% endif %}
-        {% if object.template %}
-            <div class="template header">{% trans "Template" %}</div>
-            <div class="template"><pre>{{ object.template }}</pre></div>
-        {% endif %}
-        {% if object.firmwares %}
-            <div class="firmwares header">{% trans "Supported firmwares" %}</div>
-            <ul class="firmwares data tags">
-                {% for firmware in object.firmwares.all %}
-                    <li><a href="{% if firmware.url_detail %}{{ firmware.url_detail }}{% else %}#{% endif %}" class="tag">{{ firmware }}</a></li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        </div>
     </div>
 {% endblock content %}
 
-{% block css_xtra %}
+{% block css_page %}
+    {% if object.description != None %}
+        <link rel="stylesheet" href="{% static 'admin-lte/plugins/summernote/summernote-bs4.css' %}">
+    {% endif %}
+    {% if object.template != None %}
+        <link rel="stylesheet" href="{% static 'admin-lte/plugins/codemirror/codemirror.css' %}">
+        <link rel="stylesheet" href="{% static 'admin-lte/plugins/codemirror/theme/monokai.css' %}">
+    {% endif %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jexcel/4.5.2/jexcel.min.css" integrity="sha512-WB/kEaOfg0GNR4kgcutxGokTJwOHScl+1IWlUwobvYi8USQ2ML9mn3794NPSpInbVc6ISnUM6kXZq7hg6Vk1vg==" crossorigin="anonymous" />
     <link rel="stylesheet" href="{% static "ztp/css/jsuites.css" %}" type="text/css" />
-{% endblock css_xtra %}
+{% endblock css_page %}
 
-{% block js_xtra %}
+{% block js_page %}
+    {% if object.template != None %}
+        <script src="{% static 'admin-lte/plugins/codemirror/codemirror.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/mode/css/css.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/mode/xml/xml.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/mode/htmlmixed/htmlmixed.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/mode/python/python.js' %}"></script>
+        <script>
+            $(function () {
+                let sheet = document.createElement('style')
+                sheet.innerHTML = ".CodeMirror {height: auto;}";
+                document.body.appendChild(sheet);
+
+                CodeMirror.fromTextArea(document.getElementById("id_template"), {
+                    // TODO: Add a model field to let the user determine the language
+                    mode: "python",
+                    lineNumbers: true,
+                    theme: "monokai",
+                    readOnly: true
+                });
+            });
+        </script>
+    {% endif %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jexcel/4.5.2/jexcel.min.js" integrity="sha512-wMMvCzGFoMkqblq/fcXTGli56kJQGAXsP6c2oriVYpzjXC/g6JRlvJe7zVoQZsOadgxECkr5tf4DIaJjofYGlA==" crossorigin="anonymous"></script>
     <script src="{% static "ztp/js/jsuites.js" %}"></script>
     <script>
@@ -171,4 +291,4 @@
             });
         })
     </script>
-{% endblock js_xtra %}
+{% endblock js_page %}
