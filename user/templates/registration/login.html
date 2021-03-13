@@ -1,63 +1,45 @@
 {% extends "base.html" %}
-{% load i18n %}
-
-{% block content_title %}{% trans 'Log-in' %}{% endblock content_title %}
+{% load i18n widget_tweaks %}
 
 {% block content %}
-    <div class="login">
-        <form method="post">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}" />
-            {% for error in form.non_field_errors %}
-                <p class="error">{{ error }}</p>
-            {% endfor %}
-            <table class="login-form">
-                <thead>
-                    <tr>
-                        <th colspan="2">{% trans 'Log-in' %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        {% with field=form.username %}
-                            <th><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
-                            <td>
-                                <input type="text" name="{{ field.name }}"
-                                       {% if field.value %}value="{{ field.value }}"{% endif %}
-                                       {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
-                                       id="{{ field.id_for_label }}"
-                                       {% if field.field.required %}required=""{% endif %}
-                                       autofocus="" autocapitalize="none" autocomplete="username">
-                                {% for error in field.errors %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">{% trans 'Log-in' %}</h3>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}" />
+                        {% for error in form.non_field_errors %}
+                            <p class="error">{{ error }}</p>
+                        {% endfor %}
+                        <div class="card-body {{ menu_item }}">
+                            <div class="form-group">
+                                <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                                {{ form.username|add_class:"form-control" }}
+                                {% for error in form.username.errors %}
                                     <p class="field-error">{{ error }}</p>
                                 {% endfor %}
-                            </td>
-                        {% endwith %}
-                    </tr>
-                    <tr>
-                        {% with field=form.password %}
-                            <th><label for="{{ field.id_for_label }}">{{ field.label }}</label></th>
-                            <td><input type="password" name="{{ field.name }}"
-                                   {% if field.value %}value="{{ field.value }}"{% endif %}
-                                   {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
-                                   id="{{ field.id_for_label }}"
-                                   {% if field.field.required %}required=""{% endif %}
-                                   autocomplete="current-password">
-                            {% for error in field.errors %}
-                                <p class="field-error">{{ error }}</p>
-                            {% endfor %}</td>
-                        {% endwith %}
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td class="action" colspan="2"><button type="submit">{% trans 'Log-in' %}</button></td>
-                    </tr>
-                    <tr>
-                        <td class="lost-password" colspan="2"><a href="{% url 'user:password_reset' %}">{% trans 'Lost password?' %}</a></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </form>
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                                {{ form.password|add_class:"form-control" }}
+                                {% for error in form.password.errors %}
+                                    <p class="field-error">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">{% trans 'Log-in' %}</button>
+                            <a href="{% url 'user:password_reset' %}" class="btn btn-secondary">{% trans 'Lost password?' %}</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
     </div>
 {% endblock content %}

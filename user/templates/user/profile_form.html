@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static widget_tweaks %}
+{% load i18n widget_tweaks %}
 
 {% block content %}
     <div class="container-fluid">
@@ -10,7 +10,7 @@
                     <div class="card-header">
                         <h3 class="card-title">{% trans 'User profile - Edit' %}</h3>
                     </div>
-                    <form method="post"{% if menu_item == "firmware" %} enctype="multipart/form-data"{% endif %}>
+                    <form method="post">
                         {% csrf_token %}
                         {% for error in form.non_field_errors %}
                             <p class="error">{{ error }}</p>
@@ -49,9 +49,3 @@
         </div>
     </div>
 {% endblock content %}
-
-{% block css_page %}
-{% endblock css_page %}
-
-{% block js_page %}
-{% endblock js_page %}
