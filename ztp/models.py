@@ -81,7 +81,7 @@ class Platform(DateUserBaseModel):
 class Firmware(DateUserBaseModel):
     file = models.FileField(_('file'), unique=True,
                             storage=FileSystemStorage(location=settings.ZTP_FIRMWARES_PATH,
-                                                      base_url=settings.ZTP_FIRMWARES_URL))
+                                                      base_url=f'/{settings.ZTP_FIRMWARES_URL}'))
     description = models.TextField(_('description'), blank=True)
     filesize = models.IntegerField(_('filesize'))
     md5_hash = models.CharField(_('MD5 hash'), max_length=32)

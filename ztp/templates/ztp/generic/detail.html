@@ -1,12 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% load static %}
-
-{% block content_title %}
-    {{ object_description|capfirst }} #{{ object.id }} - {% trans "Details" %}
-    {% if can_change %}<a href="{{ object.url_update }}"><div class="button-edit">{% trans 'Edit' %}</div></a>{% endif %}&nbsp;&nbsp;
-    {% if can_delete %}<a href="{{ object.url_delete }}"><div class="button-delete">{% trans 'Delete' %}</div></a></a>{% endif %}
-{% endblock content_title %}
+{% load i18n static %}
 
 {% block content %}
     <div class="container-fluid">
@@ -17,8 +10,8 @@
                         <h3 class="card-title">{{ object_description|capfirst }} #{{ object.id }} - {% trans "Details" %}</h3>
                         {% if can_change or can_delete %}
                             <div class="card-tools">
-                                {% if can_change %}<a href="{{ object.url_update }}" class="badge badge-button badge-primary">{% trans 'Edit' %}</a>{% endif %}&nbsp;&nbsp;
-                                {% if can_delete %}<a href="{{ object.url_delete }}" class="badge badge-button badge-danger">{% trans 'Delete' %}</a>{% endif %}
+                                {% if can_change %}<a href="{{ object.url_update }}" class="badge badge-primary">{% trans 'Edit' %}</a>{% endif %}
+                                {% if can_delete and object.url_delete %}<a href="{{ object.url_delete }}" class="badge badge-danger">{% trans 'Delete' %}</a>{% endif %}
                             </div>
                         {% endif %}
                     </div>

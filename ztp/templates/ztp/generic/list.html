@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% load humanize i18n static %}
 
-{% block content_title %}{{ object_description_plural|capfirst }}{% endblock content_title %}
-
 {% block content %}
     <div class="container-fluid">
         <div class="row">
@@ -50,12 +48,8 @@
                                                     {% else %}
                                                         {{ object.name }}
                                                     {% endif %}
-                                                    {% if can_delete and object.url_delete %}
-                                                        <a href="{{ object.url_delete }}" class="badge badge-btn badge-danger"><i class="fas fa-trash"></i></a>
-                                                    {% endif %}&nbsp;&nbsp;
-                                                    {% if can_change %}
-                                                        <a href="{{ object.url_update }}" class="badge badge-btn badge-primary"><i class="fas fa-pen"></i></a>
-                                                    {% endif %}
+                                                    {% if can_change %}<a href="{{ object.url_update }}" class="badge badge-primary">{% trans 'Edit' %}</a>{% endif %}
+                                                    {% if can_delete and object.url_delete %}<a href="{{ object.url_delete }}" class="badge badge-danger">{% trans 'Delete' %}</a>{% endif %}
                                                 </td>
                                             {% elif field == 'file' %}
                                                 <td class="file">
@@ -64,16 +58,12 @@
                                                     {% else %}
                                                         {{ object.file.name }}
                                                     {% endif %}
-                                                    <div class="badge badge-warning">{{ object.file.size|intcomma }} {% trans "bytes" %}</div>
-                                                    {% if can_delete and object.url_delete %}
-                                                        <a href="{{ object.url_delete }}" class="badge badge-btn badge-danger"><i class="fas fa-trash"></i></a>
-                                                    {% endif %}&nbsp;&nbsp;
-                                                    {% if can_change %}
-                                                        <a href="{{ object.url_update }}" class="badge badge-btn badge-primary"><i class="fas fa-pen"></i></a>
-                                                    {% endif %}
+                                                    <small>({{ object.file.size|intcomma }} {% trans "bytes" %})</small>
+                                                    {% if can_change %}<a href="{{ object.url_update }}" class="badge badge-primary">{% trans 'Edit' %}</a>{% endif %}
+                                                    {% if can_delete and object.url_delete %}<a href="{{ object.url_delete }}" class="badge badge-danger">{% trans 'Delete' %}</a>{% endif %}
                                                 </td>
                                             {% elif field == 'description' %}
-                                                <td class="description">{{ object.description }}</td>
+                                                <td class="description">{{ object.description|striptags }}</td>
                                             {% elif field == 'vendor' %}
                                                 <td class="vendor">{{ object.vendor }}</td>
                                             {% elif field == 'platform' %}
@@ -99,7 +89,6 @@
 
 {% block js_page %}
     <script src="{% static 'admin-lte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'admin-lte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'admin-lte/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
     <script src="{% static 'admin-lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
@@ -115,7 +104,8 @@
         $(function () {
             $('#list').DataTable({
                 'paging': true,
-                'lengthChange': false,
+                'lengthMenu': [ [10, 25, 50, -1], [10, 25, 50, 'All'] ],
+                'lengthChange': true,
                 'searching': false,
                 'ordering': true,
                 'info': true,

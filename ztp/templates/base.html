@@ -1,5 +1,5 @@
 {% extends "adminlte/base.html" %}
-{% load adminlte_helpers static i18n %}
+{% load adminlte_helpers i18n static %}
 
 {% block navbar_links %}
     <ul class="navbar-nav">
@@ -147,6 +147,11 @@
     </nav>
 {% endblock div_sidebar %}
 
+{% block content_block_wrap %}
+    {% block content %}
+    {% endblock content %}
+{% endblock content_block_wrap %}
+
 {% block footer_right %}
     <b>{% trans 'Version' %}</b> 0.0.5
 {% endblock footer_right %}
@@ -156,5 +161,10 @@
 {% endblock footer_left %}
 
 {% block css_xtra %}
+    {% block css_page %}{% endblock css_page %}
     <link href="{% static "ztp/css/style.css" %}" rel="stylesheet" />
 {% endblock css_xtra %}
+
+{% block js_xtra %}
+    {% block js_page %}{% endblock js_page %}
+{% endblock js_xtra %}
