@@ -12,7 +12,7 @@ class LogsContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin
     menu_item = 'log'
     object_description = _('log')
     object_description_plural = _('logs')
-    list_fields = ['id', 'created', 'severity', 'location-type', 'description', 'metadata', 'user']
+    list_fields = ['id', 'created', 'severity', 'location', 'type', 'description', 'metadata', 'user']
 
     @property
     def can_list(self):
@@ -26,7 +26,6 @@ class LogsContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin
 class LogsListView(LogsContextMixin, ListView):
     template_name = 'logs/list.html'
     permission_required = 'logs.list_log'
-    paginate_by = 15
 
 
 class LogsDetailView(LogsContextMixin, DetailView):
