@@ -5,302 +5,337 @@
 {% block content_title %}{{ object_description|capfirst }} {% if object.id %}#{{ object.id }} - {% trans 'Edit' %}{% else %}- {% trans 'New' %}{% endif %}{% endblock content_title %}
 
 {% block content %}
-    <form method="post"{% if menu_item == "firmware" %} enctype="multipart/form-data"{% endif %}>
-        {% csrf_token %}
-        {{ formset.management_form }}
-        <p class="error"></p>
-        {% for error in form.non_field_errors %}
-            <p class="error">{{ error }}</p>
-        {% endfor %}
-        {% for error in formset.non_form_errors %}
-            <p class="error">{{ error }}</p>
-        {% endfor %}
-        <div class="update {{ menu_item }}">
-            {% if form.vendor %}
-                {% with field=form.vendor %}
-                    <div class="header platform_{{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
-                    <div class="platform_{{ field.name }}">
-                        <select name="{{ field.name }}"
-                                id="{{ field.id_for_label }}"
-                                {% if field.errors %}class="has-error"{% endif %}
-                                {% if field.field.required %}required{% endif %}>
-                            {% for value, display in form.fields.vendor.choices %}
-                                <option value="{{ value }}"{% if value|stringformat:'s' == field.value|stringformat:'s' %} selected{% endif %}>{{ display }}</option>
-                            {% endfor %}
-                        </select>
-                        {% for error in field.errors %}
-                            <p class="field-error">{{ error }}</p>
-                        {% endfor %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ object_description|capfirst }} {% if object.id %}#{{ object.id }} - {% trans 'Edit' %}{% else %}- {% trans 'New' %}{% endif %}</h3>
                     </div>
-                {% endwith %}
-            {% endif %}
-            {% if form.platform %}
-                {% with field=form.platform %}
-                    <div class="header {{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
-                    <div class="{{ field.name }}">
-                        <select name="{{ field.name }}"
-                                id="{{ field.id_for_label }}"
-                                {% if field.errors %}class="has-error"{% endif %}
-                                {% if field.field.required %}required{% endif %}>
-                            {% for value, display in form.fields.platform.choices %}
-                                <option value="{{ value }}"{% if value|stringformat:'s' == field.value|stringformat:'s' %} selected{% endif %}>{{ display }}</option>
-                            {% endfor %}
-                        </select>
-                        {% for error in field.errors %}
-                            <p class="field-error">{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endwith %}
-            {% endif %}
-            {% if form.name %}
-                {% with field=form.name %}
-                    <div class="header {{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
-                    <div class="{{ field.name }}">
-                        <input type="text" name="{{ field.name }}"
-                               id="{{ field.id_for_label }}"
-                               {% if field.errors %}class="has-error"{% endif %}
-                               placeholder="{{ field.label|lower }}"
-                               {% if field.field.required %}required{% endif %}
-                               {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
-                               {% if field.value %}value="{{ field.value }}"{% endif %}>
-                        {% for error in field.errors %}
-                            <p class="field-error">{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endwith %}
-            {% endif %}
-            {% if form.file %}
-                {% with field=form.file %}
-                    <div class="header {{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
-                    <div class="{{ field.name }}">
-                        {% if field.value %}{% trans 'Currently:' %} {{ field.value }}<br />{% trans 'Change:' %}{% endif %}
-                        <input type="file" name="{{ field.name }}"
-                               id="{{ field.id_for_label }}"
-                               {% if field.errors %}class="has-error"{% endif %}
-                               placeholder="{{ field.label|lower }}"
-                               {% if field.field.required and not field.value %}required{% endif %}
-                               {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
-                               {% if field.value %}value="{{ field.value }}"{% endif %}>
-                        {% for error in field.errors %}
-                            <p class="field-error">{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endwith %}
-            {% endif %}
-            {% if form.description %}
-                {% with field=form.description %}
-                    <div class="header {{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
-                    <div class="{{ field.name }}">
-                                <textarea name="{{ field.name }}"
-                                          id="{{ field.id_for_label }}"
-                                          {% if field.errors %}class="has-error"{% endif %}
-                                          placeholder="{{ field.label|lower }}"
-                                          {% if field.field.required %}required{% endif %}
-                                          {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
-                                >{% if field.value %}{{ field.value }}{% endif %}</textarea>
-                        {% for error in field.errors %}
-                            <p class="field-error">{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endwith %}
-            {% endif %}
-            {% if form.platforms %}
-                {% with field=form.platforms %}
-                    <div class="header {{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
-                    <div class="{{ field.name }}">
-                        {{ form.platforms }}
-                    </div>
-                {% endwith %}
-            {% endif %}
-            {% if menu_item == "ztpScript" %}
-                <div class="header options">{% trans 'Options' %}</div>
-                <div class="options">
-                    {% with field=form.render_template %}
-                        <input type="checkbox" name="{{ field.name }}"
-                               id="{{ field.id_for_label }}"
-                               {% if field.errors %}class="has-error"{% endif %}
-                               {% if field.value %}checked{% endif %}
-                               {% if field.field.required %}required{% endif %}>
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {% for error in field.errors %}
-                            <p class="field-error">{{ error }}</p>
-                        {% endfor %}
-                    {% endwith %}<br />
-                    {% with field=form.use_parameters %}
-                        <input type="checkbox" name="{{ field.name }}"
-                               id="{{ field.id_for_label }}"
-                               {% if field.errors %}class="has-error"{% endif %}
-                               {% if field.value %}checked{% endif %}
-                               {% if field.field.required %}required{% endif %}>
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {% for error in field.errors %}
-                            <p class="field-error">{{ error }}</p>
-                        {% endfor %}
-                    {% endwith %}<br />
-                    {% with field=form.accept_query_string %}
-                        <input type="checkbox" name="{{ field.name }}"
-                               id="{{ field.id_for_label }}"
-                               {% if field.errors %}class="has-error"{% endif %}
-                               {% if field.value %}checked{% endif %}
-                               {% if field.field.required %}required{% endif %}>
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {% for error in field.errors %}
-                            <p class="field-error">{{ error }}</p>
-                        {% endfor %}
-                    {% endwith %}
-                    <br />
+                    <form method="post"{% if menu_item == "firmware" %} enctype="multipart/form-data"{% endif %}>
+                        {% csrf_token %}
+                        {{ formset.management_form }}
 
-                    {% with field=form.priority_query_string_over_arguments %}
-                        <input type="checkbox" name="{{ field.name }}"
-                               id="{{ field.id_for_label }}"
-                               {% if field.errors %}class="has-error"{% endif %}
-                               {% if field.value %}checked{% endif %}
-                               {% if field.field.required %}required{% endif %}>
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {% for error in field.errors %}
-                            <p class="field-error">{{ error }}</p>
+                        <p class="error"></p>
+                        {% for error in form.non_field_errors %}
+                            <p class="error">{{ error }}</p>
                         {% endfor %}
-                    {% endwith %}
-                </div>
-            {% endif %}
-            {% if formset %}
-                <div class="header parameters">{% trans 'Parameters' %}</div>
-                <div class="parameters" id="parameters">
-                    <fieldset>
-                        {% if menu_item == "ztpScript" %}
-                            <table class="parameters">
-                                <thead>
-                                    <tr>
-                                        <th>{% trans "Name" %}</th>
-                                        <th>{% trans "Value" %}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for parameter in formset %}
-                                        <tr class="link-formset">
-                                            <th>
-                                                {% with field=parameter.id %}
-                                                    <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
-                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
-                                                           id="{{ field.id_for_label }}">
-                                                    {% for error in field.errors %}
-                                                        <p class="field-error">{{ error }}</p>
-                                                    {% endfor %}
-                                                {% endwith %}
-                                                {% with field=parameter.name %}
-                                                    <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
-                                                    <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
-                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
-                                                           {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
-                                                           id="{{ field.id_for_label }}">
-                                                    {% for error in field.errors %}
-                                                        <p class="field-error">{{ error }}</p>
-                                                    {% endfor %}
-                                                {% endwith %}
-                                            </th>
-                                            <td>
-                                                {% with field=parameter.value %}
-                                                    <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
-                                                    <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
-                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
-                                                           {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
-                                                           id="{{ field.id_for_label }}">
-                                                    {% for error in field.errors %}
-                                                        <p class="field-error">{{ error }}</p>
-                                                    {% endfor %}
-                                                {% endwith %}
-                                                {% with field=parameter.DELETE %}
-                                                    <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
-                                                    <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
-                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
-                                                           id="{{ field.id_for_label }}">
-                                                {% endwith %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% elif menu_item == "config" %}
-                            {% for parameter in formset %}
-                                <div class="link-formset">
-                                    {% with field=parameter.id %}
-                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
-                                               {% if field.value %}value="{{ field.value }}"{% endif %}
-                                               id="{{ field.id_for_label }}">
-                                    {% endwith %}
-                                    {% with field=parameter.name %}
-                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
-                                               {% if field.value %}value="{{ field.value }}"{% endif %}
-                                               id="{{ field.id_for_label }}">
+                        {% for error in formset.non_form_errors %}
+                            <p class="error">{{ error }}</p>
+                        {% endfor %}
+
+                        <div class="card-body update {{ menu_item }}">
+                            {% if form.vendor %}
+                                <div class="form-group">
+                                    {% with field=form.vendor %}
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        <select name="{{ field.name }}"
+                                                id="{{ field.id_for_label }}"
+                                                class="form-control{% if field.errors %} has-error{% endif %}"
+                                                {% if field.field.required %}required{% endif %}>
+                                            {% for value, display in form.fields.vendor.choices %}
+                                                <option value="{{ value }}"{% if value|stringformat:'s' == field.value|stringformat:'s' %} selected{% endif %}>{{ display }}</option>
+                                            {% endfor %}
+                                        </select>
                                         {% for error in field.errors %}
                                             <p class="field-error">{{ error }}</p>
                                         {% endfor %}
-                                    {% endwith %}
-                                    {% with field=parameter.data %}
-                                        <label for="{{ field.id_for_label }}" class="config_parameter_label" style="display: none;">{{ field.label }}</label>
-                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
-                                               {% if field.value %}value="{{ field.value }}"{% endif %}
-                                               id="{{ field.id_for_label }}">
-                                        <div id="{{ field.id_for_label }}-jstable" class="jstable_instance"></div><br />
-                                        {% for error in field.errors %}
-                                            <p class="field-error">{{ error }}</p>
-                                        {% endfor %}
-                                    {% endwith %}
-                                    {% with field=parameter.is_mandatory %}
-                                        <input type="checkbox" name="{{ parameter.prefix }}-{{ field.name }}"
-                                               id="{{ field.id_for_label }}"
-                                               {% if field.errors %}class="has-error"{% endif %}
-                                               {% if field.value %}checked{% endif %}
-                                               {% if field.field.required %}required{% endif %}>
-                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label><br />
-                                        {% for error in field.errors %}
-                                            <p class="field-error">{{ error }}</p>
-                                        {% endfor %}
-                                    {% endwith %}
-                                    {% with field=parameter.DELETE %}
-                                        <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
-                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
-                                               {% if field.value %}value="{{ field.value }}"{% endif %}
-                                               id="{{ field.id_for_label }}">
                                     {% endwith %}
                                 </div>
-                            {% endfor %}
-                        {% endif %}
-                    </fieldset>
+                            {% endif %}
+                            {% if form.platform %}
+                                <div class="form-group">
+                                    {% with field=form.platform %}
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        <select name="{{ field.name }}"
+                                                id="{{ field.id_for_label }}"
+                                                class="form-control{% if field.errors %} has-error{% endif %}"
+                                                {% if field.field.required %}required{% endif %}>
+                                            {% for value, display in form.fields.platform.choices %}
+                                                <option value="{{ value }}"{% if value|stringformat:'s' == field.value|stringformat:'s' %} selected{% endif %}>{{ display }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        {% for error in field.errors %}
+                                            <p class="field-error">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endwith %}
+                                </div>
+                            {% endif %}
+                            {% if form.name %}
+                                <div class="form-group">
+                                    {% with field=form.name %}
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        <input type="text" name="{{ field.name }}"
+                                               id="{{ field.id_for_label }}"
+                                               class="form-control{% if field.errors %} has-error{% endif %}"
+                                               placeholder="{{ field.label|lower }}"
+                                               {% if field.field.required %}required{% endif %}
+                                               {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                               {% if field.value %}value="{{ field.value }}"{% endif %}>
+                                        {% for error in field.errors %}
+                                            <p class="field-error">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endwith %}
+                                </div>
+                            {% endif %}
+                            {% if form.file %}
+                                <div class="form-group">
+                                    {% with field=form.file %}
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        {% if field.value %}{% trans 'Currently:' %} {{ field.value }}<br />{% trans 'Change:' %}{% endif %}
+                                        <input type="file" name="{{ field.name }}"
+                                               id="{{ field.id_for_label }}"
+                                               class="form-control{% if field.errors %} has-error{% endif %}"
+                                               placeholder="{{ field.label|lower }}"
+                                               {% if field.field.required and not field.value %}required{% endif %}
+                                               {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                               {% if field.value %}value="{{ field.value }}"{% endif %}>
+                                        {% for error in field.errors %}
+                                            <p class="field-error">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endwith %}
+                                </div>
+                            {% endif %}
+                            {% if form.description %}
+                                <div class="form-group">
+                                    {% with field=form.description %}
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        <textarea name="{{ field.name }}"
+                                                  id="{{ field.id_for_label }}"
+                                                  class="form-control{% if field.errors %} has-error{% endif %}"
+                                                  placeholder="{{ field.label|lower }}"
+                                                  {% if field.field.required %}required{% endif %}
+                                                  {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                                  rows="10"
+                                        >{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                                        {% for error in field.errors %}
+                                            <p class="field-error">{{ error }}</p>
+                                        {% endfor %}
+                                    {% endwith %}
+                                </div>
+                            {% endif %}
+                            {% if form.platforms %}
+                                <div class="form-group">
+                                    {% with field=form.platforms %}
+                                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        {{ form.platforms }}
+                                    {% endwith %}
+                                </div>
+                            {% endif %}
+                            {% if menu_item == "ztpScript" %}
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        {% with field=form.render_template %}
+                                            <input type="checkbox" name="{{ field.name }}"
+                                                   id="{{ field.id_for_label }}"
+                                                   class="custom-control-input{% if field.errors %} has-error{% endif %}"
+                                                   {% if field.value %}checked{% endif %}
+                                                   {% if field.field.required %}required{% endif %}>
+                                            <label for="{{ field.id_for_label }}" class="custom-control-label">{{ field.label }}</label>
+                                            {% for error in field.errors %}
+                                                <p class="field-error">{{ error }}</p>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        {% with field=form.use_parameters %}
+                                            <input type="checkbox" name="{{ field.name }}"
+                                                   id="{{ field.id_for_label }}"
+                                                   class="custom-control-input{% if field.errors %} has-error{% endif %}"
+                                                   {% if field.value %}checked{% endif %}
+                                                   {% if field.field.required %}required{% endif %}>
+                                            <label for="{{ field.id_for_label }}" class="custom-control-label">{{ field.label }}</label>
+                                            {% for error in field.errors %}
+                                                <p class="field-error">{{ error }}</p>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        {% with field=form.accept_query_string %}
+                                            <input type="checkbox" name="{{ field.name }}"
+                                                   id="{{ field.id_for_label }}"
+                                                   class="custom-control-input{% if field.errors %} has-error{% endif %}"
+                                                   {% if field.value %}checked{% endif %}
+                                                   {% if field.field.required %}required{% endif %}>
+                                            <label for="{{ field.id_for_label }}" class="custom-control-label">{{ field.label }}</label>
+                                            {% for error in field.errors %}
+                                                <p class="field-error">{{ error }}</p>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch">
+                                        {% with field=form.priority_query_string_over_arguments %}
+                                            <input type="checkbox" name="{{ field.name }}"
+                                                   id="{{ field.id_for_label }}"
+                                                   class="custom-control-input{% if field.errors %} has-error{% endif %}"
+                                                   {% if field.value %}checked{% endif %}
+                                                   {% if field.field.required %}required{% endif %}>
+                                            <label for="{{ field.id_for_label }}" class="custom-control-label">{{ field.label }}</label>
+                                            {% for error in field.errors %}
+                                                <p class="field-error">{{ error }}</p>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if formset %}
+                                <div class="form-group">
+                                    <fieldset id="parameters" style="width:100%;">
+                                        {% if menu_item == "ztpScript" %}
+                                            <table class="table table-bordered parameters">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:50%;">{% trans "Name" %}</th>
+                                                        <th style="width:50%;">{% trans "Value" %}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for parameter in formset %}
+                                                        <tr class="link-formset">
+                                                            <td>
+                                                                {% with field=parameter.id %}
+                                                                    <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                                           id="{{ field.id_for_label }}">
+                                                                    {% for error in field.errors %}
+                                                                        <p class="field-error">{{ error }}</p>
+                                                                    {% endfor %}
+                                                                {% endwith %}
+                                                                {% with field=parameter.name %}
+                                                                    <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                                    <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                                           class="form-control{% if field.errors %} has-error{% endif %}"
+                                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                                           {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                                                           id="{{ field.id_for_label }}">
+                                                                    {% for error in field.errors %}
+                                                                        <p class="field-error">{{ error }}</p>
+                                                                    {% endfor %}
+                                                                {% endwith %}
+                                                            </td>
+                                                            <td>
+                                                                {% with field=parameter.value %}
+                                                                    <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                                    <input type="text" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                                           class="form-control{% if field.errors %} has-error{% endif %}"
+                                                                           {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                                                           id="{{ field.id_for_label }}">
+                                                                    {% for error in field.errors %}
+                                                                        <p class="field-error">{{ error }}</p>
+                                                                    {% endfor %}
+                                                                {% endwith %}
+                                                                {% with field=parameter.DELETE %}
+                                                                    <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                                    <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                                           {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                                           id="{{ field.id_for_label }}">
+                                                                {% endwith %}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% elif menu_item == "config" %}
+                                            {% for parameter in formset %}
+                                                <div class="link-formset">
+                                                    {% with field=parameter.id %}
+                                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                               {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                               id="{{ field.id_for_label }}">
+                                                    {% endwith %}
+                                                    {% with field=parameter.name %}
+                                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                               {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                               id="{{ field.id_for_label }}">
+                                                        {% for error in field.errors %}
+                                                            <p class="field-error">{{ error }}</p>
+                                                        {% endfor %}
+                                                    {% endwith %}
+                                                    {% with field=parameter.data %}
+                                                        <label for="{{ field.id_for_label }}" class="config_parameter_label" style="display: none;">{{ field.label }}</label>
+                                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                               {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                               id="{{ field.id_for_label }}">
+                                                        <div id="{{ field.id_for_label }}-jstable" class="jstable_instance"></div><br />
+                                                        {% for error in field.errors %}
+                                                            <p class="field-error">{{ error }}</p>
+                                                        {% endfor %}
+                                                    {% endwith %}
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            {% with field=parameter.is_mandatory %}
+                                                                <input type="checkbox" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                                       id="{{ field.id_for_label }}"
+                                                                       class="custom-control-input{% if field.errors %} has-error{% endif %}"
+                                                                       {% if field.value %}checked{% endif %}
+                                                                       {% if field.field.required %}required{% endif %}>
+                                                                <label for="{{ field.id_for_label }}" class="custom-control-label">{{ field.label }}</label>
+                                                                {% for error in field.errors %}
+                                                                    <p class="field-error">{{ error }}</p>
+                                                                {% endfor %}
+                                                            {% endwith %}
+                                                        </div>
+                                                    </div>
+                                                    {% with field=parameter.DELETE %}
+                                                        <label for="{{ field.id_for_label }}" style="display: none;">{{ field.label }}</label>
+                                                        <input type="hidden" name="{{ parameter.prefix }}-{{ field.name }}"
+                                                            {% if field.value %}value="{{ field.value }}"{% endif %}
+                                                            id="{{ field.id_for_label }}">
+                                                    {% endwith %}
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </fieldset>
+                                </div>
+                            {% endif %}
+                            {% if form.template %}
+                                {% with field=form.template %}
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    <textarea name="{{ field.name }}"
+                                              id="{{ field.id_for_label }}"
+                                              {% if field.errors %}class="has-error"{% endif %}
+                                              placeholder="{{ field.label|lower }}"
+                                              {% if field.field.required %}required{% endif %}
+                                              {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+                                    >{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                                    {% for error in field.errors %}
+                                        <p class="field-error">{{ error }}</p>
+                                    {% endfor %}
+                                {% endwith %}
+                            {% endif %}
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">{% if object.id %}{% trans "Update" %}{% else %}{% trans "Create" %}{% endif %}</button>
+                        </div>
+                    </form>
                 </div>
-            {% endif %}
-            {% if form.template %}
-                {% with field=form.template %}
-                    <div class="header {{ field.name }}"><label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
-                    <div class="{{ field.name }}">
-                        <textarea name="{{ field.name }}"
-                                  id="{{ field.id_for_label }}"
-                                  {% if field.errors %}class="has-error"{% endif %}
-                                  placeholder="{{ field.label|lower }}"
-                                  {% if field.field.required %}required{% endif %}
-                                  {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
-                        >{% if field.value %}{{ field.value }}{% endif %}</textarea>
-                        {% for error in field.errors %}
-                            <p class="field-error">{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endwith %}
-            {% endif %}
-            <div class="action">
-                <button type="submit">{% if object.id %}{% trans "Update" %}{% else %}{% trans "Create" %}{% endif %}</button>
             </div>
         </div>
-    </form>
+    </div>
 {% endblock content %}
 
-{% block css_xtra %}
+{% block css_page %}
     {% if menu_item == "config" %}
         <link rel="stylesheet" href="{% static "ztp/css/jsTable.css" %}" type="text/css" />
         <link rel="stylesheet" href="{% static "ztp/css/jsuites.css" %}" type="text/css" />
     {% endif %}
-{% endblock css_xtra %}
+    {% if form.description %}
+        <link rel="stylesheet" href="{% static 'admin-lte/plugins/summernote/summernote-bs4.css' %}">
+    {% endif %}
+    {% if form.template %}
+        <link rel="stylesheet" href="{% static 'admin-lte/plugins/codemirror/codemirror.css' %}">
+        <link rel="stylesheet" href="{% static 'admin-lte/plugins/codemirror/theme/monokai.css' %}">
+    {% endif %}
+{% endblock css_page %}
 
-{% block js_xtra %}
+{% block js_page %}
     {% if menu_item == "ztpScript" or menu_item == "config" %}
         <script src="{% static "ztp/js/jquery.formset.js" %}"></script>
         <script>
@@ -322,6 +357,29 @@
                         addText: '{% trans "Add Parameter" %}',
                         deleteText: '{% trans "Remove Parameter" %}'
                     {% endif %}
+                });
+            });
+        </script>
+    {% endif %}
+    {% if form.description %}
+        <script src="{% static 'admin-lte/plugins/summernote/summernote-bs4.min.js' %}"></script>
+        <script>
+            $(function () {
+                $('#{{ form.description.id_for_label }}').summernote()
+            });
+        </script>
+    {% endif %}
+    {% if form.template %}
+        <script src="{% static 'admin-lte/plugins/codemirror/codemirror.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/mode/css/css.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/mode/xml/xml.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/mode/htmlmixed/htmlmixed.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/mode/python/python.js' %}"></script>
+        <script>
+            $(function () {
+                CodeMirror.fromTextArea(document.getElementById("{{ form.template.id_for_label }}"), {
+                    mode: "python",
+                    theme: "monokai"
                 });
             });
         </script>
@@ -518,4 +576,4 @@
             })
         </script>
     {% endif %}
-{% endblock js_xtra %}
+{% endblock js_page %}
