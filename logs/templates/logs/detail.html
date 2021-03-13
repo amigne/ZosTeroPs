@@ -1,77 +1,104 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% load static %}
-
-{% block content_title %}
-    {{ object_description|capfirst }} #{{ object.id }} - {% trans "Details" %}
-{% endblock content_title %}
+{% load i18n static %}
 
 {% block content %}
-    <div class="detail {{ menu_item }}">
-        <div class="created header">{% trans "Date/time" %}</div>
-        <div class="created data">{{ object.created|date:"Y-m-d H:i:s" }}</div>
-
-        <div class="description header">{% trans "Description" %}</div>
-        <div class="description data">{{ object }}</div>
-
-        <div class="user header">{% trans "User" %}</div>
-        <div class="user data">
-            {% if object.user == None %}
-                <span class="data-none">{{ object.user }}</span>
-            {% else %}
-                {{ object.user }}
-            {% endif %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-success">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ object_description|capfirst }} #{{ object.id }} - {% trans "Details" %}</h3>
+                    </div>
+                    <form action="#">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="id_created">{% trans "Date/time" %}</label>
+                                <input type="text" id="id_created" disabled
+                                       class="form-control form-control-sm"
+                                       value="{{ object.created|date:"Y-m-d H:i:s" }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_description">{% trans "Description" %}</label>
+                                <input type="text" id="id_description" disabled
+                                       class="form-control form-control-sm"
+                                       value="{{ object }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_user">{% trans "User" %}</label>
+                                <input type="text" id="id_user" disabled
+                                       class="form-control form-control-sm"
+                                       value="{{ object.user }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_severity">{% trans "Severity" %}</label>
+                                <input type="text" id="id_severity" disabled
+                                       class="form-control form-control-sm bg-{% if object.severity == 0 %}danger{% elif object.severity == 1 %}danger disable{% elif object.severity == 2 %}maroon{% elif object.severity == 3 %}maroon disabled{% elif object.severity == 4 %}orange{% elif object.severity == 4 %}warning{% elif object.severity == 5 %}success{% elif object.severity == 6 %}teal{% elif object.severity == 7%}gray{% endif %}"
+                                       value="{{ object.get_severity_display|capfirst }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_location">{% trans "Location" %}</label>
+                                <input type="text" id="id_location" disabled
+                                       class="form-control form-control-sm"
+                                       value="{{ object.get_location_display|capfirst }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_task_type">{% trans "Task type" %}</label>
+                                <input type="text" id="id_task_type" disabled
+                                       class="form-control form-control-sm"
+                                       value="{{ object.get_task_type_display|capfirst }}">
+                            </div>
+                            {% if object.metadata.changes %}
+                                <div class="form-group">
+                                    <p>{% trans "Changes" %}</p>
+                                    <div class="table-responsive p-0">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 30%;">{% trans "Field" %}</th>
+                                                    <th style="width: 35%;">{% trans "Old value" %}</th>
+                                                    <th style="width: 35%;">{% trans "New value" %}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for field, change in object.metadata.changes.items %}
+                                                    <tr>
+                                                        <td>{{ field }}</td>
+                                                        <td>
+                                                            {% if change.0 == 'None' %}
+                                                                <span class="data-none">{{ change.0 }}</span>
+                                                            {% else %}
+                                                                {{ change.0 }}
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            {% if change.1 == 'None' %}
+                                                                <span class="data-none">{{ change.1 }}</span>
+                                                            {% else %}
+                                                                {{ change.1 }}
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% for field, data in object.metadata.items %}
+                                {% if field != 'changes' %}
+                                    <div class="form-group">
+                                        <label for="id_meta_{{ field }}">{{ field }}</label>
+                                        <input type="text" id="id_meta_{{ field }}" disabled
+                                               class="form-control form-control-sm"
+                                               value="{{ data }}">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="severity header">{% trans "Severity" %}</div>
-        <div class="severity data log-{{ object.severity }}">{{ object.get_severity_display|capfirst }}</div>
-
-        <div class="location header">{% trans "Location" %}</div>
-        <div class="location data">{{ object.get_location_display|capfirst }}</div>
-
-        <div class="task_type header">{% trans "Task type" %}</div>
-        <div class="task_type data">{{ object.get_task_type_display|capfirst }}</div>
-
-        {% if object.metadata.changes %}
-            <div class="changes header">{% trans "Changes" %}</div>
-            <table class="changes data">
-                <thead>
-                    <tr>
-                        <th class="field">{% trans "Field" %}</th>
-                        <th class="old-value">{% trans "Old value" %}</th>
-                        <th class="new-value">{% trans "New value" %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for field, change in object.metadata.changes.items %}
-                        <tr>
-                            <td class="field">{{ field }}</td>
-                            <td class="old-value">
-                                {% if change.0 == 'None' %}
-                                    <span class="data-none">{{ change.0 }}</span>
-                                {% else %}
-                                    {{ change.0 }}
-                                {% endif %}
-                            </td>
-                            <td class="new-value">
-                                {% if change.1 == 'None' %}
-                                    <span class="data-none">{{ change.1 }}</span>
-                                {% else %}
-                                    {{ change.1 }}
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-
-        {% for field, data in object.metadata.items %}
-            {% if field != 'changes' %}
-                <div class="metadata header">{{ field }}</div>
-                <div class="metadata data">{{ data }}</div>
-            {% endif %}
-        {% endfor%}
     </div>
 {% endblock content %}
 
