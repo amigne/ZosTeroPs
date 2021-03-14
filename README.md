@@ -107,7 +107,7 @@ Supported preprocessing elements are:
 * Mode from .env configuration to customized settings files (.env has many limitations that makes its use very impracticable)
 
 ## Releases
-* v0.0.5 (under development)
+* v0.0.5 (March 14th, 2021)
   * Minor fix: Plaform relationship in Firmware is no more mandatory
   * UI: Use AdminLTE UI
   * .env configuration imposed many restrictions with complex settings such as
