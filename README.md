@@ -157,9 +157,9 @@ Supported preprocessing elements are:
 **Note**: Unknown or syntactically incorrect preprocessing elements are ignored
 and left as is (understand they are not substituted).
 
-## TODO
-* Mode from .env configuration to customized settings files (.env has many
-  limitations that makes its use very impracticable)
+## Languages
+Currently, **ZosTeroPs** supports English and French. Language is determined 
+based on the user browser-settings.
 
 ## Releases
 * v0.0.6 (under development)
