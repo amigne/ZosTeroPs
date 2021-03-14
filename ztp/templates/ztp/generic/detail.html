@@ -195,11 +195,11 @@
                                     </fieldset>
                                 </div>
                             {% endif %}
-                            {% if object.template %}
+                            {% if object.template != None %}
                                 <label for="id_template">{% trans "Template" %}</label>
                                 <textarea id="id_template" disabled>{{ object.template }}</textarea>
                             {% endif %}
-                            {% if object.firmwares %}
+                            {% if object.firmwares != None %}
                                 <div class="form-group">
                                     <div class="label">{% trans "Supported firmwares" %}</div>
                                     <ul class="firmwares data tags">

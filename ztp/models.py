@@ -185,7 +185,7 @@ class Config(DateUserBaseModel):
     name = models.CharField(_('name'), max_length=50,
                             validators=[configNameValidator],
                             unique=True)
-    template = models.TextField(_('template'))
+    template = models.TextField(_('template'), blank=True)
     description = models.TextField(_('description'), blank=True)
 
     def __str__(self):
@@ -258,7 +258,7 @@ class ZtpScript(DateUserBaseModel):
     priority_query_string_over_arguments = models.BooleanField(_('priority query string over arguments'),
                                                                blank=False,
                                                                default=False)
-    template = models.TextField(_('template'))
+    template = models.TextField(_('template'), blank=True)
     description = models.TextField(_('description'), blank=True)
 
     def __str__(self):

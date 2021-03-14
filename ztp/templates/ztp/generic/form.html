@@ -160,7 +160,7 @@
                             {% endif %}
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">{% if object.id %}{% trans "Update" %}{% else %}{% trans "Create" %}{% endif %}</button>
+                            <button type="submit" class="btn btn-primary">{% if object.id %}{% trans 'Update' %}{% else %}{% trans 'Create' %}{% endif %}</button>
                         </div>
                     </form>
                 </div>
@@ -352,7 +352,6 @@
 
             function save_jstable_data(jstable_instances) {
                 let names = {};
-
                 for (let spreadsheet_id in jstable_instances) {
                     let jstable_instance = jstable_instances[spreadsheet_id];
 
