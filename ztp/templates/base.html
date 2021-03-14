@@ -123,14 +123,6 @@
                     </a>
                 </li>
             {% endif %}
-            {% if not user.is_authenticated %}
-                <li class="nav-item">
-                    <a href="{% url 'user:login' %}" class="nav-link{% if menu_item == 'login' %} active{% endif %}">
-                        <i class="nav-icon fas fa-sign-in-alt"></i>
-                        <p>{% trans 'Login' %}</p>
-                    </a>
-                </li>
-            {% endif %}
             <li class="nav-item">
                 <a href="{% url 'about' %}" class="nav-link{% if menu_item == 'about' %} active{% endif %}">
                     <i class="nav-icon fas fa-info"></i>
@@ -142,6 +134,14 @@
                     <a href="{% url 'admin:index' %}" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
                         <p>{% trans 'Admin' %}</p>
+                    </a>
+                </li>
+            {% endif %}
+            {% if not user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="{% url 'user:login' %}" class="nav-link{% if menu_item == 'login' %} active{% endif %}">
+                        <i class="nav-icon fas fa-sign-in-alt"></i>
+                        <p>{% trans 'Login' %}</p>
                     </a>
                 </li>
             {% endif %}
