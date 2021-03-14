@@ -107,6 +107,10 @@ Supported preprocessing elements are:
 * Mode from .env configuration to customized settings files (.env has many limitations that makes its use very impracticable)
 
 ## Releases
+* v0.0.6 (under development)
+  * Addition of VERSION file used as single source of version inside the 
+    application through `settings.VERSION` and in templates throug `VERSION`
+    context value.
 * v0.0.5 (March 14th, 2021)
   * Minor fix: Plaform relationship in Firmware is no more mandatory
   * UI: Use AdminLTE UI

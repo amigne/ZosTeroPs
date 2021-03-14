@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'ztp.context_processors.context',
             ],
         },
     },
@@ -105,3 +106,8 @@ ZTP_CONFIG_URL = 'config/'
 
 ZTP_FIRMWARES_PATH = 'firmwares/'
 ZTP_FIRMWARES_URL = 'firmwares/'
+
+
+# Version
+with open(BASE_DIR / 'VERSION', 'r') as f:
+    VERSION = f.read()
