@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static widget_tweaks%}
+{% load i18n static widget_tweaks %}
 
 {% block content %}
     <div class="container-fluid">
@@ -151,6 +151,15 @@
                                     </fieldset>
                                 </div>
                             {% endif %}
+                            {% if form.language %}
+                                <div class="form-group">
+                                    <label for="{{ form.language.id_for_label }}">{{ form.language.label }}</label>
+                                    {{ form.language|add_class:"form-control" }}
+                                    {% for error in form.language.errors %}
+                                        <p class="field-error">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                             {% if form.template %}
                                 <label for="{{ form.template.id_for_label }}">{{ form.template.label }}</label>
                                 {{ form.template }}
@@ -219,18 +228,37 @@
     {% endif %}
     {% if form.template %}
         <script src="{% static 'admin-lte/plugins/codemirror/codemirror.js' %}"></script>
-        <script src="{% static 'admin-lte/plugins/codemirror/mode/css/css.js' %}"></script>
-        <script src="{% static 'admin-lte/plugins/codemirror/mode/xml/xml.js' %}"></script>
-        <script src="{% static 'admin-lte/plugins/codemirror/mode/htmlmixed/htmlmixed.js' %}"></script>
-        <script src="{% static 'admin-lte/plugins/codemirror/mode/python/python.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/addon/mode/loadmode.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/mode/meta.js' %}"></script>
         <script>
             $(function () {
-                CodeMirror.fromTextArea(document.getElementById("{{ form.template.id_for_label }}"), {
-                    // TODO: Add a model field to let the user determine the language
-                    mode: "python",
-                    lineNumbers: true,
-                    theme: "monokai"
-                });
+                CodeMirror.modeURL = '{% static 'admin-lte/plugins/codemirror/mode/' %}%N/%N.js';
+                let template_editor = CodeMirror.fromTextArea(
+                    document.getElementById(
+                        "{{ form.template.id_for_label }}"),
+                    {
+                        lineNumbers: true,
+                        theme: "monokai"
+                    }
+                );
+                {% if form.language %}
+                    let language_field = $('#{{ form.language.id_for_label }}');
+
+                    function update_template_language() {
+                        let language = language_field.val();
+                        let mode = (language !== '') ? language : null;
+
+                        template_editor.setOption('mode', mode);
+                        if (mode) {
+                            CodeMirror.autoLoadMode(template_editor, mode);
+                        }
+                    }
+
+                    update_template_language();
+                    language_field.change(function(){
+                        update_template_language();
+                    });
+                {% endif %}
             });
         </script>
     {% endif %}

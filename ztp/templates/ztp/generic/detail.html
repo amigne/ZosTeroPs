@@ -195,6 +195,12 @@
                                     </fieldset>
                                 </div>
                             {% endif %}
+                            {% if object.language != None %}
+                                <label for="id_language">{% trans "Language" %}</label>
+                                <input type="text" id="id_language" disabled
+                                           class="form-control form-control-sm"
+                                           value="{{ object.get_language_display }}">
+                            {% endif %}
                             {% if object.template != None %}
                                 <label for="id_template">{% trans "Template" %}</label>
                                 <textarea id="id_template" disabled>{{ object.template }}</textarea>
@@ -232,23 +238,29 @@
 {% block js_page %}
     {% if object.template != None %}
         <script src="{% static 'admin-lte/plugins/codemirror/codemirror.js' %}"></script>
-        <script src="{% static 'admin-lte/plugins/codemirror/mode/css/css.js' %}"></script>
-        <script src="{% static 'admin-lte/plugins/codemirror/mode/xml/xml.js' %}"></script>
-        <script src="{% static 'admin-lte/plugins/codemirror/mode/htmlmixed/htmlmixed.js' %}"></script>
-        <script src="{% static 'admin-lte/plugins/codemirror/mode/python/python.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/addon/mode/loadmode.js' %}"></script>
+        <script src="{% static 'admin-lte/plugins/codemirror/mode/meta.js' %}"></script>
         <script>
             $(function () {
                 let sheet = document.createElement('style')
                 sheet.innerHTML = ".CodeMirror {height: auto;}";
                 document.body.appendChild(sheet);
 
-                CodeMirror.fromTextArea(document.getElementById("id_template"), {
-                    // TODO: Add a model field to let the user determine the language
-                    mode: "python",
+                CodeMirror.modeURL = '{% static 'admin-lte/plugins/codemirror/mode/' %}%N/%N.js';
+                let template_editor = CodeMirror.fromTextArea(document.getElementById("id_template"), {
                     lineNumbers: true,
                     theme: "monokai",
                     readOnly: true
                 });
+                {% if object.language != None %}
+                    let language = '{{ object.language }}';
+                    let mode = (language !== '') ? language : null;
+
+                    template_editor.setOption('mode', mode);
+                    if (mode) {
+                        CodeMirror.autoLoadMode(template_editor, mode);
+                    }
+                {% endif %}
             });
         </script>
     {% endif %}
