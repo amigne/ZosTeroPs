@@ -25,7 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
-if settings.DEV:
+
+if 'rosetta' in settings.INSTALLED_APPS:
     urlpatterns += [
         path('rosetta/', include('rosetta.urls')),
     ]
