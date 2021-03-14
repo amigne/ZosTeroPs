@@ -39,4 +39,5 @@ DEFAULT_FROM_EMAIL= 'YOUR_FROM_EMAIL_ADDRESS'
 
 # Optional LDAP configuration
 # (see https://django-auth-ldap.readthedocs.io/en/latest/)
+# Requires extra django-auth-ldap package to be installed.
 
