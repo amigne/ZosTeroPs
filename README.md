@@ -110,6 +110,9 @@ Supported preprocessing elements are:
 * v0.0.5 (under development)
   * Minor fix: Plaform relationship in Firmware is no more mandatory
   * UI: Use AdminLTE UI
+  * .env configuration imposed many restrictions with complex settings such as
+    list or dict structures. A new configuration model has been adopted to
+    provide much more flexibility.
 * v0.0.4 (March 6th, 2021)
   * Getting rid of table for forms
   * Configuration parameter table does not overflow the screen anymore
@@ -166,3 +169,4 @@ ZosTeroPs includes all or some part of code from the following projects:
 * jQuery: Copyright OpenJS Foundation and other contributors, https://openjsf.org/
 * jsTable: Which is a fork of Jexcel, removing unused code in order to make it lighter and without confusing features (such as formulas, ...)
 * jQuery Formset: Copyright (c) 2009, Stanislaus Madueke
+* stayhomech: Copyright (c) 2020 Alexandre Georges for the support with multiple settings file

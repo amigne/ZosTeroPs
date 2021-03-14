@@ -11,6 +11,24 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ZosTeroPs.settings')
+
+def set_environment():
+    """ Determine the right settings file to be used. """
+
+    # Choosing environment
+    RUNNING_ENV = os.environ.get('RUNNING_ENV', default='dev')
+
+    if RUNNING_ENV == 'prod':
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ZosTeroPs.settings.prod')
+    else:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ZosTeroPs.settings.dev')
+
+    # Return
+    return RUNNING_ENV
+
+
+# Set environment
+set_environment()
+
 
 application = get_wsgi_application()
