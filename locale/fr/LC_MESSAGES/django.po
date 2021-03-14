@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-04 21:42+0100\n"
+"POT-Creation-Date: 2021-03-14 19:57+0100\n"
 "PO-Revision-Date: 2021-02-18 16:31+0000\n"
 "Last-Translator: b'  <yann@gauteron.me>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Translated-Using: django-rosetta 0.9.5\n"
 
-#: .\ZosTeroPs\settings.py:55
+#: .\ZosTeroPs\settings\base.py:94
 msgid "English"
 msgstr "Anglais"
 
-#: .\ZosTeroPs\settings.py:56
+#: .\ZosTeroPs\settings\base.py:95
 msgid "French"
 msgstr "Français"
 

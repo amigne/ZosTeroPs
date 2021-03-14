@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-04 21:42+0100\n"
+"POT-Creation-Date: 2021-03-14 19:57+0100\n"
 "PO-Revision-Date: 2021-03-04 21:11+0000\n"
 "Last-Translator: b'  <>'\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,7 +106,7 @@ msgstr "description"
 msgid "meta-data"
 msgstr "meta-donnée"
 
-#: .\logs\models.py:142 .\logs\views.py:14
+#: .\logs\models.py:142 .\logs\views.py:13
 msgid "log"
 msgstr "journal"
 
@@ -118,61 +118,60 @@ msgstr "Peut lister les logs"
 msgid "Can view logs"
 msgstr "Peut afficher les logs"
 
-#: .\logs\templates\logs\detail.html:6
+#: .\logs\templates\logs\detail.html:10
 msgid "Details"
 msgstr "Détails"
 
-#: .\logs\templates\logs\detail.html:11 .\logs\templates\logs\list.html:15
+#: .\logs\templates\logs\detail.html:15 .\logs\templates\logs\list.html:20
 msgid "Date/time"
 msgstr "Date / heure"
 
-#: .\logs\templates\logs\detail.html:14 .\logs\templates\logs\list.html:21
+#: .\logs\templates\logs\detail.html:21 .\logs\templates\logs\list.html:28
 msgid "Description"
 msgstr "Description"
 
-#: .\logs\templates\logs\detail.html:17 .\logs\templates\logs\list.html:23
+#: .\logs\templates\logs\detail.html:27 .\logs\templates\logs\list.html:30
 msgid "User"
 msgstr "Utilisateur"
 
-#: .\logs\templates\logs\detail.html:26
+#: .\logs\templates\logs\detail.html:33
 msgid "Severity"
 msgstr "Gravité"
 
-#: .\logs\templates\logs\detail.html:29
+#: .\logs\templates\logs\detail.html:39
 msgid "Location"
 msgstr "Emplacement"
 
-#: .\logs\templates\logs\detail.html:32
+#: .\logs\templates\logs\detail.html:45
 msgid "Task type"
 msgstr "Type de tâche"
 
-#: .\logs\templates\logs\detail.html:36
+#: .\logs\templates\logs\detail.html:52
 msgid "Changes"
 msgstr "Changements"
 
-#: .\logs\templates\logs\detail.html:40
+#: .\logs\templates\logs\detail.html:57
 msgid "Field"
 msgstr "Champ"
 
-#: .\logs\templates\logs\detail.html:41
+#: .\logs\templates\logs\detail.html:58
 msgid "Old value"
 msgstr "Ancienne valeur"
 
-#: .\logs\templates\logs\detail.html:42
+#: .\logs\templates\logs\detail.html:59
 msgid "New value"
 msgstr "Nouvelle valeur"
 
-#: .\logs\templates\logs\list.html:13
+#: .\logs\templates\logs\list.html:18
 msgid "ID"
 msgstr "ID"
 
-#: .\logs\templates\logs\list.html:77 .\logs\templates\logs\list.html:81
-msgid "Previous"
-msgstr "Précédent"
-
-#: .\logs\views.py:15
+#: .\logs\views.py:14
 msgid "logs"
 msgstr "journaux"
+
+#~ msgid "Previous"
+#~ msgstr "Précédent"
 
 #, fuzzy
 #~ msgid "Options"
