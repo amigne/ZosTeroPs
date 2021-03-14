@@ -1,6 +1,8 @@
 {% extends "adminlte/base.html" %}
 {% load adminlte_helpers i18n static %}
 
+{% block html_lang %}{{ LANGUAGE_CODE }}{% endblock html_lang %}
+
 {% block navbar_links %}
     <ul class="navbar-nav">
         <li class="nav-iem">

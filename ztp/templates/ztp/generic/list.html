@@ -111,6 +111,11 @@
                 'info': true,
                 'autoWidth': false,
                 'responsive': true,
+                {% if LANGUAGE_CODE != 'en' %}
+                    'language': {
+                        'url': '{% static 'datatables/localisation/' %}{{ LANGUAGE_CODE }}.json'
+                    }
+                {% endif %}
             });
         });
     </script>
