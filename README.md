@@ -167,6 +167,9 @@ and left as is (understand they are not substituted).
     application through `settings.VERSION` and in templates throug `VERSION`
     context value
   * Addition of French translations for the Javascript DataTables component 
+  * Improve template syntax coloring mechanism: language detection uses the
+    object (ZTP script or Configuration) name, instead of an extra 'language'
+    field
 * v0.0.5 (March 14th, 2021)
   * Minor fix: Plaform relationship in Firmware is no more mandatory
   * UI: Use AdminLTE UI

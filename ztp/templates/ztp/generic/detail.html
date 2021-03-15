@@ -195,12 +195,6 @@
                                     </fieldset>
                                 </div>
                             {% endif %}
-                            {% if object.language != None %}
-                                <label for="id_language">{% trans "Language" %}</label>
-                                <input type="text" id="id_language" disabled
-                                           class="form-control form-control-sm"
-                                           value="{{ object.get_language_display }}">
-                            {% endif %}
                             {% if object.template != None %}
                                 <label for="id_template">{% trans "Template" %}</label>
                                 <textarea id="id_template" disabled>{{ object.template }}</textarea>
@@ -252,9 +246,10 @@
                     theme: "monokai",
                     readOnly: true
                 });
-                {% if object.language != None %}
-                    let language = '{{ object.language }}';
-                    let mode = (language !== '') ? language : null;
+                {% if object.name != None %}
+                    let name = '{{ object.name }}';
+                    let info = CodeMirror.findModeByFileName(name);
+                    let mode = info ? info.mode : null;
 
                     template_editor.setOption('mode', mode);
                     if (mode) {

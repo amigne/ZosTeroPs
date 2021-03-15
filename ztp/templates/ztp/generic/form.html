@@ -151,15 +151,6 @@
                                     </fieldset>
                                 </div>
                             {% endif %}
-                            {% if form.language %}
-                                <div class="form-group">
-                                    <label for="{{ form.language.id_for_label }}">{{ form.language.label }}</label>
-                                    {{ form.language|add_class:"form-control" }}
-                                    {% for error in form.language.errors %}
-                                        <p class="field-error">{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
                             {% if form.template %}
                                 <label for="{{ form.template.id_for_label }}">{{ form.template.label }}</label>
                                 {{ form.template }}
@@ -241,13 +232,12 @@
                         theme: "monokai"
                     }
                 );
-                {% if form.language %}
-                    let language_field = $('#{{ form.language.id_for_label }}');
+                {% if form.name %}
+                    let name_field = $('#{{ form.name.id_for_label }}');
 
                     function update_template_language() {
-                        let language = language_field.val();
-                        let mode = (language !== '') ? language : null;
-
+                        let info = CodeMirror.findModeByFileName(name_field.val());
+                        let mode = info ? info.mode : null;
                         template_editor.setOption('mode', mode);
                         if (mode) {
                             CodeMirror.autoLoadMode(template_editor, mode);
@@ -255,7 +245,7 @@
                     }
 
                     update_template_language();
-                    language_field.change(function(){
+                    name_field.change(function(){
                         update_template_language();
                     });
                 {% endif %}

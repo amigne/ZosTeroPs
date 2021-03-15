@@ -176,22 +176,6 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             os.remove(old_file.path)
 
 
-class Languages:
-    CHOICES = [
-        ('clike', 'C-like (C, C++, C#, Java, Kotlin, ...)'),
-        ('go', 'Go'),
-        ('javascript', 'Javascript'),
-        ('perl', 'Perl'),
-        ('php', 'PHP'),
-        ('python', 'Python'),
-        ('ruby', 'Ruby'),
-        ('rust', 'Rust'),
-        ('tcl', 'Tcl'),
-        ('xml', 'XML'),
-        ('yaml', 'YAML'),
-    ]
-
-
 @model_change_logger.register(include_fields=['name', 'description',
                                               'language', 'template'])
 class Config(DateUserBaseModel):
@@ -202,10 +186,6 @@ class Config(DateUserBaseModel):
     name = models.CharField(_('name'), max_length=50,
                             validators=[configNameValidator],
                             unique=True)
-    language = models.CharField(_('language'),
-                                max_length=15,
-                                choices=Languages.CHOICES,
-                                blank=True)
     template = models.TextField(_('template'), blank=True)
     description = models.TextField(_('description'), blank=True)
 
@@ -280,10 +260,6 @@ class ZtpScript(DateUserBaseModel):
     priority_query_string_over_arguments = models.BooleanField(_('priority query string over arguments'),
                                                                blank=False,
                                                                default=False)
-    language = models.CharField(_('language'),
-                                max_length=15,
-                                choices=Languages.CHOICES,
-                                blank=True)
     template = models.TextField(_('template'), blank=True)
     description = models.TextField(_('description'), blank=True)
 
