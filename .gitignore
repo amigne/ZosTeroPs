@@ -2,4 +2,14 @@
 db.sqlite3
 .env
 
-firmwares/
+# Ignore cached files
+__pycache__/
+
+# Ignore virtualenv /.venv/, if present
+/.venv/
+
+# Ignore /static/ that contains collected files
+/static/
+
+# Ignore /firmwares/ that contains uploaded files
+/firmwares/
