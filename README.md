@@ -157,16 +157,17 @@ Supported preprocessing elements are:
 **Note**: Unknown or syntactically incorrect preprocessing elements are ignored
 and left as is (understand they are not substituted).
 
-## TODO
-* Mode from .env configuration to customized settings files (.env has many
-  limitations that makes its use very impracticable)
+## Languages
+Currently, **ZosTeroPs** supports English and French. Language is determined 
+based on the user browser-settings.
 
 ## Releases
 * v0.0.6 (under development)
   * Addition of VERSION file used as single source of version inside the 
     application through `settings.VERSION` and in templates throug `VERSION`
     context value
-  * Addition of French translations for the Javascript DataTables component 
+  * Addition of French translations for the Javascript DataTables component
+  * Detail the installation procedure in [doc/INSTALL.md](doc/INSTALL.md)
   * Improve template syntax coloring mechanism: language detection uses the
     object (ZTP script or Configuration) name, instead of an extra 'language'
     field
@@ -213,10 +214,7 @@ and left as is (understand they are not substituted).
   * Functional mockup. Tool should not be used for production, or only if you
     know what you're doing. Please note that the software design is not
     finalized and some features may evolve without consideration for backward
-    compatibility. This includes data migrations! This warning will be persist
-    until v1.0.0 is released. At that time, the development will have reached a
-    certain level of maturity and backward compatibility will be ensured for any
-    further v1.x.y versions.
+    compatibility.
 
 [vendors_list]: doc/img/vendors_list.png "Vendors' list"
 [platforms_list]: doc/img/platforms_list.png "Platforms' list"

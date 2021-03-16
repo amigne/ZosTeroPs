@@ -1,0 +1,11 @@
+[Unit]
+Description=ZosTeroPs
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=bash -c 'cd /opt/ZosTeroPs/; source /opt/ZosTeroPs/.venv/bin/activate; RUNNING_ENV=prod uwsgi --ini config/uwsgi.ini --uid zosterops --gid zosterops'
+
+[Install]
+WantedBy=multi-user.target
