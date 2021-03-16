@@ -166,7 +166,8 @@ based on the user browser-settings.
   * Addition of VERSION file used as single source of version inside the 
     application through `settings.VERSION` and in templates throug `VERSION`
     context value
-  * Addition of French translations for the Javascript DataTables component 
+  * Addition of French translations for the Javascript DataTables component
+  * Detail the installation procedure in [doc/INSTALL.md](doc/INSTALL.md)
 * v0.0.5 (March 14th, 2021)
   * Minor fix: Plaform relationship in Firmware is no more mandatory
   * UI: Use AdminLTE UI
@@ -210,10 +211,7 @@ based on the user browser-settings.
   * Functional mockup. Tool should not be used for production, or only if you
     know what you're doing. Please note that the software design is not
     finalized and some features may evolve without consideration for backward
-    compatibility. This includes data migrations! This warning will be persist
-    until v1.0.0 is released. At that time, the development will have reached a
-    certain level of maturity and backward compatibility will be ensured for any
-    further v1.x.y versions.
+    compatibility.
 
 [vendors_list]: doc/img/vendors_list.png "Vendors' list"
 [platforms_list]: doc/img/platforms_list.png "Platforms' list"
