@@ -212,6 +212,7 @@ WantedBy=multi-user.target
 Apply the change to the systemctl and start **ZosTeroPs**:
 ```shell
 systemctl daemon-reload
+systemctl enable ZosTeroPs
 systemctl start ZosTeroPs
 ```
 
@@ -221,6 +222,13 @@ Nginx front-end server.
 ### Nginx setup
 Nginx is used as web front-end server that will relay the requests to the
 uWSGI application server.
+
+Nginx should serves both HTTP and HTTPS requests to uWSGI so it can serve
+pages to the devices using HTTP protocol, but enforce HTTPS to GUI pages for
+management purpose. If HTTPS is not desired and/or not enabled on Nginx,
+enforcement must be disabled in the **ZosTeroPs** configuration file (BUT note
+this is a bad practice on production deployment and should be reserved for
+evaluation purpose or development systems only).
 
 First step, let's install Nginx:
 ```shell
@@ -256,6 +264,32 @@ server {
 
     client_max_body_size 5000M;
 }
+
+server {
+    listen              443 ssl;
+    server_name         ztp.local;
+
+    # This assumes you own SSL certificate and key
+    ssl_certificate     /etc/ssl/zosterops/zosterops.crt;
+    ssl_certificate_key /etc/ssl/zosterops/zosterops.key;
+
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers         HIGH:!aNULL:!aMD5;
+
+    access_log          off;
+    error_log           /var/log/nginx/zosterops_error.log;
+
+    location / {
+        include         /etc/nginx/uwsgi_params;
+        uwsgi_pass      ZosTeroPs;
+    }
+
+    location /static/ {
+        alias           /opt/ZosTeroPs/static/;
+    }
+
+    client_max_body_size 5000M;     
+}
 ```
 
 Enable the site:
@@ -277,6 +311,22 @@ expected, you may need to have your DHCP server that serves IP address to your
 ZTP-enabled device returning additional data. Refer to your device vendor to
 determine the exact information that should be provided and configure your DHCP
 server accordingly.
+
+### Extra: creating a self-signed certificate
+The Nginx configuration assumes you have SSL certificates. If you don't, 
+you can generate **for testing purposes only** self-signed certificates.
+For production system, you should use SSL certificates emitted by a certificate
+authority or use [certbot](https://certbot.eff.org/).
+
+If you want to generate your self-signed certificate, you can proceed this way:
+```shell
+cd /etc/ssl/
+mkdir zosterops
+cd zosterops
+openssl req -newkey rsa:4096 -x509 -sha256 -days 3650 -nodes -out zosterops.crt -keyout zosterops.key
+```
+As this will be a fake test-only certificate, you can answer the questions the
+last command asks with the defaults.
 
 ## Database support
 Database must support JSON fields. The following databases are supported:

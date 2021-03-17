@@ -5,6 +5,11 @@ SECRET_KEY = '&&tnr)l9nhz@)3mgwo)p1ewsbdw1vx*7p0=@46c-ojp(d=fhe7'
 ALLOWED_HOSTS = ['*']
 
 
+# Don't force HTTPS sessions to GUI
+# (Not recommended for production!)
+GUI_SSL_REDIRECT = False
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

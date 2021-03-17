@@ -6,11 +6,13 @@ from django.db import transaction
 from django.http import FileResponse, Http404, HttpResponse
 from django.template import Context, Template
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _, gettext_noop
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import (CreateView, DeleteView, UpdateView)
 
 from logs.models import log_factory
+from utils.decorators import ssl_required
 from utils.views import ContextMixin
 
 from .forms import ConfigForm, ZtpScriptForm
@@ -26,6 +28,7 @@ from .utils import (parameter_table_to_dict, preprocess_params)
 #
 # Home
 #
+@method_decorator(ssl_required, 'dispatch')
 class HomeView(ContextMixin, TemplateView):
     menu_item = 'home'
     template_name = 'ztp/home.html'
@@ -34,6 +37,7 @@ class HomeView(ContextMixin, TemplateView):
 #
 # About
 #
+@method_decorator(ssl_required, 'dispatch')
 class AboutView(ContextMixin, TemplateView):
     menu_item = 'about'
     template_name = 'ztp/about.html'
@@ -73,6 +77,7 @@ class ZtpContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMixin)
         return self.request.user.has_perm('ztp.view_ztpscript')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class ZtpCreateView(ZtpContextMixin, CreateView):
     template_name = 'ztp/generic/form.html'
     permission_required = 'ztp.add_ztpscript'
@@ -107,6 +112,7 @@ class ZtpCreateView(ZtpContextMixin, CreateView):
             return reverse_lazy('home')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class ZtpDeleteView(ZtpContextMixin, DeleteView):
     template_name = 'ztp/generic/confirm_delete.html'
     permission_required = 'ztp.delete_ztpscript'
@@ -118,6 +124,7 @@ class ZtpDeleteView(ZtpContextMixin, DeleteView):
             return reverse_lazy('home')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class ZtpDetailView(ZtpContextMixin, DetailView):
     template_name = 'ztp/generic/detail.html'
     permission_required = 'ztp.view_ztpscript'
@@ -130,11 +137,13 @@ class ZtpDetailView(ZtpContextMixin, DetailView):
         return obj
 
 
+@method_decorator(ssl_required, 'dispatch')
 class ZtpListView(ZtpContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
     permission_required = 'ztp.list_ztpscript'
 
 
+@method_decorator(ssl_required, 'dispatch')
 class ZtpUpdateView(ZtpContextMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
     permission_required = 'ztp.change_ztpscript'
@@ -203,6 +212,7 @@ class ConfigContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMix
         return self.request.user.has_perm('ztp.view_config')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class ConfigCreateView(ConfigContextMixin, CreateView):
     template_name = 'ztp/generic/form.html'
     permission_required = 'ztp.add_config'
@@ -237,6 +247,7 @@ class ConfigCreateView(ConfigContextMixin, CreateView):
             return reverse_lazy('home')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class ConfigDeleteView(ConfigContextMixin, DeleteView):
     template_name = 'ztp/generic/confirm_delete.html'
     success_url = reverse_lazy('configList')
@@ -249,6 +260,7 @@ class ConfigDeleteView(ConfigContextMixin, DeleteView):
             return reverse_lazy('home')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class ConfigDetailView(ConfigContextMixin, DetailView):
     template_name = 'ztp/generic/detail.html'
     permission_required = 'ztp.view_config'
@@ -261,11 +273,13 @@ class ConfigDetailView(ConfigContextMixin, DetailView):
         return obj
 
 
+@method_decorator(ssl_required, 'dispatch')
 class ConfigListView(ConfigContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
     permission_required = 'ztp.list_config'
 
 
+@method_decorator(ssl_required, 'dispatch')
 class ConfigUpdateView(ConfigContextMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
     permission_required = 'ztp.change_config'
@@ -332,6 +346,7 @@ class FirmwareContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredM
         return self.request.user.has_perm('ztp.view_firmware')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class FirmwareCreateView(FirmwareContextMixin, SuccessMessageMixin, CreateView):
     template_name = 'ztp/generic/form.html'
     fields = ['file', 'description', 'platforms']
@@ -353,6 +368,7 @@ class FirmwareCreateView(FirmwareContextMixin, SuccessMessageMixin, CreateView):
             return reverse_lazy('home')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class FirmwareDeleteView(FirmwareContextMixin, DeleteView):
     template_name = 'ztp/generic/confirm_delete.html'
     permission_required = 'ztp.delete_firmware'
@@ -364,6 +380,7 @@ class FirmwareDeleteView(FirmwareContextMixin, DeleteView):
             return reverse_lazy('home')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class FirmwareDetailView(FirmwareContextMixin, DetailView):
     template_name = 'ztp/generic/detail.html'
     permission_required = 'ztp.view_firmware'
@@ -376,11 +393,13 @@ class FirmwareDetailView(FirmwareContextMixin, DetailView):
         return obj
 
 
+@method_decorator(ssl_required, 'dispatch')
 class FirmwareListView(FirmwareContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
     permission_required = 'ztp.list_firmware'
 
 
+@method_decorator(ssl_required, 'dispatch')
 class FirmwareUpdateView(FirmwareContextMixin, SuccessMessageMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
     fields = ['file', 'description', 'platforms']
@@ -432,6 +451,7 @@ class PlatformContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredM
         return self.request.user.has_perm('ztp.view_platform')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class PlatformCreateView(PlatformContextMixin, CreateView):
     template_name = 'ztp/generic/form.html'
     fields = ['vendor', 'name', 'description']
@@ -444,6 +464,7 @@ class PlatformCreateView(PlatformContextMixin, CreateView):
             return reverse_lazy('home')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class PlatformDeleteView(PlatformContextMixin, DeleteView):
     template_name = 'ztp/generic/confirm_delete.html'
     permission_required = 'ztp.delete_platform'
@@ -455,6 +476,7 @@ class PlatformDeleteView(PlatformContextMixin, DeleteView):
             return reverse_lazy('home')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class PlatformDetailView(PlatformContextMixin, DetailView):
     template_name = 'ztp/generic/detail.html'
     permission_required = 'ztp.view_platform'
@@ -464,11 +486,13 @@ class PlatformDetailView(PlatformContextMixin, DetailView):
         return obj
 
 
+@method_decorator(ssl_required, 'dispatch')
 class PlatformListView(PlatformContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
     permission_required = 'ztp.list_platform'
 
 
+@method_decorator(ssl_required, 'dispatch')
 class PlatformUpdateView(PlatformContextMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
     fields = ['vendor', 'name', 'description']
@@ -513,6 +537,7 @@ class VendorContextMixin(ContextMixin, LoginRequiredMixin, PermissionRequiredMix
         return False  # self.request.user.has_perm('ztp.view_vendor')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class VendorCreateView(VendorContextMixin, CreateView):
     template_name = 'ztp/generic/form.html'
     fields = ['name', 'description']
@@ -525,6 +550,7 @@ class VendorCreateView(VendorContextMixin, CreateView):
             return reverse_lazy('home')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class VendorDeleteView(VendorContextMixin, DeleteView):
     template_name = 'ztp/generic/confirm_delete.html'
     permission_required = 'ztp.delete_vendor'
@@ -536,11 +562,13 @@ class VendorDeleteView(VendorContextMixin, DeleteView):
             return reverse_lazy('home')
 
 
+@method_decorator(ssl_required, 'dispatch')
 class VendorListView(VendorContextMixin, ListView):
     template_name = 'ztp/generic/list.html'
     permission_required = 'ztp.list_vendor'
 
 
+@method_decorator(ssl_required, 'dispatch')
 class VendorUpdateView(VendorContextMixin, UpdateView):
     template_name = 'ztp/generic/form.html'
     fields = ['name', 'description']
@@ -554,7 +582,7 @@ class VendorUpdateView(VendorContextMixin, UpdateView):
 
 
 #
-# Content delivery
+# Content delivery (these views don't require HTTPS)
 #
 def ztp_download(request, name):
     metadata = {

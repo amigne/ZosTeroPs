@@ -21,6 +21,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static/'
 
 
+# Force SSL for GUI views
+GUI_SSL_REDIRECT = True
+
+
 # Django applications
 INSTALLED_APPS = [
     'ztp',
