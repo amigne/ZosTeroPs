@@ -1,6 +1,6 @@
 # History
 ## Releases
-* v0.1.0 (under development)
+* v0.1.0-rc1 (March 17th, 2021)
   * Addition of VERSION file used as single source of version inside the 
     application through `settings.VERSION` and in templates throug `VERSION`
     context value
