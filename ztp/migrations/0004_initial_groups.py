@@ -70,12 +70,12 @@ def populate_auth_groups(apps, schema_editor):
     administrators.save()
     administrators.permissions.set(administrators_permissions)
 
-    User = get_user_model()
-    admin = User(username='admin')
-    admin.set_password('admin')
-    admin.is_superuser = True
-    admin.is_staff = True
-    admin.save()
+    # User = get_user_model()
+    # admin = User(username='admin')
+    # admin.set_password('admin')
+    # admin.is_superuser = True
+    # admin.is_staff = True
+    # admin.save()
 
 
 class Migration(migrations.Migration):

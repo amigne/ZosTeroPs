@@ -163,6 +163,13 @@ python manage.py migrate
 python manage.py collectstatic
 ```
 
+**ZosTeroPs** GUI requires users to be authenticated. You should create a
+superuser account. This account will permit you to create regular users through
+the admin portal.
+```shell
+python manage.py createsuperuser
+```
+
 ### Application server configuration
 
 uWSGI is used as application server. We put its configuration in 
