@@ -185,7 +185,7 @@
                                                             <input type="checkbox"
                                                                    id="id_is_mandatory-{{ param.name }}" disabled
                                                                    class="custom-control-input"
-                                                                   {% if object.is_mandatory %}checked{% endif %}>
+                                                                   {% if param.is_mandatory %}checked{% endif %}>
                                                             <label for="id_is_mandatory-{{ param.name }}" class="custom-control-label">{% trans "Mandatory parameter" %}</label>
                                                         </div>
                                                     </div>
